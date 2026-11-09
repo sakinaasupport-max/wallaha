@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7209b7">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ولّعها">
+<meta name="description" content="ولّعها 🔥 — لعبة تحديات وأسئلة للشلة: أعلام، أفلام، كورة، أمثال، مين مثّل مع مين… والعب أونلاين مع صحابك">
+<meta property="og:title" content="ولّعها 🔥 — تحديات الشلة"><meta property="og:description" content="تعالى العب معايا! أسئلة وتحديات وكازينو وجوكرات 😈"><meta property="og:image" content="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
+<script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<title>ولّعها 🔥 — تحديات الشلة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#2b0f4c;--bg2:#5a1a6e;--card:#ffffff14;--line:#ffffff26;--txt:#fff;--mut:#e6d6ffb0;--y:#ffd23f;--g:#2ee59d;--r:#ff5d73;--b:#4cc9f0;--o:#ff9f1c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Cairo,system-ui,sans-serif;color:var(--txt);background:radial-gradient(circle at 20% 0%,#7b2cbf 0,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
+#app{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));min-height:100vh}
+.sound{top:calc(12px + env(safe-area-inset-top))!important}
+.wa{background:#25d366!important;color:#fff!important}
+h1{font-size:44px;font-weight:900;margin:8px 0 0;text-align:center;letter-spacing:1px}
+h1 span{color:var(--y)}
+.sub{text-align:center;color:var(--mut);margin:0 0 20px;font-weight:600}
+h2{font-size:22px;margin:6px 0 14px;font-weight:800}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:14px;backdrop-filter:blur(6px)}
+.btn{display:block;width:100%;border:0;border-radius:18px;padding:15px 14px;font:800 19px Cairo,sans-serif;color:#2b0f4c;background:var(--y);margin:10px 0;cursor:pointer;box-shadow:0 5px 0 #0003;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #0003}
+.btn.b{background:var(--b)}.btn.g{background:var(--g)}.btn.o{background:var(--o)}
+.btn.ghost{background:transparent;color:var(--txt);border:2px solid var(--line);box-shadow:none}
+.btn:disabled{opacity:.45}
+input{width:100%;padding:14px;border-radius:16px;border:2px solid var(--line);background:#0003;color:#fff;font:700 18px Cairo,sans-serif;outline:none;text-align:center}
+input:focus{border-color:var(--y)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.cats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.cat{font-size:14px!important;padding:10px 4px!important}
+.banner{text-align:center;font-weight:900;font-size:18px;padding:10px;border-radius:16px;margin:8px 0;background:linear-gradient(90deg,#ff9f1c,#ff5d73);animation:pulse 1s infinite alternate}
+@keyframes pulse{to{transform:scale(1.03)}}
+.jokers{display:flex;gap:8px;margin:12px 0}.jk{flex:1;border:2px dashed var(--y);background:#ffd23f18;color:#fff;border-radius:14px;padding:10px 4px;font:800 15px Cairo;cursor:pointer}.jk.used{opacity:.3;border-style:solid}.jk.on{background:var(--y);color:#2b0f4c}
+.cat{border:2px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center;font-weight:800;font-size:16px;cursor:pointer;background:#0002;user-select:none}
+.cat .e{font-size:28px;display:block}
+.ai{font-size:12px;background:#4cc9f033;border:1px solid #4cc9f088;border-radius:99px;padding:2px 8px;margin-inline-start:6px}
+.status{font-size:13px;text-align:center;color:var(--mut);margin-top:6px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700}.sw{width:54px;height:30px;border-radius:99px;background:#0005;position:relative;flex:none;cursor:pointer;border:2px solid var(--line)}.sw i{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--g)}.sw.on i{right:27px}
+.cat.on{border-color:var(--y);background:#ffd23f22}
+.pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pill{padding:8px 16px;border-radius:99px;border:2px solid var(--line);font-weight:800;cursor:pointer}
+.pill.on{background:var(--y);color:#2b0f4c;border-color:var(--y)}
+.code{font-size:52px;font-weight:900;letter-spacing:10px;text-align:center;color:var(--y);direction:ltr;margin:4px 0}
+.players{list-style:none;padding:0;margin:0}
+.players li{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:14px;background:#0002;margin:6px 0;font-weight:700}
+.tag{font-size:12px;padding:2px 10px;border-radius:99px;background:var(--y);color:#2b0f4c;font-weight:800;margin-inline-start:6px}
+.tag.me{background:var(--b)}
+.top{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-weight:700;margin-bottom:10px}
+.qcat{display:inline-block;background:#0003;border-radius:99px;padding:4px 14px;font-weight:800;font-size:15px}
+.timer{height:10px;border-radius:99px;background:#0004;overflow:hidden;margin:10px 0 16px}
+.timer i{display:block;height:100%;background:linear-gradient(90deg,var(--g),var(--y),var(--r));border-radius:99px;transition:width .25s linear}
+.prompt{text-align:center;padding:20px 8px;font-weight:900;line-height:1.5}
+.prompt .lbl{display:block;font-size:16px;color:var(--mut);font-weight:700;margin-bottom:6px}
+.prompt .big{font-size:40px}.prompt .flag{font-size:110px;line-height:1.1}
+.prompt .q{font-size:24px}.prompt .clue{font-size:22px}
+.opts{display:grid;gap:10px}
+.opt{border:0;border-radius:18px;padding:16px;font:800 19px Cairo,sans-serif;color:#fff;cursor:pointer;text-align:center;box-shadow:0 5px 0 #0003}
+.opt:nth-child(1){background:#e63946}.opt:nth-child(2){background:#1d4ed8}.opt:nth-child(3){background:#d97706}.opt:nth-child(4){background:#059669}
+.opt.picked{outline:4px solid #fff}
+.opt.dim{opacity:.35}
+.opt.right{outline:4px solid var(--y);opacity:1}
+.msg{text-align:center;font-weight:800;font-size:20px;margin:14px 0}
+.big-emoji{font-size:70px;text-align:center}
+.board li:first-child{background:#ffd23f33}
+.pts{color:var(--y);font-weight:900}
+.plus{color:var(--g);font-size:14px;margin-inline-start:6px}
+.note{color:var(--mut);font-size:14px;text-align:center;line-height:1.7}
+.back{background:none;border:0;color:var(--mut);font:700 15px Cairo;cursor:pointer;padding:4px 0}
+.teams input{margin:6px 0}
+
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(130deg,#3a0ca3,#7209b7,#f72585,#ff9f1c,#3a0ca3);background-size:400% 400%;animation:bgmove 18s ease infinite}
+@keyframes bgmove{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+#floaters{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+#floaters span{position:absolute;bottom:-60px;font-size:28px;opacity:.35;animation:floatUp linear infinite}
+@keyframes floatUp{to{transform:translateY(-115vh) rotate(360deg)}}
+.card{background:#ffffff1f;box-shadow:0 10px 30px #0003}
+h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.05)}}
+.enter>*{animation:slideIn .45s cubic-bezier(.2,1.4,.4,1) both}
+.enter>*:nth-child(2){animation-delay:.05s}.enter>*:nth-child(3){animation-delay:.1s}.enter>*:nth-child(4){animation-delay:.15s}.enter>*:nth-child(5){animation-delay:.2s}
+@keyframes slideIn{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+.enter .opt{animation:pop .4s cubic-bezier(.2,1.6,.4,1) both}
+.enter .opt:nth-child(2){animation-delay:.08s}.enter .opt:nth-child(3){animation-delay:.16s}.enter .opt:nth-child(4){animation-delay:.24s}
+@keyframes pop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.enter .prompt .flag,.enter .prompt .big{display:inline-block;animation:bounceIn .7s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes bounceIn{from{transform:scale(0) rotate(-20deg)}to{transform:none}}
+.opt.right{animation:glow .6s ease 3 alternate}
+@keyframes glow{to{transform:scale(1.05);box-shadow:0 0 30px var(--y)}}
+.shake{animation:shake .5s}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+#flash{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0}
+#flash.ok{background:radial-gradient(circle,#2ee59d66,transparent 70%);animation:fl .7s}
+#flash.bad{background:radial-gradient(circle,#ff5d7366,transparent 70%);animation:fl .7s}
+@keyframes fl{0%{opacity:1}100%{opacity:0}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
+.floatpts{position:fixed;left:50%;top:40%;transform:translate(-50%,0);font:900 54px Cairo;color:var(--y);text-shadow:0 4px 0 #0005;pointer-events:none;z-index:70;animation:rise 1.3s ease-out forwards}
+@keyframes rise{from{opacity:0;transform:translate(-50%,30px) scale(.5)}20%{opacity:1;transform:translate(-50%,0) scale(1.2)}to{opacity:0;transform:translate(-50%,-120px) scale(1)}}
+#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#3a0ca3,#f72585);transition:opacity .5s}
+#splash .logo{font:900 72px Cairo;color:#fff;animation:bounceIn 1s cubic-bezier(.2,1.8,.4,1) both;text-shadow:0 6px 0 #0004}
+#splash .fire{font-size:90px;animation:wobble 1s infinite}
+#splash.hide{opacity:0;pointer-events:none}
+.sound{position:fixed;top:12px;left:12px;z-index:80;background:#0004;border:1px solid var(--line);color:#fff;border-radius:99px;width:42px;height:42px;font-size:20px;cursor:pointer}
+.timer.hurry i{animation:hurry .5s infinite alternate}
+@keyframes hurry{to{filter:brightness(1.6)}}
+.btn{transition:transform .08s,filter .2s}.btn:hover{filter:brightness(1.08)}
+.scene{font-size:19px!important;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="splash"><div class="fire">🔥</div><div class="logo">ولّعها</div><div style="color:#fff;font-weight:800;opacity:.85">تحديات الشلة</div></div>
+<div id="floaters"></div><div id="flash"></div><canvas id="fx"></canvas>
+<button class="sound" id="sndBtn" onclick="toggleSound()">🔊</button>
+<div id="app"></div>
+<script>
+const DATA={
+rev:['كشري','طعمية','ملوخية','توكتوك','ميكروباص','شبشب','كنبة','بلكونة','مرجيحة','فسيخ','كحك','طرشي','تلاجة','مروحة','ترابيزة','شماعة','قلقاس','فطير','بسبوسة','كنافة','عربية','موبايل','شاورما','محشي','ممبار','حواوشي','سندوتش','جلابية','طاجن','فانوس','كركديه','دومينو','طاولة','بطاطس','مكرونة','عصير','قهوة','بلاستيشن','كوباية','سرير'],
+art:[
+['الزعيم • مدرسة المشاغبين • الإرهاب والكباب','عادل إمام'],
+['الهضبة • تملّي معاك • نور العين','عمرو دياب'],
+['كوكب الشرق • الأطلال • إنت عمري','أم كلثوم'],
+['العندليب الأسمر • أهواك • قارئة الفنجان','عبد الحليم حافظ'],
+['صعيدي في الجامعة الأمريكية • همام في أمستردام','محمد هنيدي'],
+['عسل إسود • آسف على الإزعاج • كده رضا','أحمد حلمي'],
+['الكينج • شبابيك • علّي صوتك','محمد منير'],
+['آه يا ليل • صوتها من أقوى الأصوات','شيرين عبد الوهاب'],
+['سيدة الشاشة العربية • دعاء الكروان','فاتن حمامة'],
+['السندريلا • خلّي بالك من زوزو','سعاد حسني'],
+['لورانس العرب • دكتور زيفاجو','عمر الشريف'],
+['النمر الأسود • أيام السادات • البيه البواب','أحمد زكي'],
+['يوميات ونيس • فارس بلا جواد','محمد صبحي'],
+['عمر وسلمى • نجم الجيل','تامر حسني'],
+['الفيل الأزرق • واحد من الناس','كريم عبد العزيز'],
+['اللمبي • اللي بالي بالك','محمد سعد'],
+['الكبير أوي • إتش دبور','أحمد مكي'],
+['ليالي الحلمية • الخواجة عبد القادر','يحيى الفخراني'],
+['رأفت الهجان • الكيف','محمود عبد العزيز'],
+['عائلة الحاج متولي • العار','نور الشريف'],
+['غزل البنات • قيثارة الغناء العربي','ليلى مراد'],
+['موسيقار الأجيال • من غير ليه','محمد عبد الوهاب'],
+['سفيرتنا إلى النجوم • جارة القمر','فيروز'],
+['ولاد رزق • الممر','أحمد عز'],
+['أفلام إسماعيل يس في الجيش والبوليس','إسماعيل يس']
+],
+flag:[['🇪🇬','مصر'],['🇸🇦','السعودية'],['🇦🇪','الإمارات'],['🇰🇼','الكويت'],['🇶🇦','قطر'],['🇧🇭','البحرين'],['🇴🇲','عُمان'],['🇯🇴','الأردن'],['🇱🇧','لبنان'],['🇮🇶','العراق'],['🇵🇸','فلسطين'],['🇲🇦','المغرب'],['🇩🇿','الجزائر'],['🇹🇳','تونس'],['🇱🇾','ليبيا'],['🇸🇩','السودان'],['🇾🇪','اليمن'],['🇹🇷','تركيا'],['🇧🇷','البرازيل'],['🇦🇷','الأرجنتين'],['🇯🇵','اليابان'],['🇰🇷','كوريا الجنوبية'],['🇨🇳','الصين'],['🇮🇹','إيطاليا'],['🇫🇷','فرنسا'],['🇩🇪','ألمانيا'],['🇪🇸','إسبانيا'],['🇵🇹','البرتغال'],['🇨🇦','كندا'],['🇲🇽','المكسيك'],['🇮🇳','الهند'],['🇵🇰','باكستان'],['🇳🇬','نيجيريا'],['🇿🇦','جنوب أفريقيا'],['🇸🇪','السويد'],['🇳🇱','هولندا'],['🇬🇷','اليونان'],['🇷🇺','روسيا'],['🇦🇺','أستراليا'],['🇮🇪','أيرلندا'],['🇧🇪','بلجيكا'],['🇨🇭','سويسرا'],['🇸🇾','سوريا'],['🇮🇷','إيران'],['🇮🇩','إندونيسيا'],['🇲🇾','ماليزيا'],['🇹🇭','تايلاند'],['🇻🇳','فيتنام'],['🇵🇭','الفلبين'],['🇰🇪','كينيا'],['🇪🇹','إثيوبيا'],['🇬🇭','غانا'],['🇸🇳','السنغال'],['🇨🇲','الكاميرون'],['🇳🇴','النرويج'],['🇩🇰','الدنمارك'],['🇫🇮','فنلندا'],['🇵🇱','بولندا'],['🇺🇦','أوكرانيا'],['🇦🇹','النمسا'],['🇭🇷','كرواتيا'],['🇨🇴','كولومبيا'],['🇨🇱','تشيلي'],['🇺🇾','أوروجواي'],['🇵🇪','بيرو'],['🇺🇸','أمريكا'],['🇬🇧','بريطانيا'],['🇯🇲','جامايكا'],['🇳🇿','نيوزيلندا'],['🇲🇷','موريتانيا'],['🇸🇴','الصومال']],
+quote:[
+['مرسي الزناتي اتهزم يا رجالة!','سعيد صالح'],
+['بلد شهادات صحيح!','عادل إمام'],
+['أحلى من الشرف مفيش','توفيق الدقن'],
+['لو لم أكن مصريًا لوددت أن أكون مصريًا','مصطفى كامل'],
+['ارفع رأسك يا أخي','جمال عبد الناصر'],
+['مفيش فايدة','سعد زغلول'],
+['أنا أفكر إذن أنا موجود','ديكارت'],
+['جئت، رأيت، انتصرت','يوليوس قيصر'],
+['وجدتها!','أرخميدس'],
+['الخيال أهم من المعرفة','أينشتاين'],
+['المعرفة قوة','فرانسيس بيكون'],
+['عندي حلم','مارتن لوثر كينج'],
+['خطوة صغيرة لإنسان، قفزة عملاقة للبشرية','نيل أرمسترونج'],
+['أكون أو لا أكون، تلك هي المسألة','شكسبير'],
+['كن أنت التغيير الذي تريد أن تراه في العالم','غاندي'],
+['أنا الكبير أوي','أحمد مكي']
+],
+mathal:[
+['اللي ما يعرفش يقول...','عدس'],['القرد في عين أمه...','غزال'],['اللي اختشوا...','ماتوا'],
+['إن جالك الطوفان...','حط ولادك تحت رجليك'],['اللي بيته من إزاز...','ما يحدفش الناس بالطوب'],
+['الباب اللي يجيلك منه الريح...','سده واستريح'],['اقلب القدرة على فمها...','تطلع البنت لأمها'],
+['ابن الوز...','عوّام'],['اللي فات...','مات'],['على قد لحافك...','مد رجليك'],
+['عصفور في الإيد...','ولا عشرة على الشجرة'],['الجار...','قبل الدار'],['اللي يحضّر العفريت...','يصرفه'],
+['الصبر...','مفتاح الفرج'],['إن كان الكلام من فضة...','يبقى السكوت من دهب'],['دخول الحمام...','مش زي خروجه'],
+['اطبخي يا جارية...','كلّف يا سيدي'],['الحركة...','بركة'],['بات مغلوب...','ولا تبات غالب'],
+['إيد لوحدها...','ما تسقفش'],['اللي ما يشوفش من الغربال...','يبقى أعمى'],['خد الحكمة...','من أفواه المجانين'],
+['الطيور على أشكالها...','تقع'],['يا واخد القرد على ماله...','يروح المال ويفضل القرد على حاله'],
+['امشي سنة...','ولا تخطي قنا'],['لاقيني ولا...','تغديني'],['الكترة...','تغلب الشجاعة'],['اللي له ضهر...','ما ينضربش على بطنه']
+],
+emoji:[
+['👨‍🌾🎓🇺🇸','صعيدي في الجامعة الأمريكية'],['🐘🔵','الفيل الأزرق'],['🍯⚫','عسل إسود'],['💣🍢','الإرهاب والكباب'],
+['👦👦👦💰','ولاد رزق'],['🐯⚫','النمر الأسود'],['💡🧔','اللمبي'],['🥚🪨','البيضة والحجر'],['🏢👴','عمارة يعقوبيان'],
+['🙏🔔','آسف على الإزعاج'],['🪖🎖️😂','إسماعيل يس في الجيش'],['👀👧','خلي بالك من زوزو'],['🍬👧🎶','غزل البنات'],
+['🏫😈','مدرسة المشاغبين'],['👶➡️👨','العيال كبرت'],['👨🔁👨','كده رضا'],['🏃‍♂️🇳🇱','همام في أمستردام'],
+['🚢🧊💔','تيتانيك'],['🦁👑','الأسد الملك'],['👓⚡🧙','هاري بوتر'],['💍🌋','سيد الخواتم'],['🦖🏝️','جوراسيك بارك'],
+['🏠🎈👴','Up — فوق'],['🐀👨‍🍳','راتاتوي'],['❄️👸⛄','ملكة الثلج'],['🕷️🧑','سبايدر مان'],['🧸🤠🚀','حكاية لعبة'],['🐠🔍','البحث عن نيمو']
+],
+ball:[
+['مصر كسبت كأس الأمم الأفريقية كام مرة؟','7',['5','6','8']],
+['مين كسب كأس العالم 2022؟','الأرجنتين',['فرنسا','البرازيل','كرواتيا']],
+['أكتر منتخب كسب كأس العالم؟','البرازيل',['ألمانيا','إيطاليا','الأرجنتين']],
+['محمد صلاح لعب لأنهي نادي من دول قبل ليفربول؟','روما',['برشلونة','يوفنتوس','ريال مدريد']],
+['مين اتلقب بـ"نادي القرن" في أفريقيا؟','الأهلي',['الزمالك','الترجي','الوداد']],
+['مين مدرب منتخب مصر في ثلاثية أفريقيا 2006 و2008 و2010؟','حسن شحاتة',['محمود الجوهري','هيكتور كوبر','شوقي غريب']],
+['مين اللاعب اللي اتلقب بـ"الظاهرة"؟','رونالدو البرازيلي',['رونالدينيو','كريستيانو رونالدو','كاكا']],
+['كأس العالم بيتعمل كل كام سنة؟','4',['2','3','5']],
+['ميسي راح أنهي نادي بعد برشلونة؟','باريس سان جيرمان',['إنتر ميامي','مانشستر سيتي','الهلال']],
+['مين أكتر لاعب كسب الكرة الذهبية؟','ميسي',['كريستيانو رونالدو','بلاتيني','كرويف']],
+['الهداف التاريخي للدوري الإنجليزي؟','آلان شيرر',['واين روني','تييري هنري','محمد صلاح']],
+['كام لاعب لكل فريق جوه الملعب؟','11',['10','12','9']],
+['أبو تريكة اتعرف أكتر مع أنهي نادي؟','الأهلي',['الزمالك','الإسماعيلي','الترسانة']],
+['كأس العالم 2026 اتلعب في أنهي دول؟','أمريكا وكندا والمكسيك',['قطر','البرازيل والأرجنتين','إسبانيا والبرتغال']],
+['ماتش الكورة الرسمي مدته كام دقيقة من غير وقت ضايع؟','90',['80','100','120']]
+],
+fawazir:[
+['كل ما تاخد منها تكبر','الحفرة',['البالونة','الكيكة','الشمعة']],
+['ليها سنان وما بتعضش','المشط',['المنشار','السمكة','الشوكة']],
+['ليها عين وما بتشوفش','الإبرة',['المراية','الكاميرا','البطاطس']],
+['كل ما تنشف تتبل','الفوطة',['الإسفنجة','الصابونة','الشمسية']],
+['لو قلت اسمها تنكسر','السكوت',['الإزاز','البيضة','الطبق']],
+['بتمشي من غير رجلين','الساعة',['العربية','السمكة','الكورة']],
+['بتطلع ولا عمرها بتنزل','العمر',['الطيارة','الشمس','الأسانسير']],
+['كل ما تزيد تقل','الشمعة',['الفلوس','الأكل','الميه']],
+['ليها رقبة ومالهاش راس','الإزازة',['الجلابية','القميص','الكوباية']],
+['تسمع من غير ودان وتتكلم من غير لسان','الصدى',['الموبايل','الراديو','الببغاء']],
+['بيتكسر من غير ما حد يلمسه','الوعد',['الإزاز','القلم','الكرسي']],
+['بيجري وما يتعبش','الميه في النهر',['الأرنب','القطر','الهوا']]
+],
+gen:[
+['أطول نهر في العالم؟','النيل',['الأمازون','الفرات','المسيسيبي']],
+['العنكبوت ليه كام رجل؟','8',['6','10','12']],
+['أكبر كوكب في المجموعة الشمسية؟','المشتري',['زحل','الأرض','نبتون']],
+['عاصمة أستراليا؟','كانبرا',['سيدني','ملبورن','بيرث']],
+['أسرع حيوان على الأرض؟','الفهد',['الأسد','الغزال','الحصان']],
+['الهرم الأكبر في الجيزة اتبنى لمين؟','خوفو',['خفرع','منقرع','رمسيس التاني']],
+['الأخطبوط ليه كام قلب؟','3',['1','2','4']],
+['أكبر محيط في العالم؟','الهادي',['الأطلنطي','الهندي','المتجمد الشمالي']],
+['أطول برج في العالم؟','برج خليفة',['برج إيفل','برج القاهرة','إمباير ستيت']],
+['الكوكب الأحمر هو؟','المريخ',['الزهرة','عطارد','المشتري']],
+['السنة الكبيسة فيها كام يوم؟','366',['365','364','360']],
+['مين اخترع المصباح الكهربائي المشهور؟','توماس إديسون',['نيوتن','تسلا','جراهام بل']],
+['أكبر قارة في العالم؟','آسيا',['أفريقيا','أوروبا','أمريكا الشمالية']],
+['جسم الإنسان فيه كام عضمة تقريبًا عند الكبار؟','206',['150','300','412']],
+['عاصمة اليابان؟','طوكيو',['أوساكا','كيوتو','سيول']],
+['أصغر دولة في العالم؟','الفاتيكان',['موناكو','البحرين','مالطا']]
+],
+cap:[['مصر','القاهرة'],['السعودية','الرياض'],['الإمارات','أبوظبي'],['قطر','الدوحة'],['البحرين','المنامة'],['عُمان','مسقط'],['الأردن','عمّان'],['لبنان','بيروت'],['سوريا','دمشق'],['العراق','بغداد'],['المغرب','الرباط'],['ليبيا','طرابلس'],['السودان','الخرطوم'],['اليمن','صنعاء'],['تركيا','أنقرة'],['إيران','طهران'],['فرنسا','باريس'],['ألمانيا','برلين'],['إيطاليا','روما'],['إسبانيا','مدريد'],['البرتغال','لشبونة'],['بريطانيا','لندن'],['روسيا','موسكو'],['اليابان','طوكيو'],['الصين','بكين'],['كوريا الجنوبية','سول'],['الهند','نيودلهي'],['باكستان','إسلام آباد'],['أستراليا','كانبرا'],['كندا','أوتاوا'],['أمريكا','واشنطن'],['البرازيل','برازيليا'],['الأرجنتين','بوينس آيرس'],['نيجيريا','أبوجا'],['كينيا','نيروبي'],['إثيوبيا','أديس أبابا'],['اليونان','أثينا'],['هولندا','أمستردام'],['بلجيكا','بروكسل'],['سويسرا','برن'],['السويد','ستوكهولم'],['النرويج','أوسلو'],['النمسا','فيينا'],['بولندا','وارسو'],['إندونيسيا','جاكرتا'],['ماليزيا','كوالالمبور'],['تايلاند','بانكوك'],['فيتنام','هانوي'],['الفلبين','مانيلا'],['تركيا','أنقرة']].map(([c,a])=>['عاصمة '+c+' إيه؟',a]),
+song:[['تملّي معاك','عمرو دياب'],['نور العين','عمرو دياب'],['الأطلال','أم كلثوم'],['أنساك','أم كلثوم'],['أهواك','عبد الحليم حافظ'],['قارئة الفنجان','عبد الحليم حافظ'],['شبابيك','محمد منير'],['آه يا ليل','شيرين عبد الوهاب'],['زهرة المدائن','فيروز'],['حلوة يا بلدي','داليدا'],['من غير ليه','محمد عبد الوهاب']].map(([s,a])=>['مين اللي غنّى «'+s+'»؟',a]),
+series:[['الكبير أوي','أحمد مكي'],['رأفت الهجان','محمود عبد العزيز'],['ليالي الحلمية','يحيى الفخراني'],['يوميات ونيس','محمد صبحي'],['الاختيار','أمير كرارة'],['لن أعيش في جلباب أبي','نور الشريف'],['جعفر العمدة','محمد رمضان'],['لعبة نيوتن','منى زكي'],['تحت السيطرة','نيللي كريم']].map(([s,a])=>['مين بطل مسلسل «'+s+'»؟',a]),
+eng:[['Apple','تفاحة'],['Chair','كرسي'],['Window','شباك'],['Kitchen','مطبخ'],['Butterfly','فراشة'],['Umbrella','شمسية'],['Mirror','مراية'],['Pillow','مخدة'],['Spoon','معلقة'],['Bridge','كوبري'],['Turtle','سلحفاة'],['Thunder','رعد'],['Island','جزيرة'],['Scissors','مقص'],['Ladder','سلّم'],['Onion','بصل'],['Garlic','توم'],['Neighbor','جار'],['Wallet','محفظة'],['Key','مفتاح']].map(([w,a])=>['يعني إيه «'+w+'»؟',a]),
+animal:[
+['أكبر حيوان في العالم؟','الحوت الأزرق',['الفيل','القرش','الزرافة']],
+['أطول حيوان؟','الزرافة',['الفيل','الجمل','النعامة']],
+['الحيوان اللي بيشيل ولاده في جراب؟','الكنغر',['الدب','القرد','الأرنب']],
+['أكبر طائر في العالم؟','النعامة',['النسر','البطريق','الصقر']],
+['الخفاش بيعرف طريقه في الضلمة إزاي؟','بالصدى',['بالشم','بالنظر','بالحرارة']],
+['ابن الأسد اسمه إيه؟','شبل',['جرو','مهر','حمل']],
+['ابن الحصان اسمه إيه؟','مهر',['شبل','جدي','عجل']],
+['الحرباية مشهورة بإيه؟','بتغيّر لونها',['بتطير','بتعيش 100 سنة','مالهاش عيون']],
+['النحل بيعمل إيه؟','عسل',['حرير','لبن','زيت']]
+],
+costar:[
+['مدرسة المشاغبين','عادل إمام','سعيد صالح',['محمد هنيدي','أحمد حلمي','كريم عبد العزيز']],['عمر وسلمى','تامر حسني','مي عز الدين',['منى زكي','يسرا','هند صبري']],
+['الناظر','علاء ولي الدين','محمد سعد',['أحمد السقا','كريم عبد العزيز','أحمد عز']],['صعيدي في الجامعة الأمريكية','محمد هنيدي','منى زكي',['يسرا','أحمد عز','دنيا سمير غانم']],
+['الإرهاب والكباب','عادل إمام','يسرا',['منى زكي','هند صبري','حنان ترك']],['الكيف','محمود عبد العزيز','يحيى الفخراني',['عادل إمام','أحمد زكي','محمد صبحي']],
+['اللمبي','محمد سعد','حسن حسني',['يحيى الفخراني','أحمد عز','كريم عبد العزيز']],['ولاد رزق','أحمد عز','عمرو يوسف',['محمد هنيدي','أحمد حلمي','محمد سعد']],
+['الجزيرة','أحمد السقا','هند صبري',['منى زكي','يسرا','دنيا سمير غانم']],['الفيل الأزرق','كريم عبد العزيز','خالد الصاوي',['أحمد السقا','محمد سعد','أحمد مكي']],
+['تيتو','أحمد السقا','حنان ترك',['يسرا','دنيا سمير غانم','منى زكي']],['همام في أمستردام','محمد هنيدي','أحمد السقا',['أحمد عز','كريم عبد العزيز','محمد سعد']],
+['عسل إسود','أحمد حلمي','إدوارد',['أحمد السقا','محمد سعد','خالد الصاوي']],['بوبوس','عادل إمام','يسرا',['منى زكي','هند صبري','دنيا سمير غانم']],
+['إكس لارج','أحمد حلمي','دنيا سمير غانم',['يسرا','حنان ترك','هند صبري']],['طير إنت','أحمد مكي','دنيا سمير غانم',['يسرا','هند صبري','منى زكي']]
+].map(([f,x,y,w])=>['مين مثّل مع '+x+' في «'+f+'»؟',y,w]),
+scene:[
+['راجل رايح مجمع التحرير يخلّص ورقة، يلاقي نفسه فجأة ماسك المبنى كله ورهاين 😅🏢','الإرهاب والكباب'],
+['دكتور نفسي بيقابل صاحبه القديم في مستشفى المجانين وعنده حكاية غريبة وشم 🐘','الفيل الأزرق'],
+['إخوات وصحابهم بيقرروا يعملوا آخر سرقة كبيرة ويتوبوا 💰😎','ولاد رزق'],
+['شاب راجع مصر بعد سنين برا بباسبور أمريكاني، والبلد بتعلّمه الأدب 🇺🇸🇪🇬','عسل إسود'],
+['ناظر مدرسة صارم بيموت، وابنه الطيب لازم يمسك المدرسة 🏫👓','الناظر'],
+['شاب صعيدي داخل الجامعة الأمريكية بمنحة ومش عارف يتأقلم 🎓🌾','صعيدي في الجامعة الأمريكية'],
+['شاب مصري يسافر هولندا يدوّر على رزقه ويتبهدل 🇳🇱🍳','همام في أمستردام'],
+['سفينة ضخمة في أول رحلة ليها تخبط في جبل تلج 🚢🧊','تيتانيك'],
+['أسد صغير أبوه بيموت ولازم يرجع ياخد مكانه 🦁👑','الأسد الملك'],
+['فار بيحلم يبقى شيف في مطعم كبير في باريس 🐀👨‍🍳','راتاتوي'],
+['ولد يعرف في عيد ميلاده إنه ساحر ويروح مدرسة سحر ⚡🧙','هاري بوتر'],
+['ناس بتزور جزيرة فيها ديناصورات رجعت للحياة 🦖','جوراسيك بارك'],
+['راجل عجوز يربط بيته في بلالين كتير ويطير 🎈🏠','Up — فوق']
+],
+hist:[
+['حرب أكتوبر كانت سنة كام؟','1973',['1967','1956','1981']],
+['قناة السويس اتفتحت سنة كام؟','1869',['1900','1956','1805']],
+['مين اكتشف مقبرة توت عنخ آمون؟','هوارد كارتر',['شامبليون','نابليون','زاهي حواس']],
+['مين فك رموز حجر رشيد؟','شامبليون',['هوارد كارتر','نابليون','كليوباترا']],
+['السد العالي اتبنى في عهد مين؟','جمال عبد الناصر',['السادات','الملك فاروق','محمد علي']],
+['مين اللي اتقال عليه مؤسس مصر الحديثة؟','محمد علي',['الخديوي إسماعيل','عبد الناصر','سعد زغلول']],
+['مين القائد اللي أسس مدينة القاهرة؟','جوهر الصقلي',['صلاح الدين','عمرو بن العاص','محمد علي']],
+['مين قاد الفتح الإسلامي لمصر؟','عمرو بن العاص',['خالد بن الوليد','صلاح الدين','جوهر الصقلي']]
+]
+};
+/* ================== الفئات ================== */
+// ai: وصف الفئة اللي بيتبعت لـ Claude علشان يولّد أسئلة جديدة
+const CATS={
+  rev:{t:'كلمات معكوسة',e:'🔄',q:'اعدل الكلمة المعكوسة',ai:'كلمات مصرية عامية يومية مشهورة (أكل، حاجات البيت، مواصلات، أماكن، أفعال)، كل كلمة من 3 لـ 8 حروف من غير مسافات',words:true},
+  art:{t:'فنانين',e:'🎤',q:'مين الفنان؟',ai:'فنانين وفنانات ومطربين مصريين وعرب مشهورين جدًا. q = تلميحين أو تلاتة (ألقاب أو أعمال مشهورة جدًا) مفصولين بـ " • " من غير ذكر الاسم، a = اسم الفنان'},
+  flag:{t:'أعلام',e:'🚩',q:'علم أنهي دولة؟'},
+  cap:{t:'عواصم',e:'🏙️',q:'عواصم الدول',ai:'عواصم دول العالم. q = "عاصمة <الدولة> إيه؟"، a = العاصمة، والاختيارات الغلط عواصم أو مدن حقيقية من نفس المنطقة'},
+  quote:{t:'مين قال؟',e:'💬',q:'مين قائل العبارة دي؟',ai:'إفيهات وجمل مشهورة جدًا من أفلام ومسرحيات ومسلسلات مصرية، أو أقوال تاريخية مشهورة عالميًا. q = العبارة نفسها (أقل من 10 كلمات)، a = اسم الممثل أو الشخص اللي قالها. ماتكتبش أي عبارة إلا لو متأكد 100% من صاحبها'},
+  mathal:{t:'كمّل المثل',e:'🧓',q:'كمّل المثل الشعبي',ai:'أمثال شعبية مصرية معروفة. q = أول المثل وبعده "..."، a = باقي المثل بالظبط'},
+  emoji:{t:'أفلام بالإيموجي',e:'🎬',q:'أنهي فيلم ده؟',ai:'أفلام مصرية وعالمية مشهورة جدًا. q = من 2 لـ 4 إيموجي بس بيوصفوا الفيلم (من غير أي كلام)، a = اسم الفيلم بالعربي'},
+  song:{t:'مين غنّاها؟',e:'🎵',q:'أغاني ومطربين',ai:'أغاني عربية ومصرية مشهورة جدًا قديمة وحديثة. q = "مين اللي غنّى «<اسم الأغنية>»؟" (اسم الأغنية بس، من غير أي كلمات منها)، a = اسم المطرب'},
+  series:{t:'مسلسلات',e:'📺',q:'مسلسلات',ai:'مسلسلات مصرية مشهورة (رمضان وغيره). أسئلة عن بطل المسلسل أو اسم المسلسل من وصف قصير أو شخصية مشهورة فيه'},
+  ball:{t:'كورة',e:'⚽',q:'سؤال كورة',ai:'كورة قدم: الدوري المصري، المنتخب، محمد صلاح، الدوريات الأوروبية، كأس العالم والبطولات. معلومات تاريخية ثابتة مش أخبار جديدة'},
+  fawazir:{t:'فوازير',e:'🧩',q:'فزّورة: أنا مين؟',ai:'فوازير وألغاز مصرية ظريفة. q = وصف اللغز بالعامية من غير "أنا مين"، a = الحل (كلمة أو اتنين)'},
+  gen:{t:'معلومات عامة',e:'🧠',q:'سؤال معلومات',ai:'معلومات عامة متنوعة: علوم، جغرافيا، جسم الإنسان، فضاء، اختراعات'},
+  animal:{t:'حيوانات',e:'🐾',q:'عالم الحيوان',ai:'معلومات طريفة ومؤكدة عن الحيوانات والطيور والأسماك'},
+  hist:{t:'تاريخ',e:'🏛️',q:'سؤال تاريخ',ai:'تاريخ مصر (فرعوني، إسلامي، حديث) والتاريخ العربي والعالمي المشهور. معلومات مؤكدة بس'},
+  eng:{t:'إنجليزي',e:'🔤',q:'ترجم الكلمة',ai:'كلمات إنجليزي متوسطة الصعوبة. q = "يعني إيه «<English word>»؟"، a = المعنى بالعامية المصرية، والاختيارات الغلط كلمات عربية قريبة'},
+  costar:{t:'مين مثّل مع مين',e:'🎭',q:'مين مثّل معاه؟',ai:'أفلام ومسرحيات مصرية مشهورة جدًا. q = "مين مثّل مع <ممثل> في «<الفيلم>»؟"، a = اسم ممثل أو ممثلة كان بطل أساسي معاه في نفس العمل، والاختيارات الغلط ممثلين مشهورين ماكانوش في العمل ده خالص. لازم تكون متأكد 100% من الأبطال'},
+  scene:{t:'احزر الفيلم',e:'🍿',q:'احزر الفيلم من المشهد',ai:'أفلام مصرية وعالمية مشهورة جدًا. q = وصف قصير ومضحك لقصة الفيلم أو مشهد مشهور فيه بالعامية المصرية (من غير اسم الفيلم أو أسماء الأبطال)، وفي آخره إيموجي أو اتنين، a = اسم الفيلم'},
+  math:{t:'حساب سريع',e:'🧮',q:'احسبها بسرعة!',gen:true}
+};
+const DUR=20;
+
+/* ================== أدوات ================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const revWord=w=>[...w].reverse().join('');
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function bank(k){if(k==='rev')return DATA.rev.map(w=>[revWord(w),w]);return DATA[k]||[]}
+
+/* ---------- الأسئلة المتولّدة (حساب) ---------- */
+function mathQ(){
+  const t=rnd(0,3);let p,a;
+  if(t===0){const x=rnd(12,89),y=rnd(12,89);p=`${x} + ${y}`;a=x+y}
+  else if(t===1){const x=rnd(40,150),y=rnd(11,x-5);p=`${x} − ${y}`;a=x-y}
+  else if(t===2){const x=rnd(3,13),y=rnd(3,13);p=`${x} × ${y}`;a=x*y}
+  else{const y=rnd(2,12),a0=rnd(2,15);p=`${y*a0} ÷ ${y}`;a=a0}
+  const w=new Set();while(w.size<3){const d=a+(Math.random()<.5?-1:1)*rnd(1,t===2?12:10);if(d!==a&&d>=0)w.add(d)}
+  const o=shuffle([a,...w].map(String));return {k:'math',p:p+' = ؟',o,c:o.indexOf(String(a))};
+}
+
+/* ---------- بناء سؤال باختيارات ---------- */
+function makeQ(k,it,ai){
+  let wrong=it[2];
+  if(!wrong||wrong.length<3){
+    const pool=[...new Set([...bank(k),...(AIPOOL[k]||[])].map(x=>x[1]))].filter(a=>a!==it[1]);
+    wrong=shuffle(pool).slice(0,3);
+  }
+  const o=shuffle([it[1],...wrong.slice(0,3)]);
+  return {k,p:it[0],o,c:o.indexOf(it[1]),ai:!!ai};
+}
+
+/* ================== محرّك الأسئلة اللانهائي ================== */
+let sampleFn=null, aiOn=store.get('wl_ai',true), aiStatus='', aiCount=0, aiFail=false;
+const DECK={}, AIPOOL={}, aiQueue=[], inflight=new Set();
+let seen=new Set(store.get('wl_seen',[]));
+function markSeen(p){seen.add(p);if(seen.size>800)seen=new Set([...seen].slice(-600));store.set('wl_seen',[...seen])}
+function deck(k){
+  if(!DECK[k]){const b=shuffle(bank(k));DECK[k]={ai:[],bank:[...b.filter(x=>!seen.has(x[0])),...b.filter(x=>seen.has(x[0]))]}}
+  return DECK[k];
+}
+const aiReady=()=>!!(sampleFn&&aiOn&&!aiFail);
+function wantMore(k){
+  if(!aiReady()||!CATS[k].ai)return;
+  const d=deck(k);
+  if(d.ai.length<4&&!inflight.has(k)&&!aiQueue.includes(k)){aiQueue.push(k);pumpAI()}
+}
+let pumping=false;
+async function pumpAI(){
+  if(pumping)return;pumping=true;
+  while(aiQueue.length&&aiReady()){
+    const k=aiQueue.shift();inflight.add(k);setAI('🤖 بيجهّز أسئلة '+CATS[k].t+' جديدة...');
+    try{const items=await genAI(k);const d=deck(k);items.forEach(x=>d.ai.push(x));(AIPOOL[k]=AIPOOL[k]||[]).push(...items);aiCount+=items.length;setAI(`🤖 ${aiCount} سؤال جديد اتولّد`)}
+    catch(e){
+      if(['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e&&e.code)){aiFail=true;setAI('الأسئلة الذكية مش متاحة هنا — شغالين بالأسئلة الجاهزة')}
+      else if(e&&e.code==='rate_limited'){setAI('🤖 استراحة شوية من توليد الأسئلة...');aiQueue.length=0}
+      else setAI('🤖 حصلت مشكلة صغيرة، هنكمل بالأسئلة الجاهزة');
+    }
+    inflight.delete(k);
+  }
+  pumping=false;
+}
+function setAI(t){aiStatus=t;const el=$('#aist');if(el)el.textContent=t}
+async function genAI(k){
+  const c=CATS[k];
+  const avoid=[...bank(k).map(x=>c.words?x[1]:x[0]),...(AIPOOL[k]||[]).map(x=>c.words?x[1]:x[0])].slice(-60);
+  const words=!!c.words;
+  const prompt=words
+    ?`إنت بتولّد محتوى للعبة "ولّعها" (لعبة تحديات بين صحاب مصريين).
+اكتب 15 كلمة جديدة لفئة: ${c.ai}.
+ماتكررش أي كلمة من دول: ${avoid.join('، ')}
+رد بـ JSON array of strings بس، مثال: ["مخدة","طرابيزة"]`
+    :`إنت بتولّد أسئلة للعبة "ولّعها" (لعبة تحديات وأسئلة بين صحاب مصريين).
+الفئة: ${c.t} — ${c.ai}
+اكتب 10 أسئلة جديدة متنوعة بالعامية المصرية، شوية سهلة وشوية متوسطة وشوية صعبة، وتكون ممتعة وتعمل جو.
+شروط مهمة:
+- الإجابة الصح لازم تكون معلومة مؤكدة 100%، ولو مش متأكد من حاجة ماتكتبهاش.
+- 3 اختيارات غلط مقنعة من نفس النوع، ومحدش منهم ينفع يكون صح.
+- كل نص قصير (السؤال أقل من 15 كلمة، والاختيار أقل من 6 كلمات).
+- ماتكررش الأسئلة دي: ${avoid.join(' | ')}
+رد بـ JSON array بس، مثال: [{"q":"نص السؤال","a":"الإجابة الصح","w":["غلط 1","غلط 2","غلط 3"]}]`;
+  const res=await sampleFn.json(prompt,{cache:false});
+  if(!Array.isArray(res))throw {code:'bad'};
+  const clean=s=>String(s||'').replace(/[\u0000-\u001f]/g,'').trim().slice(0,120);
+  let out;
+  if(words){
+    const have=new Set(DATA.rev.concat((AIPOOL.rev||[]).map(x=>x[1])));
+    out=res.map(clean).filter(w=>w&&!/\s/.test(w)&&[...w].length>=3&&[...w].length<=10&&!have.has(w)).map(w=>[revWord(w),w]);
+  }else{
+    const have=new Set(avoid);
+    out=res.map(x=>x&&[clean(x.q),clean(x.a),Array.isArray(x.w)?[...new Set(x.w.map(clean))].filter(v=>v&&v!==clean(x.a)):[]])
+      .filter(x=>x&&x[0]&&x[1]&&x[2].length>=3&&!have.has(x[0]));
+  }
+  if(!out.length)throw {code:'bad'};
+  return shuffle(out);
+}
+function draw(k){
+  if(CATS[k].gen)return mathQ();
+  const d=deck(k);wantMore(k);
+  let it,ai=false;
+  if(d.ai.length&&(Math.random()<.75||!d.bank.length)){it=d.ai.shift();ai=true}
+  else{if(!d.bank.length){delete DECK[k];return draw(k)}it=d.bank.shift()}
+  markSeen(it[0]);
+  return makeQ(k,it,ai);
+}
+function warmUp(cats){cats.forEach(k=>{deck(k);wantMore(k)})}
+let lastCat='';
+function drawAny(cats){let k;do{k=cats[Math.floor(Math.random()*cats.length)]}while(cats.length>1&&k===lastCat);lastCat=k;return draw(k)}
+
+/* ================== عرض السؤال ================== */
+function promptHTML(q){
+  const c=CATS[q.k];let inner;
+  if(q.k==='flag')inner=`<span class="flag">${esc(q.p)}</span>`;
+  else if(q.k==='emoji')inner=`<span class="flag" style="font-size:64px">${esc(q.p)}</span>`;
+  else if(q.k==='rev'||q.k==='math')inner=`<span class="big" style="direction:${q.k==='math'?'ltr':'rtl'};display:inline-block">${esc(q.p)}</span>`;
+  else if(q.k==='quote'||q.k==='mathal')inner=`<span class="q">«${esc(q.p)}»</span>`;
+  else if(q.k==='art')inner=`<span class="clue">${esc(q.p)}</span>`;
+  else if(q.k==='scene')inner=`<span class="q scene">${esc(q.p)}</span>`;
+  else inner=`<span class="q">${esc(q.p)}</span>`;
+  return `<div class="card prompt"><span class="lbl">${c.q}${q.ai?'<span class="ai">🤖 جديد</span>':''}</span>${inner}</div>`;
+}
+function optsHTML(q,{picked=-1,reveal=false,fn='',hide=[]}={}){
+  return `<div class="opts">${q.o.map((t,i)=>{
+    let cl='opt';if(hide.includes(i)&&!reveal)return `<button class="opt" style="visibility:hidden">.</button>`;
+    if(reveal){cl+=i===q.c?' right':' dim'} else if(picked>=0){cl+=i===picked?' picked':' dim'}
+    return `<button class="${cl}" ${fn&&!reveal&&picked<0?`onclick="${fn}(${i})"`:''}>${esc(t)}</button>`}).join('')}</div>`;
+}
+const multOf=(qi,n)=>n&&qi===n-1?3:((qi+1)%4===0?2:1);
+const pointsFor=ms=>100+Math.max(0,Math.round(50*(1-ms/(DUR*1000))));
+function catPicker(sel,fn){return `<div class="cats">${Object.entries(CATS).map(([k,c])=>`<div class="cat ${sel.includes(k)?'on':''}" onclick="${fn}('${k}')"><span class="e">${c.e}</span>${c.t}</div>`).join('')}</div>
+  <div class="row" style="margin-top:8px"><button class="btn ghost" style="font-size:15px;padding:8px" onclick="${fn}('*all')">اختار الكل</button><button class="btn ghost" style="font-size:15px;padding:8px" onclick="${fn}('*none')">شيل الكل</button></div>`}
+function toggleIn(arr,k){if(k==='*all')return Object.keys(CATS);if(k==='*none')return [];return arr.includes(k)?arr.filter(x=>x!==k):[...arr,k]}
+function nPicker(cur,fn,list){return `<div class="pills">${list.map(n=>`<div class="pill ${n===cur?'on':''}" onclick="${fn}(${n})">${n||'∞'}</div>`).join('')}</div>`}
+function aiBox(){
+  if(!sampleFn)return '';
+  return `<div class="card"><div class="toggle"><span>🤖 أسئلة لا نهائية<br><span class="note" style="font-size:13px">Claude بيولّد أسئلة جديدة وانتوا بتلعبوا</span></span><div class="sw ${aiOn?'on':''}" onclick="aiOn=!aiOn;store.set('wl_ai',aiOn);render()"><i></i></div></div></div>`;
+}
+
+/* ================== غرف أونلاين عبر MQTT (سيرفر مجاني) ================== */
+const BROKERS=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt'];
+const MY_PEER=Math.random().toString(36).slice(2,12);
+function createRoomService(){
+  if(!window.mqtt)return null;
+  return {
+    join(code){
+      return new Promise((resolve,reject)=>{
+        const base='wallaha/v1/'+code+'/p/';const myTopic=base+MY_PEER;
+        let bi=0,client=null,done=false,me={},peersMap=new Map(),listeners=new Set(),hb=null,flushT=null,snapshot=[];
+        const rebuild=()=>{
+          const now=Date.now();
+          for(const [id,p] of peersMap)if(id!==MY_PEER&&now-p.seen>30000)peersMap.delete(id);
+          snapshot=[{peer:MY_PEER,presence:me,isMe:true,sameTab:true,kind:'viewer',updatedAt:now},
+            ...[...peersMap].filter(([id])=>id!==MY_PEER).map(([id,p])=>({peer:id,presence:p.presence,isMe:false,sameTab:false,kind:'viewer',updatedAt:p.seen}))];
+          listeners.forEach(f=>{try{f({peers:snapshot})}catch(e){}});
+        };
+        const send=()=>{flushT=null;if(client&&client.connected)client.publish(myTopic,JSON.stringify({ts:Date.now(),p:me}),{retain:true,qos:0})};
+        const connect=()=>{
+          client=mqtt.connect(BROKERS[bi],{clientId:'wl_'+MY_PEER+'_'+Math.random().toString(36).slice(2,6),clean:true,keepalive:20,reconnectPeriod:2000,connectTimeout:8000,
+            will:{topic:myTopic,payload:'',retain:true,qos:0}});
+          client.on('connect',()=>{
+            client.subscribe(base+'+');send();
+            if(!done){done=true;resolve(api)}
+          });
+          client.on('message',(t,msg)=>{
+            const id=t.slice(base.length);if(id===MY_PEER)return;
+            const txt=msg.toString();
+            if(!txt){peersMap.delete(id);rebuild();return}
+            try{const d=JSON.parse(txt);if(Math.abs(Date.now()-(+d.ts||0))>60000&&!peersMap.has(id))return;
+              if(d&&typeof d.p==='object'){peersMap.set(id,{presence:Object.freeze(d.p),seen:Date.now()});rebuild()}}catch(e){}
+          });
+          client.on('error',()=>{});
+          setTimeout(()=>{if(!done){try{client.end(true)}catch(e){}bi++;if(bi<BROKERS.length)connect();else reject({code:'upstream_error'})}},9000);
+        };
+        const api={
+          presence(patch){for(const k in patch){if(patch[k]===null)delete me[k];else me[k]=patch[k]}me={...me};rebuild();if(!flushT)flushT=setTimeout(send,80);return Promise.resolve()},
+          peers(){return snapshot},
+          onPeers(f){listeners.add(f);setTimeout(()=>f({peers:snapshot}),0);return()=>listeners.delete(f)},
+          leave(){clearInterval(hb);try{client.publish(myTopic,'',{retain:true});setTimeout(()=>client.end(),300)}catch(e){}listeners.clear();return Promise.resolve()}
+        };
+        hb=setInterval(()=>{send();rebuild()},10000);
+        connect();
+      });
+    }
+  };
+}
+
+/* ================== المؤثرات: أصوات وكونفيتي ================== */
+let soundOn=store.get('wl_snd',true),AC=null;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});return AC}
+document.addEventListener('pointerdown',()=>ac(),{once:true});
+function tone(f,t0,d,type='sine',v=.18){const a=ac();if(!a||!soundOn)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,a.currentTime+t0);g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(v,a.currentTime+t0+.02);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);o.connect(g).connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
+function snd(n){
+  if(n==='ok'){[523,659,784,1047].forEach((f,i)=>tone(f,i*.08,.25,'triangle'))}
+  else if(n==='bad'){tone(220,0,.25,'sawtooth',.12);tone(165,.2,.4,'sawtooth',.12)}
+  else if(n==='tick')tone(880,0,.06,'square',.06);
+  else if(n==='tap')tone(600,0,.08,'triangle',.12);
+  else if(n==='joker'){[700,900,1200].forEach((f,i)=>tone(f,i*.05,.15,'square',.08))}
+  else if(n==='win'){[523,523,659,784,659,784,1047].forEach((f,i)=>tone(f,i*.13,.3,'triangle',.2))}
+}
+function toggleSound(){soundOn=!soundOn;store.set('wl_snd',soundOn);$('#sndBtn').textContent=soundOn?'🔊':'🔇'}
+let lastTick=-1;function tickSound(left){const s=Math.ceil(left/1000);const t=document.querySelector('.timer');if(t)t.classList.toggle('hurry',s<=5);if(s!==lastTick){lastTick=s;if(s<=5&&s>0)snd('tick')}}
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function fxResult(ok){
+  const fl=$('#flash');fl.className='';void fl.offsetWidth;fl.className=ok?'ok':'bad';
+  if(ok){snd('ok');confetti(70);vib(40)}else{snd('bad');vib([80,50,80]);const a=$('#app');a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake')}
+}
+function floatPts(t){const d=document.createElement('div');d.className='floatpts';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
+const cv=$('#fx'),cx=cv.getContext&&cv.getContext('2d');let parts=[],raf=0;
+function sizeCv(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px'}
+addEventListener('resize',sizeCv);sizeCv();
+const COLS=['#ffd23f','#ff5d73','#2ee59d','#4cc9f0','#ff9f1c','#f72585','#fff'];
+function confetti(n,from){
+  if(!cx)return;const W=cv.width,Hh=cv.height,dp=devicePixelRatio;
+  for(let i=0;i<n;i++){const x=from==='top'?Math.random()*W:W/2,y=from==='top'?-20:Hh*.45;
+    parts.push({x,y,vx:(Math.random()-.5)*(from==='top'?4:22)*dp,vy:(from==='top'?Math.random()*3:-(Math.random()*16+6))*dp,g:.45*dp,s:(Math.random()*8+5)*dp,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:COLS[i%COLS.length],life:160})}
+  if(!raf)raf=requestAnimationFrame(stepFx);
+}
+function stepFx(){cx.clearRect(0,0,cv.width,cv.height);parts=parts.filter(p=>p.life-->0&&p.y<cv.height+40);
+  parts.forEach(p=>{p.vy+=p.g*.5;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore()});
+  raf=parts.length?requestAnimationFrame(stepFx):0}
+function winFx(){snd('win');confetti(120);let k=0;const iv=setInterval(()=>{confetti(40,'top');if(++k>6)clearInterval(iv)},350)}
+(function floaters(){const em=['🔥','🎉','⭐','🎬','⚽','🎤','🧩','🍿','🏆','😂'];const box=$('#floaters');for(let i=0;i<12;i++){const sp=document.createElement('span');sp.textContent=em[i%em.length];sp.style.left=(Math.random()*95)+'%';sp.style.animationDuration=(14+Math.random()*14)+'s';sp.style.animationDelay=(-Math.random()*20)+'s';sp.style.fontSize=(20+Math.random()*22)+'px';box.appendChild(sp)}})();
+setTimeout(()=>{const sp=$('#splash');if(sp){sp.classList.add('hide');setTimeout(()=>sp.remove(),600)}},1400);
+setTimeout(()=>{const b=$('#sndBtn');if(b)b.textContent=soundOn?'🔊':'🔇'},0);
+
+/* ================== الحالة العامة ================== */
+let S={scr:'home',err:''};
+let myName=store.get('wl_name','');
+let roomNS=null, roomReady=false;
+roomNS=createRoomService();roomReady=true;
+
+function render(){
+  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,lsetup,lturn,lq,lend}[S.scr];
+  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:'');
+  const app=$('#app');app.classList.toggle('enter',key!==lastScreenKey);
+  if(key!==lastScreenKey){app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter')}
+  lastScreenKey=key;
+  app.innerHTML=f()+(S.scr!=='home'&&aiStatus&&aiOn&&sampleFn?`<p class="status" id="aist">${esc(aiStatus)}</p>`:'');
+  const ci=$('#codeInp');if(ci&&S.prefill){ci.value=S.prefill}
+  const inp=$('#nameInp');if(inp){inp.oninput=e=>{myName=e.target.value.slice(0,16);store.set('wl_name',myName)}}
+}
+let lastScreenKey='';
+function go(scr){snd('tap');S.scr=scr;S.err='';render()}
+
+/* ================== الشاشة الرئيسية ================== */
+function home(){
+  const online=!!roomNS;
+  return `<h1>ولّعها <span>🔥</span></h1><p class="sub">تحديات الشلة • ${Object.keys(CATS).length} فئة • العب أونلاين مع صحابك</p>
+  ${S.invite?`<div class="banner">صاحبك مستنيك في أوضة <b style="direction:ltr;display:inline-block">${esc(S.invite)}</b> 🎉<br><span style="font-size:14px">اكتب اسمك ودوس «ادخل الأوضة»</span></div>`:''}
+  <div class="card"><h2>اسمك إيه؟</h2><input id="nameInp" maxlength="16" placeholder="اكتب اسمك" value="${esc(myName)}"></div>
+  <div class="card"><h2>🌐 كل واحد من موبايله</h2>
+    ${online?(S.invite?`<button class="btn g" onclick="joinRoom(S.invite)">ادخل الأوضة 🚀</button>`:'')+`<button class="btn" onclick="createRoom()">اعمل أوضة جديدة</button><button class="btn b" onclick="go('join')">ادخل أوضة بكود</button>`
+    :`<p class="note">محتاج نت علشان تلعب أونلاين 📶 — جرب تحدي الفرق تحت 👇</p>`}
+    ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}
+  </div>
+  <div class="card"><h2>📱 تحدي الفرق — موبايل واحد</h2><p class="note">فرق بتلعب بالدور، وفيه جوكرات وكازينو وسرقة 😈</p><button class="btn o" onclick="startLocalSetup()">يلا تحدي الفرق</button></div>
+  ${aiBox()}`;
+}
+function needName(){if(!myName.trim()){S.err='اكتب اسمك الأول 🙂';render();return false}return true}
+
+/* ================== أونلاين ================== */
+let lastFx='';
+let R=null, isHost=false, hostSince=0, H=null, lastKey='', localStart=0, myAns=null, tick=null, revealTimer=null;
+const CODE_CH='abcdefghjkmnpqrstuvwxyz23456789';
+function joinScr(){
+  return `<button class="back" onclick="go('home')">→ رجوع</button><h2>ادخل أوضة</h2>
+  <div class="card"><input id="codeInp" maxlength="4" placeholder="الكود" style="direction:ltr;letter-spacing:8px;font-size:28px;text-transform:lowercase" autocapitalize="off" autocomplete="off">
+  <button class="btn b" onclick="joinRoom($('#codeInp').value)">ادخل</button>
+  ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}</div>`;
+}
+async function enter(code,host){
+  S.err='';$('#app').insertAdjacentHTML('beforeend','<p class="msg">بيوصّل... ⏳</p>');try{R=await roomNS.join(code)}catch(e){S.err='النت ضعيف أو السيرفر مش راد، جرب تاني';render();return}
+  S.code=code;isHost=host;try{history.replaceState(null,'','#r-'+code)}catch(e){}
+  if(host){hostSince=Date.now();H={ph:'lobby',cats:Object.keys(CATS),n:15,sc:{}};
+    await R.presence({nm:myName.trim(),h:1,hs:hostSince,st:pub()});}
+  else await R.presence({nm:myName.trim()});
+  R.onPeers(()=>onUpdate());
+  clearInterval(tick);tick=setInterval(onTick,250);
+  S.scr='lobby';onUpdate();
+}
+function copyInvite(){const t=location.origin+location.pathname+'#r-'+S.code;try{navigator.clipboard.writeText(t).then(()=>{S.err='';floatPts('اتنسخ ✅')})}catch(e){}}
+function createRoom(){if(!needName())return;let c='';for(let i=0;i<4;i++)c+=CODE_CH[Math.floor(Math.random()*CODE_CH.length)];enter(c,true)}
+function joinRoom(c){if(!needName())return;c=(c||'').trim().toLowerCase();if(!/^[a-z0-9]{4}$/.test(c)){S.err='الكود 4 حروف';render();return}enter(c,false)}
+async function leaveRoom(){try{history.replaceState(null,'',location.pathname)}catch(e){}clearInterval(tick);clearTimeout(revealTimer);try{await R?.leave()}catch(e){}R=null;isHost=false;H=null;go('home')}
+
+const peers=()=>R?R.peers().filter(p=>p.kind==='viewer'&&p.presence&&p.presence.nm):[];
+function hostPeer(){return peers().filter(p=>p.presence.h===1).sort((a,b)=>(a.presence.hs||0)-(b.presence.hs||0))[0]}
+function st(){if(isHost)return pub();const h=hostPeer();return h&&h.presence.st||null}
+function pub(){
+  if(!H)return null;
+  const o={ph:H.ph,cats:H.cats,n:H.n,sc:H.sc};
+  if(H.ph==='q'||H.ph==='rv'){const q=H.q;Object.assign(o,{g:H.g,qi:H.qi,k:q.k,p:q.p,o:q.o,ai:q.ai,m:multOf(H.qi,H.n)});if(H.ph==='rv')o.c=q.c}
+  return o;
+}
+function pushState(){if(isHost&&R)R.presence({st:pub()}).catch(()=>{})}
+function onUpdate(){
+  if(!R)return;
+  const s=st();
+  if(s&&(s.ph==='q'||s.ph==='rv')){const key=s.g+':'+s.qi;if(key!==lastKey){lastKey=key;localStart=Date.now();myAns=null}S.scr='oq';
+    const fk=key+s.ph;if(s.ph==='rv'&&fk!==lastFx){lastFx=fk;const ok=myAns&&myAns.qi===s.qi&&myAns.i===s.c;fxResult(!!ok);const me=Object.entries(s.sc||{}).find(([pid])=>R.peers().find(p=>p.peer===pid&&p.sameTab));if(ok&&me&&me[1][2])floatPts('+'+me[1][2])}}
+  else if(s&&s.ph==='end'){if(S.scr!=='oend')setTimeout(winFx,200);S.scr='oend'}
+  else S.scr='lobby';
+  render();
+}
+function onTick(){
+  if(!R)return;
+  if(isHost&&H&&H.ph==='q'){
+    const el=Date.now()-H.qStart;const ps=peers();
+    const ans=ps.filter(p=>{const a=p.presence.a;return a&&a.g===H.g&&a.qi===H.qi});
+    if(el>=DUR*1000||(ps.length&&ans.length>=ps.length))reveal();
+  }
+  const bar=$('#tbar');if(bar){const s=st();if(s&&s.ph==='q'){const left=Math.max(0,DUR*1000-(Date.now()-localStart));if(!myAns)tickSound(left);bar.style.width=(left/(DUR*10))+'%';const t=$('#tsec');if(t)t.textContent=Math.ceil(left/1000)}}
+}
+function hostStart(){
+  if(!H.cats.length)return;
+  warmUp(H.cats);
+  H.g=Math.random().toString(36).slice(2,7);H.qi=0;H.sc={};H.q=drawAny(H.cats);
+  peers().forEach(p=>H.sc[p.peer]=[p.presence.nm,0,0]);
+  H.ph='q';H.qStart=Date.now();pushState();onUpdate();
+}
+function reveal(){
+  const q=H.q;
+  peers().forEach(p=>{
+    const row=H.sc[p.peer]||(H.sc[p.peer]=[p.presence.nm,0,0]);
+    row[0]=String(p.presence.nm).slice(0,16);
+    const a=p.presence.a;let gain=0;
+    if(a&&a.g===H.g&&a.qi===H.qi&&a.i===q.c)gain=pointsFor(Math.min(Math.max(+a.ms||0,0),DUR*1000))*multOf(H.qi,H.n);
+    row[1]+=gain;row[2]=gain;
+  });
+  H.ph='rv';pushState();onUpdate();
+  clearTimeout(revealTimer);revealTimer=setTimeout(hostNext,5500);
+}
+function hostNext(){
+  if(!H||H.ph!=='rv')return;clearTimeout(revealTimer);
+  H.qi++;
+  if(H.n&&H.qi>=H.n){H.ph='end'}else{H.q=drawAny(H.cats);H.ph='q';H.qStart=Date.now()}
+  pushState();onUpdate();
+}
+function hostEnd(){clearTimeout(revealTimer);H.ph='end';pushState();onUpdate()}
+function hostAgain(){H.ph='lobby';pushState();onUpdate()}
+function toggleCat(k){H.cats=toggleIn(H.cats,k);pushState();render()}
+function setN(n){H.n=n;pushState();render()}
+function answer(i){
+  const s=st();if(!s||s.ph!=='q'||myAns)return;snd('tap');
+  myAns={g:s.g,qi:s.qi,i};
+  R.presence({a:{g:s.g,qi:s.qi,i,ms:Date.now()-localStart}}).catch(()=>{});
+  render();
+}
+function lobby(){
+  const ps=peers();const h=hostPeer();
+  const list=ps.map(p=>`<li><span>${esc(p.presence.nm)}${p.presence.h===1?'<span class="tag">المضيف</span>':''}${p.sameTab?'<span class="tag me">إنت</span>':''}</span></li>`).join('');
+  return `<button class="back" onclick="leaveRoom()">→ اخرج</button>
+  <div class="card" style="text-align:center"><div class="note">كود الأوضة</div><div class="code">${esc(S.code)}</div>
+  <a class="btn wa" style="text-decoration:none" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا ولّعها 🔥\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
+  <button class="btn ghost" onclick="copyInvite()">انسخ اللينك 📋</button></div>
+  <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
+  ${isHost?`<div class="card"><h2>اختار الفئات</h2>${catPicker(H.cats,'toggleCat')}<h2 style="margin-top:16px">عدد الأسئلة</h2>${nPicker(H.n,'setN',[10,20,30,0])}
+    <p class="note">كل رابع سؤال 🔥 دبل${H.n?' والسؤال الأخير 🎰 ×3':''}</p>
+    <button class="btn g" onclick="hostStart()" ${H.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`
+  :`<div class="card"><p class="msg">${h?'مستنيين المضيف يبدأ اللعبة ⏳':'مستنيين المضيف يدخل...'}</p></div>`}`;
+}
+function scoreList(sc,showGain){
+  const rows=Object.entries(sc||{}).sort((a,b)=>b[1][1]-a[1][1]);
+  return `<ul class="players board">${rows.map(([pid,r],i)=>`<li><span>${['🥇','🥈','🥉'][i]||'•'} ${esc(r[0])}${R&&R.peers().find(p=>p.peer===pid&&p.sameTab)?'<span class="tag me">إنت</span>':''}</span><span class="pts">${r[1]}${showGain&&r[2]?`<span class="plus">+${r[2]}</span>`:''}</span></li>`).join('')}</ul>`;
+}
+function onlineQ(){
+  const s=st();if(!s)return lobby();
+  const q={k:s.k,p:s.p,o:s.o,c:s.c,ai:s.ai};const rv=s.ph==='rv';
+  let res='';
+  if(rv){const ok=myAns&&myAns.qi===s.qi&&myAns.i===s.c;res=`<p class="msg" style="color:${ok?'var(--g)':'var(--r)'}">${ok?'برافو عليك! ✅':myAns?'للأسف غلط ❌':'الوقت خلص ⏰'}</p><div class="card"><h2>النتيجة</h2>${scoreList(s.sc,true)}</div>${isHost?`<div class="row"><button class="btn" onclick="hostNext()">التالي ←</button><button class="btn ghost" onclick="hostEnd()">إنهاء</button></div>`:''}`}
+  else if(myAns)res=`<p class="msg">جاوبت! مستنيين الباقي... 👀</p>`;
+  const answered=peers().filter(p=>{const a=p.presence.a;return a&&a.g===s.g&&a.qi===s.qi}).length;
+  return `<div class="top"><span class="qcat">${CATS[s.k].e} ${CATS[s.k].t}</span><span>سؤال ${s.qi+1}${s.n?'/'+s.n:''}</span><span>${rv?'':`⏱ <b id="tsec">${DUR}</b>`}</span></div>
+  ${s.m>1?`<div class="banner">${s.m===3?'🎰 السؤال الأخير — النقط ×3!':'🔥 سؤال دبل — النقط ×2!'}</div>`:''}
+  ${rv?'':`<div class="timer"><i id="tbar" style="width:${Math.max(0,DUR*1000-(Date.now()-localStart))/(DUR*10)}%"></i></div>`}
+  ${promptHTML(q)}${optsHTML(q,{picked:myAns&&myAns.qi===s.qi?myAns.i:-1,reveal:rv,fn:'answer'})}
+  ${rv?'':`<p class="note">جاوب ${answered} من ${peers().length}</p>`}${res}`;
+}
+function onlineEnd(){
+  const s=st();const rows=Object.values(s.sc||{}).sort((a,b)=>b[1]-a[1]);
+  return `<div class="big-emoji">🏆</div><h1 style="font-size:30px">${rows[0]?esc(rows[0][0])+' كسب!':'خلصت!'}</h1>
+  <div class="card">${scoreList(s.sc,false)}</div>
+  ${isHost?`<button class="btn g" onclick="hostAgain()">العب تاني 🔁</button>`:'<p class="note">المضيف يقدر يبدأ جولة جديدة</p>'}
+  <button class="btn ghost" onclick="leaveRoom()">اخرج من الأوضة</button>`;
+}
+/* ================== موبايل واحد (تحدي الفرق) ================== */
+let L=null,lTimer=null;
+function startLocalSetup(){L={teams:['الفريق الأحمر','الفريق الأزرق'],cats:Object.keys(CATS),rounds:5};go('lsetup')}
+function lsetup(){
+  return `<button class="back" onclick="go('home')">→ رجوع</button><h2>📱 تحدي الفرق</h2>
+  <div class="card teams"><h2>الفرق</h2>${L.teams.map((t,i)=>`<input value="${esc(t)}" maxlength="16" oninput="L.teams[${i}]=this.value">`).join('')}
+  <div class="row">${L.teams.length<4?`<button class="btn ghost" onclick="L.teams.push('فريق '+(L.teams.length+1));render()">+ فريق</button>`:''}${L.teams.length>2?`<button class="btn ghost" onclick="L.teams.pop();render()">− فريق</button>`:''}</div></div>
+  <div class="card"><h2>الفئات</h2>${catPicker(L.cats,'lToggle')}<h2 style="margin-top:16px">أدوار لكل فريق</h2>${nPicker(L.rounds,'lRounds',[3,5,8,0])}
+  <p class="note">كل فريق معاه جوكرين: 🔥 دبل و✂️ شيل اتنين<br>🎰 سؤال الكازينو بيظهر فجأة: ×3 لو صح، و−100 لو غلط<br>🕵️ لو فريق غلط، اللي بعده يقدر يسرق السؤال</p>
+  <button class="btn g" onclick="lStart()" ${L.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`;
+}
+function lToggle(k){L.cats=toggleIn(L.cats,k);render()}
+function lRounds(n){L.rounds=n;render()}
+function lStart(){
+  L.teams=L.teams.map((t,i)=>t.trim()||'فريق '+(i+1));L.sc=L.teams.map(()=>0);
+  L.jk=L.teams.map(()=>({dbl:1,half:1}));warmUp(L.cats);
+  L.turn=0;L.total=L.rounds*L.teams.length;go('lturn');
+}
+const lTeam=()=>L.turn%L.teams.length;
+const nextTeam=()=>(L.turn+1)%L.teams.length;
+function scoreBox(){return `<div class="card"><h2>النقط</h2><ul class="players">${L.teams.map((t,i)=>`<li><span>${i===lTeam()?'👉 ':''}${esc(t)}<span style="font-size:13px;opacity:.7"> ${L.jk[i].dbl?'🔥':''}${L.jk[i].half?'✂️':''}</span></span><span class="pts">${L.sc[i]}</span></li>`).join('')}</ul></div>`}
+function lturn(){
+  return `<div class="top"><span>دور ${L.turn+1}${L.total?'/'+L.total:''}</span><button class="back" onclick="go('lend')">إنهاء 🏁</button></div>
+  <div class="card" style="text-align:center"><h2 style="font-size:26px;margin-bottom:4px">دور ${esc(L.teams[lTeam()])} 🎯</h2><p class="note">اختاروا الفئة</p>
+  <div class="cats">${L.cats.map(k=>`<div class="cat" onclick="lPick('${k}')"><span class="e">${CATS[k].e}</span>${CATS[k].t}</div>`).join('')}
+  <div class="cat" onclick="lPick('')"><span class="e">🎲</span>عشوائي</div></div></div>${scoreBox()}`;
+}
+function lPick(k){
+  if(!k)k=L.cats[Math.floor(Math.random()*L.cats.length)];
+  L.q=draw(k);
+  L.casino=Math.random()<0.2;L.dbl=false;L.hide=[];L.pick=-1;L.rv=false;L.gain=0;L.steal=null;
+  lRun(DUR);go('lq');
+}
+function lRun(sec){L.start=Date.now();L.dur=sec;clearInterval(lTimer);lTimer=setInterval(()=>{
+  if(S.scr!=='lq'||L.rv){clearInterval(lTimer);return}
+  const left=Math.max(0,L.dur*1000-(Date.now()-L.start));tickSound(left);const b=$('#tbar');if(b)b.style.width=(left/(L.dur*10))+'%';const t=$('#tsec');if(t)t.textContent=Math.ceil(left/1000);
+  if(left<=0)lAnswer(-1);
+},250)}
+function useDbl(){snd('joker');const j=L.jk[lTeam()];if(!j.dbl||L.pick>=0||L.steal)return;j.dbl=0;L.dbl=true;render()}
+function useHalf(){snd('joker');const j=L.jk[lTeam()];if(!j.half||L.pick>=0||L.steal)return;j.half=0;L.hide=shuffle([0,1,2,3].filter(i=>i!==L.q.c)).slice(0,2);render()}
+function lAnswer(i){
+  if(L.rv)return;const q=L.q;clearInterval(lTimer);
+  if(L.steal){ // محاولة السرقة
+    L.steal.pick=i;L.rv=true;
+    if(i===q.c){L.gain=50;L.sc[L.steal.team]+=50}
+    fxResult(i===q.c,i===q.c?50:0);render();return;
+  }
+  L.pick=i;const ok=i===q.c;fxResult(ok,ok?null:0);
+  if(ok){let g=pointsFor(Date.now()-L.start);if(L.dbl)g*=2;if(L.casino)g*=3;L.gain=g;L.sc[lTeam()]+=g;L.rv=true;floatPts('+'+g)}
+  else{
+    if(L.casino){L.sc[lTeam()]-=100;L.gain=-100}
+    if(L.teams.length>1){L.steal={team:nextTeam(),pick:-1,offer:true}}else L.rv=true;
+  }
+  render();
+}
+function startSteal(){L.steal.offer=false;L.hide=[...L.hide,L.pick].filter(i=>i>=0);lRun(10);render()}
+function skipSteal(){L.rv=true;L.steal.skipped=true;render()}
+function lq(){
+  const q=L.q,T=L.teams,t=lTeam(),j=L.jk[t];let res='',banner='';
+  if(L.casino)banner=`<div class="banner">🎰 سؤال الكازينو! ×3 لو صح… و−100 لو غلط</div>`;
+  if(L.dbl)banner+=`<div class="banner" style="background:linear-gradient(90deg,#ffd23f,#ff9f1c);color:#2b0f4c">🔥 الدبل شغال!</div>`;
+  const stealing=L.steal&&!L.steal.offer&&!L.rv;
+  if(L.steal&&L.steal.offer){
+    res=`<p class="msg" style="color:var(--r)">${L.pick<0?'الوقت خلص ⏰':'غلط ❌'}${L.gain<0?' (−100)':''}</p>
+    <div class="card" style="text-align:center"><h2>🕵️ فرصة سرقة لـ ${esc(T[L.steal.team])}</h2><p class="note">عندكم 10 ثواني، ولو صح تاخدوا 50 نقطة</p>
+    <button class="btn o" onclick="startSteal()">هنسرق! 😈</button><button class="btn ghost" onclick="skipSteal()">لأ، عدّوها</button></div>`;
+    return head()+banner+promptHTML(q)+`<div style="opacity:.4;pointer-events:none">${optsHTML(q,{hide:L.hide,picked:L.pick})}</div>`+res;
+  }
+  if(L.rv){
+    let m;
+    if(L.steal){m=L.steal.skipped?'محدش سرق 🤷':L.steal.pick===q.c?`${esc(T[L.steal.team])} سرقوها! +50 🕵️`:'السرقة فشلت 😅'}
+    else m=`صح! +${L.gain} ✅`;
+    res=`<p class="msg" style="color:${(L.steal&&L.steal.pick!==q.c)?'var(--r)':'var(--g)'}">${m}</p><button class="btn" onclick="lNext()">${L.total&&L.turn+1>=L.total?'النتيجة 🏆':'التالي ←'}</button>`;
+    return head()+banner+promptHTML(q)+optsHTML(q,{reveal:true})+res;
+  }
+  const jokers=stealing?'':`<div class="jokers"><button class="jk ${j.dbl?'':'used'} ${L.dbl?'on':''}" onclick="useDbl()">🔥 دبل</button><button class="jk ${j.half?'':'used'}" onclick="useHalf()">✂️ شيل اتنين</button></div>`;
+  return head()+banner+(stealing?`<div class="banner" style="background:var(--b);color:#2b0f4c">🕵️ ${esc(T[L.steal.team])} بيسرقوا!</div>`:'')+promptHTML(q)+optsHTML(q,{fn:'lAnswer',hide:L.hide})+jokers;
+  function head(){const who=stealing?L.steal.team:t;return `<div class="top"><span class="qcat">${CATS[q.k].e} ${CATS[q.k].t}</span><span>${esc(T[who])}</span><span>${L.rv||(L.steal&&L.steal.offer)?'':`⏱ <b id="tsec">${L.dur}</b>`}</span></div>
+  ${L.rv||(L.steal&&L.steal.offer)?'':`<div class="timer"><i id="tbar" style="width:${Math.max(0,L.dur*1000-(Date.now()-L.start))/(L.dur*10)}%"></i></div>`}`}
+}
+function lNext(){L.turn++;go(L.total&&L.turn>=L.total?'lend':'lturn')}
+function lend(){
+  setTimeout(winFx,200);
+  const rows=L.teams.map((t,i)=>[t,L.sc[i]]).sort((a,b)=>b[1]-a[1]);
+  const tie=rows[1]&&rows[0][1]===rows[1][1];
+  return `<div class="big-emoji">🏆</div><h1 style="font-size:30px">${tie?'تعادل!':esc(rows[0][0])+' كسب!'}</h1>
+  <div class="card"><ul class="players board">${rows.map((r,i)=>`<li><span>${['🥇','🥈','🥉'][i]||'•'} ${esc(r[0])}</span><span class="pts">${r[1]}</span></li>`).join('')}</ul></div>
+  <button class="btn g" onclick="lStart()">العب تاني 🔁</button><button class="btn ghost" onclick="go('home')">الرئيسية</button>`;
+}
+(function(){const m=location.hash.match(/^#r-([a-z0-9]{4})$/);if(m){S.prefill=m[1];S.invite=m[1]}})();
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
