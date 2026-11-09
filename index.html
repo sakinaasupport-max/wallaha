@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+<!-- لمّتنا © 2026 محمود أحمد الترامسي (Mahmoud Ahmed Altramsy). جميع الحقوق محفوظة. -->
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="author" content="Mahmoud Ahmed Altramsy — محمود أحمد الترامسي">
+<meta name="copyright" content="© 2026 Mahmoud Ahmed Altramsy. All rights reserved.">
 <meta name="theme-color" content="#5B1A6E">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -150,6 +153,8 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 #splash .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd23f,#ff9f1c);border-radius:99px;animation:load 2.2s .3s ease forwards}
 @keyframes load{to{width:100%}}
 #splash .skip{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff9;font-size:14px;font-weight:700}
+.credit{text-align:center;color:#ffffffcc;font-size:14px;line-height:1.8;margin:26px 0 6px;padding:16px;border-top:1px solid var(--line)}
+.credit b{color:var(--y)}.cr-logo{font-weight:900;font-size:20px;color:#fff}.cr-small{font-size:12px;opacity:.75}
 </style>
 </head>
 <body>
@@ -841,7 +846,8 @@ function home(){
     <div class="game g3" onclick="guessHome()"><span class="new">جديد</span><span class="ge">🔤</span><b>خمّن الكلمة</b><small>أمثال وأفلام وأكلات</small></div>
     <div class="game g4" onclick="snakeStart()"><span class="new">جديد</span><span class="ge">🐍</span><b>سناك</b><small>اكسر الرقم القياسي</small></div>
   </div>
-  ${aiBox()}`;
+  ${aiBox()}
+  <div class="credit"><div class="cr-logo">لمّتنا</div>تأسيس وتطوير: <b>محمود أحمد الترامسي</b><br><span dir="ltr">Founded by Mahmoud Ahmed Altramsy</span><br><span class="cr-small">© 2026 لمّتنا — جميع الحقوق محفوظة</span></div>`;
 }
 function needName(){if(!myName.trim()){S.err='اكتب اسمك الأول 🙂';render();return false}return true}
 
