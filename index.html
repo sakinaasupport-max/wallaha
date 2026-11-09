@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#7209b7">
+<meta name="theme-color" content="#5B1A6E">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="لمّتنا">
@@ -14,9 +14,9 @@
 <title>لمّتنا 🎉 — ألعاب الشلة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg1:#2b0f4c;--bg2:#5a1a6e;--card:#ffffff14;--line:#ffffff26;--txt:#fff;--mut:#e6d6ffb0;--y:#ffd23f;--g:#2ee59d;--r:#ff5d73;--b:#4cc9f0;--o:#ff9f1c}
+:root{--bg1:#3d0f4a;--bg2:#5B1A6E;--card:#ffffff14;--line:#ffffff26;--txt:#fff;--mut:#e6d6ffb0;--y:#FFC46B;--g:#2ee59d;--r:#ff5d73;--b:#4cc9f0;--o:#ff9f1c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:Cairo,system-ui,sans-serif;color:var(--txt);background:radial-gradient(circle at 20% 0%,#7b2cbf 0,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
+html,body{margin:0;min-height:100%;font-family:Cairo,system-ui,sans-serif;color:var(--txt);background:radial-gradient(circle at 20% 0%,#A855F7 0,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
 #app{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));min-height:100vh}
 .sound{top:calc(12px + env(safe-area-inset-top))!important}
 .wa{background:#25d366!important;color:#fff!important}
@@ -75,7 +75,7 @@ input:focus{border-color:var(--y)}
 .back{background:none;border:0;color:var(--mut);font:700 15px Cairo;cursor:pointer;padding:4px 0}
 .teams input{margin:6px 0}
 
-body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(130deg,#3a0ca3,#7209b7,#f72585,#ff9f1c,#3a0ca3);background-size:400% 400%;animation:bgmove 18s ease infinite}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(130deg,#4a1260,#8E2A7E,#EC4899,#F97316,#4a1260);background-size:400% 400%;animation:bgmove 18s ease infinite}
 @keyframes bgmove{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
 #floaters{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 #floaters span{position:absolute;bottom:-60px;font-size:28px;opacity:.35;animation:floatUp linear infinite}
@@ -117,7 +117,7 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 .game:active{transform:translateY(4px);box-shadow:0 3px 0 #0003}
 .game .ge{font-size:46px;display:block;animation:wobble 3s ease-in-out infinite}
 .game b{font-size:18px;display:block}.game small{font-size:12px;opacity:.85;font-weight:700}
-.game.g1{background:linear-gradient(140deg,#ff9f1c,#f72585)}.game.g2{background:linear-gradient(140deg,#3a0ca3,#4cc9f0)}.game.g3{background:linear-gradient(140deg,#2ee59d,#118ab2)}.game.g4{background:linear-gradient(140deg,#ffd23f,#ef476f)}
+.game.g1{background:linear-gradient(140deg,#F97316,#EC4899)}.game.g2{background:linear-gradient(140deg,#7C2D92,#A855F7)}.game.g3{background:linear-gradient(140deg,#EC4899,#BE185D)}.game.g4{background:linear-gradient(140deg,#FBBF24,#F97316)}
 .game .new{position:absolute;top:8px;left:8px;background:#fff;color:#f72585;font-size:11px;font-weight:900;border-radius:99px;padding:1px 8px}
 .hero-mini{font-size:64px;text-align:center;animation:bounceIn .8s cubic-bezier(.2,1.8,.4,1) both}
 .flipcard{text-align:center;padding:40px 16px!important;cursor:pointer;border:3px dashed var(--y)!important}
@@ -138,7 +138,7 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 .dpad button{height:58px;border:0;border-radius:16px;font-size:26px;background:#ffffff26;box-shadow:0 4px 0 #0003;cursor:pointer}
 .dpad button:active{transform:translateY(3px)}
 /* افتتاحية */
-#splash{overflow:hidden;background:radial-gradient(circle at 50% 45%,#f72585,#7209b7 45%,#3a0ca3)!important}
+#splash{overflow:hidden;background:radial-gradient(circle at 50% 45%,#F97316,#EC4899 45%,#5B1A6E)!important}
 #splash .rays{position:absolute;width:220vmax;height:220vmax;background:repeating-conic-gradient(from 0deg,#ffffff14 0 10deg,transparent 10deg 20deg);animation:spin 18s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #splash .burst span{position:absolute;left:50%;top:45%;font-size:38px;opacity:0;animation:burst 1.6s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(.35s + var(--i)*.07s)}
@@ -153,7 +153,7 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 </style>
 </head>
 <body>
-<div id="splash" onclick="hideSplash()"><div class="rays"></div><div class="burst"><span style="--i:0;--x:-130px;--y:-170px;--r:-15deg">🕵️</span><span style="--i:1;--x:130px;--y:-170px;--r:15deg">🧠</span><span style="--i:2;--x:-160px;--y:40px;--r:-20deg">🐍</span><span style="--i:3;--x:160px;--y:40px;--r:20deg">🔤</span><span style="--i:4;--x:-90px;--y:190px;--r:-10deg">🎬</span><span style="--i:5;--x:95px;--y:190px;--r:10deg">⚽</span><span style="--i:6;--x:0px;--y:-230px;--r:0deg">🎤</span><span style="--i:7;--x:0px;--y:240px;--r:0deg">🏆</span></div><div class="fire">🎉</div><div class="logo">لمّتنا</div><div class="tag">ألعاب وتحديات الشلة 🎉</div><div class="bar"><i></i></div><div class="skip">دوس في أي حتة</div></div>
+<div id="splash" onclick="hideSplash()"><div class="rays"></div><div class="burst"><span style="--i:0;--x:-130px;--y:-170px;--r:-15deg">🕵️</span><span style="--i:1;--x:130px;--y:-170px;--r:15deg">🧠</span><span style="--i:2;--x:-160px;--y:40px;--r:-20deg">🐍</span><span style="--i:3;--x:160px;--y:40px;--r:20deg">🔤</span><span style="--i:4;--x:-90px;--y:190px;--r:-10deg">🎬</span><span style="--i:5;--x:95px;--y:190px;--r:10deg">⚽</span><span style="--i:6;--x:0px;--y:-230px;--r:0deg">🎤</span><span style="--i:7;--x:0px;--y:240px;--r:0deg">🏆</span></div><img class="fire" src="icon-512.png" alt="لمّتنا" style="width:190px;height:190px;border-radius:44px;box-shadow:0 20px 50px #0006"><div class="tag">ألعاب وتحديات الشلة 🎉</div><div class="bar"><i></i></div><div class="skip">دوس في أي حتة</div></div>
 <div id="floaters"></div><div id="flash"></div><canvas id="fx"></canvas>
 <button class="sound" id="sndBtn" onclick="toggleSound()">🔊</button>
 <div id="app"></div>
