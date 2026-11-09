@@ -111,10 +111,49 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 @keyframes hurry{to{filter:brightness(1.6)}}
 .btn{transition:transform .08s,filter .2s}.btn:hover{filter:brightness(1.08)}
 .scene{font-size:19px!important;line-height:1.7}
+
+.games{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.game{border-radius:22px;padding:16px 10px;text-align:center;cursor:pointer;box-shadow:0 8px 0 #0003,0 12px 30px #0003;transition:transform .1s;position:relative;overflow:hidden}
+.game:active{transform:translateY(4px);box-shadow:0 3px 0 #0003}
+.game .ge{font-size:46px;display:block;animation:wobble 3s ease-in-out infinite}
+.game b{font-size:18px;display:block}.game small{font-size:12px;opacity:.85;font-weight:700}
+.game.g1{background:linear-gradient(140deg,#ff9f1c,#f72585)}.game.g2{background:linear-gradient(140deg,#3a0ca3,#4cc9f0)}.game.g3{background:linear-gradient(140deg,#2ee59d,#118ab2)}.game.g4{background:linear-gradient(140deg,#ffd23f,#ef476f)}
+.game .new{position:absolute;top:8px;left:8px;background:#fff;color:#f72585;font-size:11px;font-weight:900;border-radius:99px;padding:1px 8px}
+.hero-mini{font-size:64px;text-align:center;animation:bounceIn .8s cubic-bezier(.2,1.8,.4,1) both}
+.flipcard{text-align:center;padding:40px 16px!important;cursor:pointer;border:3px dashed var(--y)!important}
+.role{text-align:center;padding:26px 16px!important;background:linear-gradient(140deg,#2ee59d33,#4cc9f033)!important;animation:bounceIn .5s both}
+.role.spy{background:linear-gradient(140deg,#ff5d7344,#2b0f4c)!important}
+.gboard{display:flex;flex-wrap:wrap;gap:12px 18px;justify-content:center;margin:16px 0 6px;direction:rtl}
+.gword{display:inline-flex;gap:4px;direction:rtl}
+.gbox{width:30px;height:40px;border-bottom:4px solid #ffffff88;display:inline-flex;align-items:center;justify-content:center;font:900 24px Cairo;border-radius:6px;background:#0002}
+.gbox.on{color:var(--y);animation:pop .3s both}.gbox.miss{color:var(--r)}
+.gsym{font:900 22px Cairo;align-self:end}
+.gkb{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;direction:rtl;margin:12px 0}
+.gk{border:0;border-radius:12px;padding:11px 0;font:800 20px Cairo;background:#ffffff26;color:#fff;cursor:pointer;box-shadow:0 3px 0 #0003}
+.gk.hit{background:var(--g);color:#0b3}.gk.hit{color:#063}.gk.miss{background:#0004;color:#fff5}
+.snwrap{position:relative;display:flex;justify-content:center;margin:6px 0 12px}
+#snC{border-radius:18px;background:#1a0638aa;box-shadow:0 10px 30px #0005;touch-action:none}
+.snover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#2b0f4ccc;border-radius:18px;text-align:center;padding:20px}
+.dpad{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center;direction:ltr}
+.dpad button{height:58px;border:0;border-radius:16px;font-size:26px;background:#ffffff26;box-shadow:0 4px 0 #0003;cursor:pointer}
+.dpad button:active{transform:translateY(3px)}
+/* افتتاحية */
+#splash{overflow:hidden;background:radial-gradient(circle at 50% 45%,#f72585,#7209b7 45%,#3a0ca3)!important}
+#splash .rays{position:absolute;width:220vmax;height:220vmax;background:repeating-conic-gradient(from 0deg,#ffffff14 0 10deg,transparent 10deg 20deg);animation:spin 18s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#splash .burst span{position:absolute;left:50%;top:45%;font-size:38px;opacity:0;animation:burst 1.6s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(.35s + var(--i)*.07s)}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}30%{opacity:1}100%{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(var(--r))}}
+#splash .fire{font-size:110px!important;position:relative;filter:drop-shadow(0 0 30px #ffd23f);animation:bounceIn .9s cubic-bezier(.2,1.8,.4,1) both,wobble 1.2s .9s ease-in-out infinite!important}
+#splash .logo{position:relative;font-size:84px!important;animation:bounceIn 1s .25s cubic-bezier(.2,1.8,.4,1) both!important;text-shadow:0 6px 0 #0005,0 0 40px #ffd23faa!important}
+#splash .tag{position:relative;color:#fff;font-weight:800;font-size:18px;opacity:0;animation:slideIn .6s .9s both}
+#splash .bar{position:relative;width:180px;height:8px;border-radius:99px;background:#0004;margin-top:22px;overflow:hidden}
+#splash .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd23f,#ff9f1c);border-radius:99px;animation:load 2.2s .3s ease forwards}
+@keyframes load{to{width:100%}}
+#splash .skip{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff9;font-size:14px;font-weight:700}
 </style>
 </head>
 <body>
-<div id="splash"><div class="fire">🔥</div><div class="logo">ولّعها</div><div style="color:#fff;font-weight:800;opacity:.85">تحديات الشلة</div></div>
+<div id="splash" onclick="hideSplash()"><div class="rays"></div><div class="burst"><span style="--i:0;--x:-130px;--y:-170px;--r:-15deg">🕵️</span><span style="--i:1;--x:130px;--y:-170px;--r:15deg">🧠</span><span style="--i:2;--x:-160px;--y:40px;--r:-20deg">🐍</span><span style="--i:3;--x:160px;--y:40px;--r:20deg">🔤</span><span style="--i:4;--x:-90px;--y:190px;--r:-10deg">🎬</span><span style="--i:5;--x:95px;--y:190px;--r:10deg">⚽</span><span style="--i:6;--x:0px;--y:-230px;--r:0deg">🎤</span><span style="--i:7;--x:0px;--y:240px;--r:0deg">🏆</span></div><div class="fire">🔥</div><div class="logo">ولّعها</div><div class="tag">ألعاب وتحديات الشلة 🎉</div><div class="bar"><i></i></div><div class="skip">دوس في أي حتة</div></div>
 <div id="floaters"></div><div id="flash"></div><canvas id="fx"></canvas>
 <button class="sound" id="sndBtn" onclick="toggleSound()">🔊</button>
 <div id="app"></div>
@@ -532,7 +571,8 @@ function stepFx(){cx.clearRect(0,0,cv.width,cv.height);parts=parts.filter(p=>p.l
   raf=parts.length?requestAnimationFrame(stepFx):0}
 function winFx(){snd('win');confetti(120);let k=0;const iv=setInterval(()=>{confetti(40,'top');if(++k>6)clearInterval(iv)},350)}
 (function floaters(){const em=['🔥','🎉','⭐','🎬','⚽','🎤','🧩','🍿','🏆','😂'];const box=$('#floaters');for(let i=0;i<12;i++){const sp=document.createElement('span');sp.textContent=em[i%em.length];sp.style.left=(Math.random()*95)+'%';sp.style.animationDuration=(14+Math.random()*14)+'s';sp.style.animationDelay=(-Math.random()*20)+'s';sp.style.fontSize=(20+Math.random()*22)+'px';box.appendChild(sp)}})();
-setTimeout(()=>{const sp=$('#splash');if(sp){sp.classList.add('hide');setTimeout(()=>sp.remove(),600)}},1400);
+function hideSplash(){const sp=$('#splash');if(sp&&!sp.classList.contains('hide')){sp.classList.add('hide');setTimeout(()=>sp.remove(),600)}}
+setTimeout(hideSplash,2700);
 setTimeout(()=>{const b=$('#sndBtn');if(b)b.textContent=soundOn?'🔊':'🔇'},0);
 
 /* ================== الحالة العامة ================== */
@@ -542,8 +582,8 @@ let roomNS=null, roomReady=false;
 roomNS=createRoomService();roomReady=true;
 
 function render(){
-  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,lsetup,lturn,lq,lend}[S.scr];
-  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:'');
+  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,lsetup,lturn,lq,lend,spys,spyp,spyd,spyv,spyx,ospy,gh,gp,snk}[S.scr];
+  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:S.scr==='spyp'?LS.idx+''+LS.show:S.scr==='ospy'?(st()||{}).ph:S.scr==='gp'?GW.ans:'');
   const app=$('#app');app.classList.toggle('enter',key!==lastScreenKey);
   if(key!==lastScreenKey){app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter')}
   lastScreenKey=key;
@@ -554,18 +594,253 @@ function render(){
 let lastScreenKey='';
 function go(scr){snd('tap');S.scr=scr;S.err='';render()}
 
+/* ================== بنك الجاسوس ================== */
+const SPY={
+  place:{t:'أماكن',e:'📍',w:['مطار','مستشفى','مدرسة','جيم','سينما','مطعم كشري','شاطئ','كافيه','سوق','محطة مترو','فرح','حديقة الحيوان','بنك','ملعب كورة','صيدلية','محل حلاقة','مول','سوبر ماركت','الأهرامات','قطر','طيارة','فندق','جامعة','مخبز','ملاهي','عيادة أسنان','مصلحة حكومية','محل موبايلات','جنينة','عربية ميكروباص']},
+  food:{t:'أكلات',e:'🍲',w:['كشري','ملوخية','محشي','فول','طعمية','شاورما','بيتزا','سوشي','كبدة','فطير مشلتت','حواوشي','رز بلبن','كنافة','بسبوسة','مكرونة بشاميل','فتة','كباب','ممبار','بيض بالبسطرمة','برجر','بطاطس محمرة','سمك مشوي','حمام محشي','أم علي','كحك']},
+  job:{t:'مهن',e:'👷',w:['دكتور','مهندس','سواق تاكسي','طباخ','مدرس','ظابط','طيار','فلاح','نجار','سباك','حلاق','يوتيوبر','لاعب كورة','مذيع','ممثل','محامي','صيدلي','مبرمج','رسام','جزار','كهربائي','ممرضة','بياع خضار','مصور','رائد فضاء']},
+  home:{t:'حاجات البيت',e:'🏠',w:['تلاجة','غسالة','مروحة','تكييف','سرير','كنبة','ترابيزة','مراية','شماعة','بوتجاز','ريموت','مخدة','سجادة','ستارة','لمبة','دولاب','ساعة حيطة','كاتل','خلاط','مكواة','تليفزيون','شبشب','فوطة','مقشة','حلّة']},
+  animal:{t:'حيوانات',e:'🐾',w:['أسد','فيل','زرافة','قرد','جمل','حصان','قطة','كلب','أرنب','تمساح','دولفين','بطريق','نسر','ببغاء','بقرة','خروف','معزة','فرخة','بطة','سلحفاة','ثعبان','نمر','دب','كنغر','فار']}
+};
+
+/* ================== الجاسوس — موبايل واحد ================== */
+let LS=null,spyTimer=null;
+function spySetup(){
+  if(!LS)LS={players:[myName.trim()||'لاعب 1','لاعب 2','لاعب 3'],cat:'place',min:3};
+  go('spys');
+}
+function spys(){
+  return `<button class="back" onclick="go('home')">→ رجوع</button>
+  <div class="hero-mini">🕵️</div><h2 style="text-align:center">الجاسوس — أشك فيك!</h2>
+  <p class="note">الكل بياخد نفس الكلمة… ماعدا واحد بس: الجاسوس 😈<br>اسألوا بعض أسئلة ذكية، واكشفوا الجاسوس قبل ما يعرف الكلمة!</p>
+  <div class="card teams"><h2>اللعيبة (${LS.players.length})</h2>${LS.players.map((t,i)=>`<input value="${esc(t)}" maxlength="14" oninput="LS.players[${i}]=this.value">`).join('')}
+  <div class="row">${LS.players.length<12?`<button class="btn ghost" onclick="LS.players.push('لاعب '+(LS.players.length+1));render()">+ لاعب</button>`:''}${LS.players.length>3?`<button class="btn ghost" onclick="LS.players.pop();render()">− لاعب</button>`:''}</div></div>
+  <div class="card"><h2>الفئة</h2><div class="pills">${Object.entries(SPY).map(([k,c])=>`<div class="pill ${LS.cat===k?'on':''}" onclick="LS.cat='${k}';render()">${c.e} ${c.t}</div>`).join('')}</div>
+  <h2 style="margin-top:16px">وقت النقاش</h2>${nPicker(LS.min,'spySetMin',[2,3,5])}<p class="note">بالدقايق</p>
+  <button class="btn g" onclick="spyLocalStart()">يلا نبدأ 🕵️</button></div>`;
+}
+function spySetMin(n){LS.min=n;render()}
+function spyLocalStart(){
+  LS.players=LS.players.map((p,i)=>p.trim()||'لاعب '+(i+1));
+  const c=SPY[LS.cat];LS.word=c.w[Math.floor(Math.random()*c.w.length)];
+  LS.spy=Math.floor(Math.random()*LS.players.length);LS.idx=0;LS.show=false;
+  LS.opts=shuffle([LS.word,...shuffle(c.w.filter(x=>x!==LS.word)).slice(0,7)]);
+  LS.first=LS.players[Math.floor(Math.random()*LS.players.length)];LS.result=null;
+  go('spyp');
+}
+function spyp(){
+  const name=LS.players[LS.idx];
+  if(!LS.show)return `<div class="top"><span>${LS.idx+1}/${LS.players.length}</span><button class="back" onclick="go('home')">إنهاء</button></div>
+    <div class="card flipcard" onclick="LS.show=true;snd('joker');render()"><div class="big-emoji">🤫</div><h2 style="font-size:28px;text-align:center">ادّي الموبايل لـ<br><span style="color:var(--y)">${esc(name)}</span></h2><p class="note">ومحدش يبص غيره!<br>دوس هنا علشان تشوف دورك 👆</p></div>`;
+  const amSpy=LS.idx===LS.spy;
+  return `<div class="top"><span>${LS.idx+1}/${LS.players.length}</span><span>${esc(name)}</span></div>
+    <div class="card role ${amSpy?'spy':''}">${amSpy?`<div class="big-emoji">🕵️</div><h2>إنت الجاسوس!</h2><p class="note">ماتخليش حد يكشفك، وحاول تعرف الكلمة من أسئلتهم 😈</p>`
+      :`<div class="note">الفئة: ${SPY[LS.cat].e} ${SPY[LS.cat].t}</div><div class="big-emoji">🔑</div><h2 style="font-size:36px">${esc(LS.word)}</h2><p class="note">احفظ الكلمة وماتقولهاش!</p>`}
+    <button class="btn" onclick="spyNextPlayer()">${LS.idx+1<LS.players.length?'خلاص، اخفي وعدّي ←':'يلا النقاش! 🗣️'}</button></div>`;
+}
+function spyNextPlayer(){LS.show=false;LS.idx++;if(LS.idx>=LS.players.length){LS.end=Date.now()+LS.min*60000;go('spyd');spyTick()}else go('spyp')}
+const SPY_TIPS=['اسأل سؤال يبيّن إنك عارف الكلمة… من غير ما تفضحها','الجاسوس بيجاوب إجابات عامة جدًا 👀','مثال: «بتروح المكان ده إمتى؟» أو «بيبقى ريحته إيه؟»','لو حد اتلخبط أو اتأخر في الرد… أشك فيه!'];
+function spyd(){
+  return `<div class="card" style="text-align:center"><div class="big-emoji">🗣️</div><h2>وقت النقاش</h2>
+  <div class="code" id="spyt" style="letter-spacing:2px">--:--</div>
+  <p class="msg">أول واحد يسأل: <span style="color:var(--y)">${esc(LS.first)}</span></p>
+  <p class="note">${SPY_TIPS[Math.floor(Math.random()*SPY_TIPS.length)]}</p>
+  <button class="btn o" onclick="go('spyv')">يلا نصوّت 🗳️</button></div>`;
+}
+function spyTick(){clearInterval(spyTimer);spyTimer=setInterval(()=>{
+  const el=$('#spyt');if(!el){if(!['spyd','ospy'].includes(S.scr))clearInterval(spyTimer);return}
+  const end=S.scr==='ospy'?(SO.end||0):LS.end;const left=Math.max(0,end-Date.now());
+  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);el.textContent=`${m}:${String(s).padStart(2,'0')}`;
+  if(left<=5000&&left>0)snd('tick');if(left<=0&&!el.dataset.done){el.dataset.done=1;snd('bad');vib([200,100,200])}
+},1000)}
+function spyv(){
+  return `<div class="card" style="text-align:center"><div class="big-emoji">🗳️</div><h2>اتفقوا: مين الجاسوس؟</h2><p class="note">دوسوا على اللي بتشكّوا فيه</p>
+  <div class="opts">${LS.players.map((p,i)=>`<button class="opt" style="background:#ffffff22" onclick="spyAccuse(${i})">${esc(p)}</button>`).join('')}</div></div>`;
+}
+function spyAccuse(i){LS.accused=i;LS.result=i===LS.spy?'caught':'escaped';if(LS.result==='caught'){fxResult(true)}else{fxResult(false)}go('spyx')}
+function spyGuessLocal(i){LS.guess=LS.opts[i];LS.result=LS.guess===LS.word?'stole':'caughtFinal';if(LS.result==='stole')fxResult(false);else winFx();render()}
+function spyx(){
+  const spyName=esc(LS.players[LS.spy]);let body;
+  if(LS.result==='caught')body=`<div class="big-emoji">🎯</div><h2>مسكتوه! الجاسوس كان ${spyName}</h2>
+    <p class="msg">بس استنوا… يا ${spyName} عندك فرصة أخيرة: خمّن الكلمة!</p><div class="opts">${LS.opts.map((o,i)=>`<button class="opt" onclick="spyGuessLocal(${i})">${esc(o)}</button>`).join('')}</div>`;
+  else if(LS.result==='escaped')body=`<div class="big-emoji">😈</div><h2>الجاسوس كسب!</h2><p class="msg">اتّهمتوا ${esc(LS.players[LS.accused])} والجاسوس الحقيقي كان <span style="color:var(--y)">${spyName}</span></p><p class="note">الكلمة كانت: <b>${esc(LS.word)}</b></p>`;
+  else if(LS.result==='stole')body=`<div class="big-emoji">🦊</div><h2>${spyName} سرق الفوز!</h2><p class="msg">عرف إن الكلمة «${esc(LS.word)}» 😱</p>`;
+  else body=`<div class="big-emoji">🏆</div><h2>اللعيبة كسبوا!</h2><p class="msg">${spyName} قال «${esc(LS.guess)}» والكلمة كانت «${esc(LS.word)}»</p>`;
+  return `<div class="card" style="text-align:center">${body}</div>${LS.result!=='caught'?`<button class="btn g" onclick="spyLocalStart()">جولة تانية 🔁</button><button class="btn ghost" onclick="go('spys')">غيّر اللعيبة أو الفئة</button>`:''}`;
+}
+
+/* ================== الجاسوس — أونلاين ================== */
+let SO={};
+const myPeer=()=>{const m=R&&R.peers().find(p=>p.sameTab);return m?m.peer:''};
+function spyHostStart(){
+  const ps=peers();if(ps.length<3){S.err='الجاسوس محتاج 3 لعيبة على الأقل 👥';render();return}
+  const c=SPY[H.spyCat];const word=c.w[Math.floor(Math.random()*c.w.length)];
+  const spy=ps[Math.floor(Math.random()*ps.length)].peer;
+  H.sp={r:Math.random().toString(36).slice(2,7),cat:H.spyCat,word,spy,opts:shuffle([word,...shuffle(c.w.filter(x=>x!==word)).slice(0,7)]),
+    first:ps[Math.floor(Math.random()*ps.length)].presence.nm,dur:H.spyMin*60,names:Object.fromEntries(ps.map(p=>[p.peer,String(p.presence.nm).slice(0,16)]))};
+  ps.forEach(p=>{if(!H.sc[p.peer])H.sc[p.peer]=[p.presence.nm,0,0]});
+  H.ph='sr';S.err='';pushState();onUpdate();
+}
+function spyHostVote(){H.ph='sv';pushState();onUpdate()}
+function spyHostReveal(){
+  const sp=H.sp;const votes={};let guessOk=false;
+  peers().forEach(p=>{const pr=p.presence;
+    if(p.peer===sp.spy){if(pr.sg&&pr.sg.r===sp.r)guessOk=sp.opts[pr.sg.i]===sp.word}
+    else if(pr.sv&&pr.sv.r===sp.r&&sp.names[pr.sv.p])votes[pr.sv.p]=(votes[pr.sv.p]||0)+1});
+  const max=Math.max(0,...Object.values(votes));const top=Object.keys(votes).filter(k=>votes[k]===max);
+  const caught=max>0&&top.length===1&&top[0]===sp.spy;
+  Object.values(H.sc).forEach(r=>r[2]=0);
+  peers().forEach(p=>{const row=H.sc[p.peer]||(H.sc[p.peer]=[p.presence.nm,0,0]);let g=0;
+    if(p.peer===sp.spy){if(!caught)g+=200;if(guessOk)g+=100}
+    else if(p.presence.sv&&p.presence.sv.r===sp.r&&p.presence.sv.p===sp.spy)g+=100;
+    row[1]+=g;row[2]=g});
+  sp.res={votes,caught,guessOk};H.ph='sx';pushState();onUpdate();
+}
+function spyVote(pid){const s=st();if(!s||s.ph!=='sv')return;snd('tap');SO.voted=s.sp.r;R.presence({sv:{r:s.sp.r,p:pid}});render()}
+function spyGuess(i){const s=st();if(!s||s.ph!=='sv')return;snd('tap');SO.voted=s.sp.r;R.presence({sg:{r:s.sp.r,i}});render()}
+function ospy(){
+  const s=st();if(!s||!s.sp)return lobby();const sp=s.sp;const me=myPeer();const amSpy=sp.spy===me;
+  if(SO.r!==sp.r){SO={r:sp.r,end:Date.now()+sp.dur*1000,show:false}}
+  if(s.ph==='sr'){
+    setTimeout(spyTick,0);
+    return `<div class="top"><span class="qcat">🕵️ الجاسوس</span><span>${SPY[sp.cat].e} ${SPY[sp.cat].t}</span></div>
+    ${SO.show?`<div class="card role ${amSpy?'spy':''}" onclick="SO.show=false;render()">${amSpy?`<div class="big-emoji">🕵️</div><h2>إنت الجاسوس!</h2><p class="note">حاول تعرف الكلمة من غير ما يكشفوك 😈</p>`:`<div class="big-emoji">🔑</div><h2 style="font-size:36px">${esc(sp.word)}</h2><p class="note">ماتقولهاش! (دوس علشان تخفيها)</p>`}</div>`
+    :`<div class="card flipcard" onclick="SO.show=true;snd('joker');render()"><div class="big-emoji">🃏</div><h2 style="text-align:center">دوس علشان تشوف دورك</h2><p class="note">خلّي بالك محدش يبص على موبايلك 🤫</p></div>`}
+    <div class="card" style="text-align:center"><div class="code" id="spyt" style="letter-spacing:2px">--:--</div><p class="msg">أول واحد يسأل: <span style="color:var(--y)">${esc(sp.first)}</span></p><p class="note">اتكلموا في الفويس أو الجروب واسألوا بعض 🗣️</p>
+    ${isHost?`<button class="btn o" onclick="spyHostVote()">يلا نصوّت 🗳️</button>`:''}</div>`;
+  }
+  if(s.ph==='sv'){
+    const done=SO.voted===sp.r;
+    const n=peers().filter(p=>(p.presence.sv&&p.presence.sv.r===sp.r)||(p.presence.sg&&p.presence.sg.r===sp.r)).length;
+    let body;
+    if(done)body=`<p class="msg">تمام! مستنيين الباقي 👀 (${n}/${peers().length})</p>`;
+    else if(amSpy)body=`<h2>🕵️ إنت الجاسوس: خمّن الكلمة!</h2><div class="opts">${sp.opts.map((o,i)=>`<button class="opt" onclick="spyGuess(${i})">${esc(o)}</button>`).join('')}</div>`;
+    else body=`<h2>مين الجاسوس؟ 🤔</h2><div class="opts">${Object.entries(sp.names).filter(([pid])=>pid!==me).map(([pid,nm])=>`<button class="opt" style="background:#ffffff22" onclick="spyVote('${esc(pid)}')">${esc(nm)}</button>`).join('')}</div>`;
+    return `<div class="top"><span class="qcat">🗳️ التصويت</span><span>${n}/${peers().length}</span></div><div class="card" style="text-align:center">${body}</div>${isHost?`<button class="btn" onclick="spyHostReveal()">اكشف النتيجة 🎭</button>`:''}`;
+  }
+  const res=sp.res||{};const spyName=esc(sp.names[sp.spy]||'؟');
+  const iWon=amSpy?(!res.caught||res.guessOk):res.caught&&!res.guessOk;
+  if(SO.fx!==sp.r){SO.fx=sp.r;setTimeout(()=>{iWon?winFx():fxResult(false)},150)}
+  return `<div class="card" style="text-align:center"><div class="big-emoji">${res.caught?'🎯':'😈'}</div>
+    <h2>${res.caught?'مسكتوا الجاسوس!':'الجاسوس هرب!'}</h2><p class="msg">الجاسوس كان: <span style="color:var(--y)">${spyName}</span></p>
+    <p class="note">الكلمة: <b>${esc(sp.word)}</b> • ${res.guessOk?'والجاسوس عرفها! 🦊':'والجاسوس ماعرفهاش'}</p>
+    <ul class="players">${Object.entries(res.votes||{}).sort((a,b)=>b[1]-a[1]).map(([pid,c])=>`<li><span>${esc(sp.names[pid]||'؟')}${pid===sp.spy?' 🕵️':''}</span><span class="pts">${c} صوت</span></li>`).join('')}</ul></div>
+    <div class="card"><h2>النقط</h2>${scoreList(s.sc,true)}</div>
+    ${isHost?`<button class="btn g" onclick="spyHostStart()">جولة تانية 🔁</button><button class="btn ghost" onclick="hostAgain()">ارجع للأوضة</button>`:'<p class="note">المضيف يقدر يبدأ جولة جديدة</p>'}`;
+}
+
+/* ================== خمّن الكلمة / المثل ================== */
+const AR_KEYS='ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي ء'.split(' ');
+const normCh=c=>({'أ':'ا','إ':'ا','آ':'ا','ٱ':'ا','ى':'ي','ة':'ه','ؤ':'و','ئ':'ي'})[c]||c;
+const isAr=c=>/[ء-ي]/.test(c);
+const clean=s=>String(s).replace(/[ً-ْـ]/g,'');
+const GCATS={
+  mathal:{t:'أمثال شعبية',e:'🧓',list:()=>DATA.mathal.map(x=>x[0].replace(/\.\.\.$/,'')+' '+x[1])},
+  film:{t:'أفلام',e:'🎬',list:()=>[...new Set([...DATA.emoji,...DATA.scene].map(x=>x[1]))]},
+  food:{t:'أكلات',e:'🍲',list:()=>SPY.food.w},
+  country:{t:'دول',e:'🌍',list:()=>DATA.flag.map(x=>x[1])},
+  place:{t:'أماكن',e:'📍',list:()=>SPY.place.w},
+  job:{t:'مهن',e:'👷',list:()=>SPY.job.w},
+  animal:{t:'حيوانات',e:'🐾',list:()=>SPY.animal.w},
+  star:{t:'فنانين',e:'🎤',list:()=>[...new Set(DATA.art.map(x=>x[1]))]}
+};
+let GW={cat:'mathal',streak:0,best:store.get('wl_gbest',0)};
+function guessHome(){go('gh')}
+function gh(){
+  return `<button class="back" onclick="go('home')">→ رجوع</button><div class="hero-mini">🔤</div><h2 style="text-align:center">خمّن الكلمة أو المثل</h2>
+  <p class="note">خمّن الحروف واحد واحد قبل ما القلوب تخلص ❤️</p>
+  <div class="card"><h2>العب لوحدك</h2><div class="cats">${Object.entries(GCATS).map(([k,c])=>`<div class="cat ${GW.cat===k?'on':''}" onclick="GW.cat='${k}';render()"><span class="e">${c.e}</span>${c.t}</div>`).join('')}</div>
+  <button class="btn g" onclick="gStart()">يلا 🔤</button><p class="note">أعلى سلسلة ليك: 🔥 ${GW.best}</p></div>
+  <div class="card"><h2>👥 تحدّي صاحبك</h2><p class="note">اكتب كلمة أو مثل سرّي، وادّي الموبايل لصاحبك يخمّن</p>
+  <input id="gSecret" maxlength="40" placeholder="الكلمة أو المثل (بالعربي)"><input id="gHint" maxlength="40" placeholder="تلميح (اختياري)" style="margin-top:8px">
+  <button class="btn o" onclick="gDuo()">اخفيها وادّي الموبايل 🤫</button>${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}</div>`;
+}
+function gNew(ans,hint,mode){GW={...GW,ans:clean(ans),hint,mode,used:new Set(),hearts:6,done:null};go('gp')}
+function gStart(){const l=GCATS[GW.cat].list().filter(w=>/^[ء-ي\s]+$/.test(clean(w)));const seenG=store.get('wl_gseen',[]);
+  let pool=l.filter(w=>!seenG.includes(w));if(!pool.length)pool=l;const w=pool[Math.floor(Math.random()*pool.length)];
+  store.set('wl_gseen',[...seenG,w].slice(-150));gNew(w,GCATS[GW.cat].e+' '+GCATS[GW.cat].t,'solo')}
+function gDuo(){const v=($('#gSecret')||{}).value||'';const h=($('#gHint')||{}).value||'';
+  if(![...clean(v)].some(isAr)){S.err='اكتب كلمة بالعربي الأول 🙂';render();return}gNew(v.trim().replace(/\s+/g,' '),h.trim()?'💡 '+h.trim():'👥 تحدّي صاحبك','duo')}
+const gSolved=()=>[...GW.ans].every(c=>!isAr(c)||GW.used.has(normCh(c)));
+function gKey(k){
+  if(GW.done||GW.used.has(k))return;GW.used.add(k);
+  const hit=[...GW.ans].some(c=>isAr(c)&&normCh(c)===k);
+  if(hit){snd('tap');if(gSolved()){GW.done='win';if(GW.mode==='solo'){GW.streak++;if(GW.streak>GW.best){GW.best=GW.streak;store.set('wl_gbest',GW.best)}}winFx()}}
+  else{GW.hearts--;snd('bad');vib(60);const a=$('#app');a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake');if(GW.hearts<=0){GW.done='lose';if(GW.mode==='solo')GW.streak=0;fxResult(false)}}
+  render();
+}
+function gHint(){if(GW.done||GW.hearts<=1)return;const left=[...new Set([...GW.ans].filter(c=>isAr(c)&&!GW.used.has(normCh(c))).map(normCh))];if(!left.length)return;GW.hearts--;gKey(left[Math.floor(Math.random()*left.length)])}
+function gp(){
+  const words=GW.ans.split(' ');
+  const board=words.map(w=>`<span class="gword">${[...w].map(c=>isAr(c)?`<span class="gbox ${GW.used.has(normCh(c))||GW.done?'on':''} ${GW.done==='lose'&&!GW.used.has(normCh(c))?'miss':''}">${GW.used.has(normCh(c))||GW.done?esc(c):''}</span>`:`<span class="gsym">${esc(c)}</span>`).join('')}</span>`).join('');
+  const kb=AR_KEYS.map(k=>{const used=GW.used.has(k);const hit=used&&[...GW.ans].some(c=>normCh(c)===k);return `<button class="gk ${used?(hit?'hit':'miss'):''}" onclick="gKey('${k}')">${k}</button>`}).join('');
+  return `<div class="top"><button class="back" onclick="go('gh')">→ رجوع</button><span>${'❤️'.repeat(Math.max(0,GW.hearts))}${'🖤'.repeat(6-Math.max(0,GW.hearts))}</span>${GW.mode==='solo'?`<span>🔥 ${GW.streak}</span>`:''}</div>
+  <div class="card" style="text-align:center"><span class="qcat">${esc(GW.hint)}</span><div class="gboard">${board}</div></div>
+  ${GW.done?`<p class="msg" style="color:${GW.done==='win'?'var(--g)':'var(--r)'}">${GW.done==='win'?'برافو عليك! 🎉':'خلصت القلوب 💔'}</p>
+    ${GW.mode==='solo'?`<button class="btn g" onclick="gStart()">اللي بعده ←</button>`:`<button class="btn g" onclick="go('gh')">تحدّي جديد 🔁</button>`}`
+  :`<div class="gkb">${kb}</div><button class="btn ghost" onclick="gHint()" ${GW.hearts<=1?'disabled':''}>💡 اكشف حرف (بقلب)</button>`}`;
+}
+
+/* ================== سناك 🐍 ================== */
+let SN=null;
+function snakeStart(){go('snk');setTimeout(snInit,30)}
+function snk(){
+  return `<div class="top"><button class="back" onclick="snStop();go('home')">→ رجوع</button><span>🍎 <b id="snS">0</b></span><span>🏆 <b id="snB">${store.get('wl_snb',0)}</b></span></div>
+  <div class="snwrap"><canvas id="snC"></canvas><div id="snO" class="snover"><div class="big-emoji">🐍</div><h2>سناك</h2><p class="note">اسحب بصباعك على الشاشة أو استخدم الأسهم</p><button class="btn g" onclick="snPlay()">ابدأ ▶️</button></div></div>
+  <div class="dpad"><span></span><button onclick="snDir(0,-1)">⬆️</button><span></span><button onclick="snDir(-1,0)">⬅️</button><span></span><button onclick="snDir(1,0)">➡️</button><span></span><button onclick="snDir(0,1)">⬇️</button><span></span></div>`;
+}
+const SN_FOOD=['🍎','🍔','🍕','🧆','🍩','🍉','🌽','🍓'];
+function snInit(){
+  const cv=$('#snC');if(!cv)return;const N=17;const sz=Math.min(innerWidth-36,440);const dp=devicePixelRatio||1;
+  cv.width=sz*dp;cv.height=sz*dp;cv.style.width=sz+'px';cv.style.height=sz+'px';
+  SN={cv,ctx:cv.getContext('2d'),N,cell:sz*dp/N,snake:[{x:8,y:8},{x:7,y:8},{x:6,y:8}],dir:{x:1,y:0},next:{x:1,y:0},food:null,score:0,speed:150,timer:null,alive:false};
+  snFood();snDraw();
+  let t0=null;cv.ontouchstart=e=>{const t=e.touches[0];t0={x:t.clientX,y:t.clientY};e.preventDefault()};
+  cv.ontouchend=e=>{if(!t0)return;const t=e.changedTouches[0];const dx=t.clientX-t0.x,dy=t.clientY-t0.y;if(Math.max(Math.abs(dx),Math.abs(dy))>18){Math.abs(dx)>Math.abs(dy)?snDir(Math.sign(dx),0):snDir(0,Math.sign(dy))}t0=null;e.preventDefault()};
+}
+document.addEventListener('keydown',e=>{if(S.scr!=='snk')return;const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(m){e.preventDefault();snDir(...m)}});
+function snFood(){let f;do{f={x:Math.floor(Math.random()*SN.N),y:Math.floor(Math.random()*SN.N),e:SN_FOOD[Math.floor(Math.random()*SN_FOOD.length)]}}while(SN.snake.some(s=>s.x===f.x&&s.y===f.y));SN.food=f}
+function snDir(x,y){if(!SN)return;if(!SN.alive){return}if(x===-SN.dir.x&&y===-SN.dir.y)return;SN.next={x,y}}
+function snPlay(){if(!SN)snInit();if(SN.over)snInit();$('#snO').style.display='none';SN.alive=true;snLoop()}
+function snStop(){if(SN){clearTimeout(SN.timer);SN.alive=false}}
+function snLoop(){
+  if(!SN||!SN.alive||S.scr!=='snk')return;
+  SN.dir=SN.next;const h=SN.snake[0];const nh={x:h.x+SN.dir.x,y:h.y+SN.dir.y};
+  if(nh.x<0||nh.y<0||nh.x>=SN.N||nh.y>=SN.N||SN.snake.some(s=>s.x===nh.x&&s.y===nh.y)){
+    SN.alive=false;SN.over=true;fxResult(false);const b=store.get('wl_snb',0);const rec=SN.score>b;if(rec){store.set('wl_snb',SN.score);setTimeout(winFx,300)}
+    const o=$('#snO');o.innerHTML=`<div class="big-emoji">${rec?'🏆':'💥'}</div><h2>${rec?'رقم قياسي جديد!':'خسرت!'}</h2><p class="msg">نقطك: ${SN.score}</p><button class="btn g" onclick="snPlay()">العب تاني 🔁</button>`;o.style.display='flex';$('#snB').textContent=store.get('wl_snb',0);return}
+  SN.snake.unshift(nh);
+  if(nh.x===SN.food.x&&nh.y===SN.food.y){SN.score++;$('#snS').textContent=SN.score;snd('ok');vib(20);SN.speed=Math.max(70,SN.speed-4);snFood()}else SN.snake.pop();
+  snDraw();SN.timer=setTimeout(snLoop,SN.speed);
+}
+function snDraw(){
+  const {ctx,cell,N}=SN;const W=cell*N;ctx.clearRect(0,0,W,W);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){ctx.fillStyle=(x+y)%2?'rgba(255,255,255,.06)':'rgba(255,255,255,.12)';ctx.fillRect(x*cell,y*cell,cell,cell)}
+  ctx.font=`${cell*.85}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(SN.food.e,SN.food.x*cell+cell/2,SN.food.y*cell+cell/2+cell*.05);
+  SN.snake.forEach((s,i)=>{const t=i/Math.max(1,SN.snake.length-1);ctx.fillStyle=`hsl(${48-t*30},100%,${60-t*12}%)`;const r=cell*.32,p=cell*.06;
+    const x=s.x*cell+p,y=s.y*cell+p,w=cell-2*p;ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,w,r):ctx.rect(x,y,w,w);ctx.fill();
+    if(i===0){ctx.fillStyle='#2b0f4c';const ex=SN.dir.y?cell*.22:0,ey=SN.dir.x?cell*.22:0;const cx=s.x*cell+cell/2+SN.dir.x*cell*.15,cy=s.y*cell+cell/2+SN.dir.y*cell*.15;
+      [[1],[-1]].forEach(([k])=>{ctx.beginPath();ctx.arc(cx+ex*k,cy+ey*k,cell*.09,0,7);ctx.fill()})}});
+}
+
 /* ================== الشاشة الرئيسية ================== */
 function home(){
   const online=!!roomNS;
-  return `<h1>ولّعها <span>🔥</span></h1><p class="sub">تحديات الشلة • ${Object.keys(CATS).length} فئة • العب أونلاين مع صحابك</p>
+  return `<h1>ولّعها <span>🔥</span></h1><p class="sub">ألعاب وتحديات الشلة • العب أونلاين أو على موبايل واحد</p>
   ${S.invite?`<div class="banner">صاحبك مستنيك في أوضة <b style="direction:ltr;display:inline-block">${esc(S.invite)}</b> 🎉<br><span style="font-size:14px">اكتب اسمك ودوس «ادخل الأوضة»</span></div>`:''}
   <div class="card"><h2>اسمك إيه؟</h2><input id="nameInp" maxlength="16" placeholder="اكتب اسمك" value="${esc(myName)}"></div>
-  <div class="card"><h2>🌐 كل واحد من موبايله</h2>
-    ${online?(S.invite?`<button class="btn g" onclick="joinRoom(S.invite)">ادخل الأوضة 🚀</button>`:'')+`<button class="btn" onclick="createRoom()">اعمل أوضة جديدة</button><button class="btn b" onclick="go('join')">ادخل أوضة بكود</button>`
-    :`<p class="note">محتاج نت علشان تلعب أونلاين 📶 — جرب تحدي الفرق تحت 👇</p>`}
+  <div class="card"><h2>🌐 العب أونلاين مع صحابك</h2><p class="note">أوضة بكود: تحدي الأسئلة 🧠 أو الجاسوس 🕵️</p>
+    ${online?(S.invite?`<button class="btn g" onclick="joinRoom(S.invite)">ادخل الأوضة 🚀</button>`:'')+`<div class="row"><button class="btn" onclick="createRoom()">اعمل أوضة</button><button class="btn b" onclick="go('join')">ادخل بكود</button></div>`
+    :`<p class="note">محتاج نت علشان تلعب أونلاين 📶</p>`}
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}
   </div>
-  <div class="card"><h2>📱 تحدي الفرق — موبايل واحد</h2><p class="note">فرق بتلعب بالدور، وفيه جوكرات وكازينو وسرقة 😈</p><button class="btn o" onclick="startLocalSetup()">يلا تحدي الفرق</button></div>
+  <h2 style="text-align:center">📱 العبوا على موبايل واحد</h2>
+  <div class="games">
+    <div class="game g1" onclick="startLocalSetup()"><span class="ge">🧠</span><b>تحدي الأسئلة</b><small>جوكرات وكازينو وسرقة</small></div>
+    <div class="game g2" onclick="spySetup()"><span class="new">جديد</span><span class="ge">🕵️</span><b>الجاسوس</b><small>أشك فيك! مين برا السالفة؟</small></div>
+    <div class="game g3" onclick="guessHome()"><span class="new">جديد</span><span class="ge">🔤</span><b>خمّن الكلمة</b><small>أمثال وأفلام وأكلات</small></div>
+    <div class="game g4" onclick="snakeStart()"><span class="new">جديد</span><span class="ge">🐍</span><b>سناك</b><small>اكسر الرقم القياسي</small></div>
+  </div>
   ${aiBox()}`;
 }
 function needName(){if(!myName.trim()){S.err='اكتب اسمك الأول 🙂';render();return false}return true}
@@ -583,7 +858,7 @@ function joinScr(){
 async function enter(code,host){
   S.err='';$('#app').insertAdjacentHTML('beforeend','<p class="msg">بيوصّل... ⏳</p>');try{R=await roomNS.join(code)}catch(e){S.err='النت ضعيف أو السيرفر مش راد، جرب تاني';render();return}
   S.code=code;isHost=host;try{history.replaceState(null,'','#r-'+code)}catch(e){}
-  if(host){hostSince=Date.now();H={ph:'lobby',cats:Object.keys(CATS),n:15,sc:{}};
+  if(host){hostSince=Date.now();H={ph:'lobby',game:'quiz',spyCat:'place',spyMin:3,cats:Object.keys(CATS),n:15,sc:{}};
     await R.presence({nm:myName.trim(),h:1,hs:hostSince,st:pub()});}
   else await R.presence({nm:myName.trim()});
   R.onPeers(()=>onUpdate());
@@ -600,7 +875,8 @@ function hostPeer(){return peers().filter(p=>p.presence.h===1).sort((a,b)=>(a.pr
 function st(){if(isHost)return pub();const h=hostPeer();return h&&h.presence.st||null}
 function pub(){
   if(!H)return null;
-  const o={ph:H.ph,cats:H.cats,n:H.n,sc:H.sc};
+  const o={ph:H.ph,game:H.game,spyCat:H.spyCat,spyMin:H.spyMin,cats:H.cats,n:H.n,sc:H.sc};
+  if(['sr','sv','sx'].includes(H.ph))o.sp=H.sp;
   if(H.ph==='q'||H.ph==='rv'){const q=H.q;Object.assign(o,{g:H.g,qi:H.qi,k:q.k,p:q.p,o:q.o,ai:q.ai,m:multOf(H.qi,H.n)});if(H.ph==='rv')o.c=q.c}
   return o;
 }
@@ -610,6 +886,7 @@ function onUpdate(){
   const s=st();
   if(s&&(s.ph==='q'||s.ph==='rv')){const key=s.g+':'+s.qi;if(key!==lastKey){lastKey=key;localStart=Date.now();myAns=null}S.scr='oq';
     const fk=key+s.ph;if(s.ph==='rv'&&fk!==lastFx){lastFx=fk;const ok=myAns&&myAns.qi===s.qi&&myAns.i===s.c;fxResult(!!ok);const me=Object.entries(s.sc||{}).find(([pid])=>R.peers().find(p=>p.peer===pid&&p.sameTab));if(ok&&me&&me[1][2])floatPts('+'+me[1][2])}}
+  else if(s&&['sr','sv','sx'].includes(s.ph))S.scr='ospy';
   else if(s&&s.ph==='end'){if(S.scr!=='oend')setTimeout(winFx,200);S.scr='oend'}
   else S.scr='lobby';
   render();
@@ -624,6 +901,7 @@ function onTick(){
   const bar=$('#tbar');if(bar){const s=st();if(s&&s.ph==='q'){const left=Math.max(0,DUR*1000-(Date.now()-localStart));if(!myAns)tickSound(left);bar.style.width=(left/(DUR*10))+'%';const t=$('#tsec');if(t)t.textContent=Math.ceil(left/1000)}}
 }
 function hostStart(){
+  if(H.game==='spy')return spyHostStart();
   if(!H.cats.length)return;
   warmUp(H.cats);
   H.g=Math.random().toString(36).slice(2,7);H.qi=0;H.sc={};H.q=drawAny(H.cats);
@@ -652,6 +930,7 @@ function hostEnd(){clearTimeout(revealTimer);H.ph='end';pushState();onUpdate()}
 function hostAgain(){H.ph='lobby';pushState();onUpdate()}
 function toggleCat(k){H.cats=toggleIn(H.cats,k);pushState();render()}
 function setN(n){H.n=n;pushState();render()}
+function setSpyMin(n){H.spyMin=n;pushState();render()}
 function answer(i){
   const s=st();if(!s||s.ph!=='q'||myAns)return;snd('tap');
   myAns={g:s.g,qi:s.qi,i};
@@ -666,9 +945,13 @@ function lobby(){
   <a class="btn wa" style="text-decoration:none" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا ولّعها 🔥\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
   <button class="btn ghost" onclick="copyInvite()">انسخ اللينك 📋</button></div>
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
-  ${isHost?`<div class="card"><h2>اختار الفئات</h2>${catPicker(H.cats,'toggleCat')}<h2 style="margin-top:16px">عدد الأسئلة</h2>${nPicker(H.n,'setN',[10,20,30,0])}
+  ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div></div></div>
+    ${H.game==='spy'?`<div class="card"><h2>فئة الجاسوس</h2><div class="pills">${Object.entries(SPY).map(([k,c])=>`<div class="pill ${H.spyCat===k?'on':''}" onclick="H.spyCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
+    <h2 style="margin-top:16px">وقت النقاش (دقايق)</h2>${nPicker(H.spyMin,'setSpyMin',[2,3,5])}<p class="note">محتاجين 3 لعيبة على الأقل، واتكلموا في الفويس أو جروب واتساب 🗣️</p>
+    ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="spyHostStart()">يلا الجاسوس 🕵️</button></div>`
+    :`<div class="card"><h2>اختار الفئات</h2>${catPicker(H.cats,'toggleCat')}<h2 style="margin-top:16px">عدد الأسئلة</h2>${nPicker(H.n,'setN',[10,20,30,0])}
     <p class="note">كل رابع سؤال 🔥 دبل${H.n?' والسؤال الأخير 🎰 ×3':''}</p>
-    <button class="btn g" onclick="hostStart()" ${H.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`
+    <button class="btn g" onclick="hostStart()" ${H.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`}`
   :`<div class="card"><p class="msg">${h?'مستنيين المضيف يبدأ اللعبة ⏳':'مستنيين المضيف يدخل...'}</p></div>`}`;
 }
 function scoreList(sc,showGain){
