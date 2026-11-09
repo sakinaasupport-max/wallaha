@@ -14,6 +14,7 @@
 <meta property="og:title" content="لمّتنا 🎉 — ألعاب الشلة"><meta property="og:description" content="تعالى العب معايا! أسئلة وتحديات وكازينو وجوكرات 😈"><meta property="og:image" content="icon-512.png">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script data-goatcounter="https://lammetna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <title>لمّتنا 🎉 — ألعاب الشلة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
@@ -540,6 +541,7 @@ function createRoomService(){
   };
 }
 
+function track(name,title){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:name,title:title||name,event:true})}catch(e){}}
 /* ================== المؤثرات: أصوات وكونفيتي ================== */
 let soundOn=store.get('wl_snd',true),AC=null;
 function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});return AC}
@@ -625,7 +627,7 @@ function spys(){
   <button class="btn g" onclick="spyLocalStart()">يلا نبدأ 🕵️</button></div>`;
 }
 function spySetMin(n){LS.min=n;render()}
-function spyLocalStart(){
+function spyLocalStart(){track('play-spy-local','جاسوس موبايل واحد');
   LS.players=LS.players.map((p,i)=>p.trim()||'لاعب '+(i+1));
   const c=SPY[LS.cat];LS.word=c.w[Math.floor(Math.random()*c.w.length)];
   LS.spy=Math.floor(Math.random()*LS.players.length);LS.idx=0;LS.show=false;
@@ -678,7 +680,7 @@ function spyx(){
 let SO={};
 const myPeer=()=>{const m=R&&R.peers().find(p=>p.sameTab);return m?m.peer:''};
 function spyHostStart(){
-  const ps=peers();if(ps.length<3){S.err='الجاسوس محتاج 3 لعيبة على الأقل 👥';render();return}
+  const ps=peers();if(ps.length<3){S.err='الجاسوس محتاج 3 لعيبة على الأقل 👥';render();return}track('play-spy-online','جاسوس أونلاين');
   const c=SPY[H.spyCat];const word=c.w[Math.floor(Math.random()*c.w.length)];
   const spy=ps[Math.floor(Math.random()*ps.length)].peer;
   H.sp={r:Math.random().toString(36).slice(2,7),cat:H.spyCat,word,spy,opts:shuffle([word,...shuffle(c.w.filter(x=>x!==word)).slice(0,7)]),
@@ -761,10 +763,10 @@ function gh(){
   <button class="btn o" onclick="gDuo()">اخفيها وادّي الموبايل 🤫</button>${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}</div>`;
 }
 function gNew(ans,hint,mode){GW={...GW,ans:clean(ans),hint,mode,used:new Set(),hearts:6,done:null};go('gp')}
-function gStart(){const l=GCATS[GW.cat].list().filter(w=>/^[ء-ي\s]+$/.test(clean(w)));const seenG=store.get('wl_gseen',[]);
+function gStart(){track('play-guess','خمّن الكلمة');const l=GCATS[GW.cat].list().filter(w=>/^[ء-ي\s]+$/.test(clean(w)));const seenG=store.get('wl_gseen',[]);
   let pool=l.filter(w=>!seenG.includes(w));if(!pool.length)pool=l;const w=pool[Math.floor(Math.random()*pool.length)];
   store.set('wl_gseen',[...seenG,w].slice(-150));gNew(w,GCATS[GW.cat].e+' '+GCATS[GW.cat].t,'solo')}
-function gDuo(){const v=($('#gSecret')||{}).value||'';const h=($('#gHint')||{}).value||'';
+function gDuo(){track('play-guess-duo','تحدّي صاحبك');const v=($('#gSecret')||{}).value||'';const h=($('#gHint')||{}).value||'';
   if(![...clean(v)].some(isAr)){S.err='اكتب كلمة بالعربي الأول 🙂';render();return}gNew(v.trim().replace(/\s+/g,' '),h.trim()?'💡 '+h.trim():'👥 تحدّي صاحبك','duo')}
 const gSolved=()=>[...GW.ans].every(c=>!isAr(c)||GW.used.has(normCh(c)));
 function gKey(k){
@@ -806,7 +808,7 @@ function snInit(){
 document.addEventListener('keydown',e=>{if(S.scr!=='snk')return;const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(m){e.preventDefault();snDir(...m)}});
 function snFood(){let f;do{f={x:Math.floor(Math.random()*SN.N),y:Math.floor(Math.random()*SN.N),e:SN_FOOD[Math.floor(Math.random()*SN_FOOD.length)]}}while(SN.snake.some(s=>s.x===f.x&&s.y===f.y));SN.food=f}
 function snDir(x,y){if(!SN)return;if(!SN.alive){return}if(x===-SN.dir.x&&y===-SN.dir.y)return;SN.next={x,y}}
-function snPlay(){if(!SN)snInit();if(SN.over)snInit();$('#snO').style.display='none';SN.alive=true;snLoop()}
+function snPlay(){track('play-snake','سناك');if(!SN)snInit();if(SN.over)snInit();$('#snO').style.display='none';SN.alive=true;snLoop()}
 function snStop(){if(SN){clearTimeout(SN.timer);SN.alive=false}}
 function snLoop(){
   if(!SN||!SN.alive||S.scr!=='snk')return;
@@ -863,7 +865,7 @@ function joinScr(){
 }
 async function enter(code,host){
   S.err='';$('#app').insertAdjacentHTML('beforeend','<p class="msg">بيوصّل... ⏳</p>');try{R=await roomNS.join(code)}catch(e){S.err='النت ضعيف أو السيرفر مش راد، جرب تاني';render();return}
-  S.code=code;isHost=host;try{history.replaceState(null,'','#r-'+code)}catch(e){}
+  S.code=code;isHost=host;if(!host)track('room-join','دخل أوضة');try{history.replaceState(null,'','#r-'+code)}catch(e){}
   if(host){hostSince=Date.now();H={ph:'lobby',game:'quiz',spyCat:'place',spyMin:3,cats:Object.keys(CATS),n:15,sc:{}};
     await R.presence({nm:myName.trim(),h:1,hs:hostSince,st:pub()});}
   else await R.presence({nm:myName.trim()});
@@ -872,7 +874,7 @@ async function enter(code,host){
   S.scr='lobby';onUpdate();
 }
 function copyInvite(){const t=location.origin+location.pathname+'#r-'+S.code;try{navigator.clipboard.writeText(t).then(()=>{S.err='';floatPts('اتنسخ ✅')})}catch(e){}}
-function createRoom(){if(!needName())return;let c='';for(let i=0;i<4;i++)c+=CODE_CH[Math.floor(Math.random()*CODE_CH.length)];enter(c,true)}
+function createRoom(){if(!needName())return;track('room-create','عمل أوضة');let c='';for(let i=0;i<4;i++)c+=CODE_CH[Math.floor(Math.random()*CODE_CH.length)];enter(c,true)}
 function joinRoom(c){if(!needName())return;c=(c||'').trim().toLowerCase();if(!/^[a-z0-9]{4}$/.test(c)){S.err='الكود 4 حروف';render();return}enter(c,false)}
 async function leaveRoom(){try{history.replaceState(null,'',location.pathname)}catch(e){}clearInterval(tick);clearTimeout(revealTimer);try{await R?.leave()}catch(e){}R=null;isHost=false;H=null;go('home')}
 
@@ -907,7 +909,7 @@ function onTick(){
   const bar=$('#tbar');if(bar){const s=st();if(s&&s.ph==='q'){const left=Math.max(0,DUR*1000-(Date.now()-localStart));if(!myAns)tickSound(left);bar.style.width=(left/(DUR*10))+'%';const t=$('#tsec');if(t)t.textContent=Math.ceil(left/1000)}}
 }
 function hostStart(){
-  if(H.game==='spy')return spyHostStart();
+  if(H.game==='spy')return spyHostStart();track('play-quiz-online','أسئلة أونلاين');
   if(!H.cats.length)return;
   warmUp(H.cats);
   H.g=Math.random().toString(36).slice(2,7);H.qi=0;H.sc={};H.q=drawAny(H.cats);
@@ -948,7 +950,7 @@ function lobby(){
   const list=ps.map(p=>`<li><span>${esc(p.presence.nm)}${p.presence.h===1?'<span class="tag">المضيف</span>':''}${p.sameTab?'<span class="tag me">إنت</span>':''}</span></li>`).join('');
   return `<button class="back" onclick="leaveRoom()">→ اخرج</button>
   <div class="card" style="text-align:center"><div class="note">كود الأوضة</div><div class="code">${esc(S.code)}</div>
-  <a class="btn wa" style="text-decoration:none" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا على لمّتنا 🎉\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
+  <a class="btn wa" style="text-decoration:none" onclick="track('invite-whatsapp','دعوة واتساب')" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا على لمّتنا 🎉\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
   <button class="btn ghost" onclick="copyInvite()">انسخ اللينك 📋</button></div>
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
   ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div></div></div>
@@ -997,7 +999,7 @@ function lsetup(){
 }
 function lToggle(k){L.cats=toggleIn(L.cats,k);render()}
 function lRounds(n){L.rounds=n;render()}
-function lStart(){
+function lStart(){track('play-quiz-local','أسئلة موبايل واحد');
   L.teams=L.teams.map((t,i)=>t.trim()||'فريق '+(i+1));L.sc=L.teams.map(()=>0);
   L.jk=L.teams.map(()=>({dbl:1,half:1}));warmUp(L.cats);
   L.turn=0;L.total=L.rounds*L.teams.length;go('lturn');
