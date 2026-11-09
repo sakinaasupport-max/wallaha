@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#7209b7">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ولّعها">
-<meta name="description" content="ولّعها 🔥 — لعبة تحديات وأسئلة للشلة: أعلام، أفلام، كورة، أمثال، مين مثّل مع مين… والعب أونلاين مع صحابك">
-<meta property="og:title" content="ولّعها 🔥 — تحديات الشلة"><meta property="og:description" content="تعالى العب معايا! أسئلة وتحديات وكازينو وجوكرات 😈"><meta property="og:image" content="icon-512.png">
+<meta name="apple-mobile-web-app-title" content="لمّتنا">
+<meta name="description" content="لمّتنا 🎉 — ألعاب تحديات وأسئلة للشلة: أعلام، أفلام، كورة، أمثال، مين مثّل مع مين… والعب أونلاين مع صحابك">
+<meta property="og:title" content="لمّتنا 🎉 — ألعاب الشلة"><meta property="og:description" content="تعالى العب معايا! أسئلة وتحديات وكازينو وجوكرات 😈"><meta property="og:image" content="icon-512.png">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
-<title>ولّعها 🔥 — تحديات الشلة</title>
+<title>لمّتنا 🎉 — ألعاب الشلة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg1:#2b0f4c;--bg2:#5a1a6e;--card:#ffffff14;--line:#ffffff26;--txt:#fff;--mut:#e6d6ffb0;--y:#ffd23f;--g:#2ee59d;--r:#ff5d73;--b:#4cc9f0;--o:#ff9f1c}
@@ -153,7 +153,7 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 </style>
 </head>
 <body>
-<div id="splash" onclick="hideSplash()"><div class="rays"></div><div class="burst"><span style="--i:0;--x:-130px;--y:-170px;--r:-15deg">🕵️</span><span style="--i:1;--x:130px;--y:-170px;--r:15deg">🧠</span><span style="--i:2;--x:-160px;--y:40px;--r:-20deg">🐍</span><span style="--i:3;--x:160px;--y:40px;--r:20deg">🔤</span><span style="--i:4;--x:-90px;--y:190px;--r:-10deg">🎬</span><span style="--i:5;--x:95px;--y:190px;--r:10deg">⚽</span><span style="--i:6;--x:0px;--y:-230px;--r:0deg">🎤</span><span style="--i:7;--x:0px;--y:240px;--r:0deg">🏆</span></div><div class="fire">🔥</div><div class="logo">ولّعها</div><div class="tag">ألعاب وتحديات الشلة 🎉</div><div class="bar"><i></i></div><div class="skip">دوس في أي حتة</div></div>
+<div id="splash" onclick="hideSplash()"><div class="rays"></div><div class="burst"><span style="--i:0;--x:-130px;--y:-170px;--r:-15deg">🕵️</span><span style="--i:1;--x:130px;--y:-170px;--r:15deg">🧠</span><span style="--i:2;--x:-160px;--y:40px;--r:-20deg">🐍</span><span style="--i:3;--x:160px;--y:40px;--r:20deg">🔤</span><span style="--i:4;--x:-90px;--y:190px;--r:-10deg">🎬</span><span style="--i:5;--x:95px;--y:190px;--r:10deg">⚽</span><span style="--i:6;--x:0px;--y:-230px;--r:0deg">🎤</span><span style="--i:7;--x:0px;--y:240px;--r:0deg">🏆</span></div><div class="fire">🎉</div><div class="logo">لمّتنا</div><div class="tag">ألعاب وتحديات الشلة 🎉</div><div class="bar"><i></i></div><div class="skip">دوس في أي حتة</div></div>
 <div id="floaters"></div><div id="flash"></div><canvas id="fx"></canvas>
 <button class="sound" id="sndBtn" onclick="toggleSound()">🔊</button>
 <div id="app"></div>
@@ -417,11 +417,11 @@ async function genAI(k){
   const avoid=[...bank(k).map(x=>c.words?x[1]:x[0]),...(AIPOOL[k]||[]).map(x=>c.words?x[1]:x[0])].slice(-60);
   const words=!!c.words;
   const prompt=words
-    ?`إنت بتولّد محتوى للعبة "ولّعها" (لعبة تحديات بين صحاب مصريين).
+    ?`إنت بتولّد محتوى للعبة "لمّتنا" (لعبة تحديات بين صحاب مصريين).
 اكتب 15 كلمة جديدة لفئة: ${c.ai}.
 ماتكررش أي كلمة من دول: ${avoid.join('، ')}
 رد بـ JSON array of strings بس، مثال: ["مخدة","طرابيزة"]`
-    :`إنت بتولّد أسئلة للعبة "ولّعها" (لعبة تحديات وأسئلة بين صحاب مصريين).
+    :`إنت بتولّد أسئلة للعبة "لمّتنا" (لعبة تحديات وأسئلة بين صحاب مصريين).
 الفئة: ${c.t} — ${c.ai}
 اكتب 10 أسئلة جديدة متنوعة بالعامية المصرية، شوية سهلة وشوية متوسطة وشوية صعبة، وتكون ممتعة وتعمل جو.
 شروط مهمة:
@@ -826,7 +826,7 @@ function snDraw(){
 /* ================== الشاشة الرئيسية ================== */
 function home(){
   const online=!!roomNS;
-  return `<h1>ولّعها <span>🔥</span></h1><p class="sub">ألعاب وتحديات الشلة • العب أونلاين أو على موبايل واحد</p>
+  return `<h1>لمّتنا <span>🎉</span></h1><p class="sub">ألعاب وتحديات الشلة • العب أونلاين أو على موبايل واحد</p>
   ${S.invite?`<div class="banner">صاحبك مستنيك في أوضة <b style="direction:ltr;display:inline-block">${esc(S.invite)}</b> 🎉<br><span style="font-size:14px">اكتب اسمك ودوس «ادخل الأوضة»</span></div>`:''}
   <div class="card"><h2>اسمك إيه؟</h2><input id="nameInp" maxlength="16" placeholder="اكتب اسمك" value="${esc(myName)}"></div>
   <div class="card"><h2>🌐 العب أونلاين مع صحابك</h2><p class="note">أوضة بكود: تحدي الأسئلة 🧠 أو الجاسوس 🕵️</p>
@@ -942,7 +942,7 @@ function lobby(){
   const list=ps.map(p=>`<li><span>${esc(p.presence.nm)}${p.presence.h===1?'<span class="tag">المضيف</span>':''}${p.sameTab?'<span class="tag me">إنت</span>':''}</span></li>`).join('');
   return `<button class="back" onclick="leaveRoom()">→ اخرج</button>
   <div class="card" style="text-align:center"><div class="note">كود الأوضة</div><div class="code">${esc(S.code)}</div>
-  <a class="btn wa" style="text-decoration:none" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا ولّعها 🔥\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
+  <a class="btn wa" style="text-decoration:none" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا على لمّتنا 🎉\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
   <button class="btn ghost" onclick="copyInvite()">انسخ اللينك 📋</button></div>
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
   ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div></div></div>
@@ -951,7 +951,7 @@ function lobby(){
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="spyHostStart()">يلا الجاسوس 🕵️</button></div>`
     :`<div class="card"><h2>اختار الفئات</h2>${catPicker(H.cats,'toggleCat')}<h2 style="margin-top:16px">عدد الأسئلة</h2>${nPicker(H.n,'setN',[10,20,30,0])}
     <p class="note">كل رابع سؤال 🔥 دبل${H.n?' والسؤال الأخير 🎰 ×3':''}</p>
-    <button class="btn g" onclick="hostStart()" ${H.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`}`
+    <button class="btn g" onclick="hostStart()" ${H.cats.length?'':'disabled'}>يلا بينا! 🔥</button></div>${aiBox()}`}`
   :`<div class="card"><p class="msg">${h?'مستنيين المضيف يبدأ اللعبة ⏳':'مستنيين المضيف يدخل...'}</p></div>`}`;
 }
 function scoreList(sc,showGain){
@@ -987,7 +987,7 @@ function lsetup(){
   <div class="row">${L.teams.length<4?`<button class="btn ghost" onclick="L.teams.push('فريق '+(L.teams.length+1));render()">+ فريق</button>`:''}${L.teams.length>2?`<button class="btn ghost" onclick="L.teams.pop();render()">− فريق</button>`:''}</div></div>
   <div class="card"><h2>الفئات</h2>${catPicker(L.cats,'lToggle')}<h2 style="margin-top:16px">أدوار لكل فريق</h2>${nPicker(L.rounds,'lRounds',[3,5,8,0])}
   <p class="note">كل فريق معاه جوكرين: 🔥 دبل و✂️ شيل اتنين<br>🎰 سؤال الكازينو بيظهر فجأة: ×3 لو صح، و−100 لو غلط<br>🕵️ لو فريق غلط، اللي بعده يقدر يسرق السؤال</p>
-  <button class="btn g" onclick="lStart()" ${L.cats.length?'':'disabled'}>ولّعها! 🔥</button></div>${aiBox()}`;
+  <button class="btn g" onclick="lStart()" ${L.cats.length?'':'disabled'}>يلا بينا! 🔥</button></div>${aiBox()}`;
 }
 function lToggle(k){L.cats=toggleIn(L.cats,k);render()}
 function lRounds(n){L.rounds=n;render()}
