@@ -110,6 +110,18 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 #splash .logo{font:900 72px Cairo;color:#fff;animation:bounceIn 1s cubic-bezier(.2,1.8,.4,1) both;text-shadow:0 6px 0 #0004}
 #splash .fire{font-size:90px;animation:wobble 1s infinite}
 #splash.hide{opacity:0;pointer-events:none}
+#vcBar{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:16px;z-index:85;display:none;gap:8px;align-items:center}
+#vcBar.show{display:flex}
+body.vc #app{padding-bottom:96px}
+#vcBar button{border:1px solid var(--line);color:#fff;border-radius:99px;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 6px 20px #0006}
+#vcMic{height:58px;min-width:58px;padding:0 18px;font-size:17px;background:#5B1A6E}
+#vcMic.on{background:var(--g);color:#11331f}
+#vcMic.mu{background:var(--r)}
+#vcMic.talk{box-shadow:0 0 0 5px #2ee59d66,0 6px 20px #0006}
+#vcOff{width:40px;height:40px;background:#0007;font-size:15px}
+#vcInfo{font-size:12px;background:#0007;padding:4px 10px;border-radius:99px;color:var(--mut)}
+.vci{font-size:16px;opacity:.85;transition:.15s}
+.vci.talk{opacity:1;transform:scale(1.3);filter:drop-shadow(0 0 6px #2ee59d)}
 .sound{position:fixed;top:12px;left:12px;z-index:80;background:#0004;border:1px solid var(--line);color:#fff;border-radius:99px;width:42px;height:42px;font-size:20px;cursor:pointer}
 .timer.hurry i{animation:hurry .5s infinite alternate}
 @keyframes hurry{to{filter:brightness(1.6)}}
@@ -163,6 +175,7 @@ h1{text-shadow:0 4px 0 #0004,0 0 30px #ffd23f88;animation:wobble 3s ease-in-out 
 <div id="floaters"></div><div id="flash"></div><canvas id="fx"></canvas>
 <button class="sound" id="sndBtn" onclick="toggleSound()">🔊</button>
 <div id="app"></div>
+<div id="vcBar"><button id="vcMic" onclick="vcToggle()">🎙️ اتكلم</button><button id="vcOff" onclick="vcLeave()" style="display:none">✕</button><span id="vcInfo" style="display:none"></span></div>
 <script>
 const DATA={
 rev:['كشري','طعمية','ملوخية','توكتوك','ميكروباص','شبشب','كنبة','بلكونة','مرجيحة','فسيخ','كحك','طرشي','تلاجة','مروحة','ترابيزة','شماعة','قلقاس','فطير','بسبوسة','كنافة','عربية','موبايل','شاورما','محشي','ممبار','حواوشي','سندوتش','جلابية','طاجن','فانوس','كركديه','دومينو','طاولة','بطاطس','مكرونة','عصير','قهوة','بلاستيشن','كوباية','سرير'],
@@ -501,7 +514,7 @@ function createRoomService(){
   return {
     join(code){
       return new Promise((resolve,reject)=>{
-        const base='wallaha/v1/'+code+'/p/';const myTopic=base+MY_PEER;
+        const base='wallaha/v1/'+code+'/p/';const myTopic=base+MY_PEER;const sigBase='wallaha/v1/'+code+'/s/';const sigL=new Set();
         let bi=0,client=null,done=false,me={},peersMap=new Map(),listeners=new Set(),hb=null,flushT=null,snapshot=[];
         const rebuild=()=>{
           const now=Date.now();
@@ -515,10 +528,11 @@ function createRoomService(){
           client=mqtt.connect(BROKERS[bi],{clientId:'wl_'+MY_PEER+'_'+Math.random().toString(36).slice(2,6),clean:true,keepalive:20,reconnectPeriod:2000,connectTimeout:8000,
             will:{topic:myTopic,payload:'',retain:true,qos:0}});
           client.on('connect',()=>{
-            client.subscribe(base+'+');send();
+            client.subscribe(base+'+');client.subscribe(sigBase+MY_PEER);send();
             if(!done){done=true;resolve(api)}
           });
           client.on('message',(t,msg)=>{
+            if(t.startsWith(sigBase)){try{const d=JSON.parse(msg.toString());if(d&&d.f&&d.f!==MY_PEER)sigL.forEach(f=>{try{f(d)}catch(e){}})}catch(e){}return}
             const id=t.slice(base.length);if(id===MY_PEER)return;
             const txt=msg.toString();
             if(!txt){peersMap.delete(id);rebuild();return}
@@ -532,7 +546,9 @@ function createRoomService(){
           presence(patch){for(const k in patch){if(patch[k]===null)delete me[k];else me[k]=patch[k]}me={...me};rebuild();if(!flushT)flushT=setTimeout(send,80);return Promise.resolve()},
           peers(){return snapshot},
           onPeers(f){listeners.add(f);setTimeout(()=>f({peers:snapshot}),0);return()=>listeners.delete(f)},
-          leave(){clearInterval(hb);try{client.publish(myTopic,'',{retain:true});setTimeout(()=>client.end(),300)}catch(e){}listeners.clear();return Promise.resolve()}
+          signal(to,d){if(client&&client.connected)client.publish(sigBase+to,JSON.stringify({...d,f:MY_PEER}),{qos:0})},
+          onSignal(f){sigL.add(f);return()=>sigL.delete(f)},
+          leave(){clearInterval(hb);try{client.publish(myTopic,'',{retain:true});setTimeout(()=>client.end(),300)}catch(e){}listeners.clear();sigL.clear();return Promise.resolve()}
         };
         hb=setInterval(()=>{send();rebuild()},10000);
         connect();
@@ -540,6 +556,123 @@ function createRoomService(){
     }
   };
 }
+
+
+/* ================== فويس شات داخل الأوضة (WebRTC + إشارة عبر MQTT) ================== */
+const ICE=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'}];
+const VC={on:false,muted:false,stream:null,pcs:new Map(),talk:new Set(),meters:new Map(),mt:null};
+function vcPeers(){return peers().filter(p=>!p.sameTab&&p.presence.vc===1)}
+async function vcJoin(){
+  if(!R)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){floatPts('المتصفح ده مش بيدعم المايك 😕');return}
+  try{VC.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
+  catch(e){floatPts('لازم تسمح للمايك من إعدادات المتصفح 🎙️');return}
+  VC.on=true;VC.muted=false;track('voice-join','دخل الفويس');
+  vcMeter(MY_PEER,VC.stream);
+  await R.presence({vc:1,mu:0});
+  setTimeout(vcSync,400);vcUI();if(S.scr==='lobby')render();
+}
+function vcToggle(){
+  ac();
+  if(!VC.on){vcJoin();return}
+  VC.muted=!VC.muted;VC.stream.getAudioTracks().forEach(t=>t.enabled=!VC.muted);
+  R&&R.presence({mu:VC.muted?1:0});vib(20);vcUI();
+}
+function vcClose(id){
+  const c=VC.pcs.get(id);if(!c)return;VC.pcs.delete(id);
+  try{c.pc.close()}catch(e){}if(c.au){c.au.srcObject=null;c.au.remove()}
+  VC.meters.delete(id);VC.talk.delete(id);
+}
+function vcLeave(){
+  [...VC.pcs.keys()].forEach(id=>{try{R&&R.signal(id,{t:'b'})}catch(e){}vcClose(id)});
+  if(VC.stream)VC.stream.getTracks().forEach(t=>t.stop());
+  VC.stream=null;VC.on=false;VC.muted=false;VC.meters.clear();VC.talk.clear();
+  try{R&&R.presence({vc:null,mu:null})}catch(e){}
+  vcUI();
+}
+function vcPC(id){
+  vcClose(id);
+  const pc=new RTCPeerConnection({iceServers:ICE});const c={pc,au:null,q:[]};VC.pcs.set(id,c);
+  VC.stream.getTracks().forEach(t=>pc.addTrack(t,VC.stream));
+  pc.onicecandidate=e=>{if(e.candidate)R&&R.signal(id,{t:'c',d:e.candidate.toJSON()})};
+  pc.ontrack=e=>{
+    const st=e.streams[0]||new MediaStream([e.track]);
+    if(!c.au){c.au=document.createElement('audio');c.au.autoplay=true;c.au.setAttribute('playsinline','');c.au.style.display='none';document.body.appendChild(c.au)}
+    c.au.srcObject=st;c.au.play().catch(()=>{});vcMeter(id,st);vcUI();
+  };
+  pc.onconnectionstatechange=()=>{
+    const s=pc.connectionState;
+    if(s==='failed'||s==='closed'){if(VC.pcs.get(id)===c){vcClose(id);setTimeout(vcSync,2500)}}
+    vcUI();
+  };
+  return c;
+}
+async function vcCall(id){
+  const c=vcPC(id);
+  setTimeout(()=>{if(VC.pcs.get(id)===c&&c.pc.connectionState!=='connected'){vcClose(id);vcSync()}},15000);
+  try{const o=await c.pc.createOffer();await c.pc.setLocalDescription(o);R.signal(id,{t:'o',d:c.pc.localDescription.toJSON()})}catch(e){vcClose(id)}
+}
+async function vcSignal(m){
+  if(!VC.on||!R)return;const id=m.f;
+  try{
+    if(m.t==='o'){
+      const c=vcPC(id);await c.pc.setRemoteDescription(m.d);
+      for(const x of c.q)await c.pc.addIceCandidate(x).catch(()=>{});c.q=[];
+      const a=await c.pc.createAnswer();await c.pc.setLocalDescription(a);R.signal(id,{t:'a',d:c.pc.localDescription.toJSON()});
+    }else if(m.t==='a'){
+      const c=VC.pcs.get(id);if(!c||c.pc.signalingState!=='have-local-offer')return;
+      await c.pc.setRemoteDescription(m.d);for(const x of c.q)await c.pc.addIceCandidate(x).catch(()=>{});c.q=[];
+    }else if(m.t==='c'){
+      const c=VC.pcs.get(id);if(!c)return;
+      if(c.pc.remoteDescription)await c.pc.addIceCandidate(m.d).catch(()=>{});else c.q.push(m.d);
+    }else if(m.t==='b'){vcClose(id);vcUI()}
+  }catch(e){}
+}
+function vcSync(){
+  if(!R||!VC.on)return;
+  const want=new Set(vcPeers().map(p=>p.peer));
+  for(const id of [...VC.pcs.keys()])if(!want.has(id))vcClose(id);
+  // الأصغر في الـ id هو اللي بيبدأ الاتصال، عشان مايحصلش تصادم
+  want.forEach(id=>{if(!VC.pcs.has(id)&&MY_PEER<id)vcCall(id)});
+  vcUI();
+}
+function vcMeter(id,stream){
+  const a=ac();if(!a)return;
+  try{const an=a.createAnalyser();an.fftSize=512;a.createMediaStreamSource(stream).connect(an);VC.meters.set(id,{an,buf:new Uint8Array(an.fftSize)})}catch(e){}
+  if(!VC.mt)VC.mt=setInterval(vcTick,180);
+}
+function vcTick(){
+  if(!VC.on){clearInterval(VC.mt);VC.mt=null;return}
+  const before=[...VC.talk].join();
+  VC.meters.forEach((m,id)=>{m.an.getByteTimeDomainData(m.buf);let s=0;for(let i=0;i<m.buf.length;i++){const v=(m.buf[i]-128)/128;s+=v*v}
+    const loud=Math.sqrt(s/m.buf.length)>0.04&&!(id===MY_PEER&&VC.muted);loud?VC.talk.add(id):VC.talk.delete(id)});
+  if([...VC.talk].join()!==before){
+    document.querySelectorAll('.vci').forEach(el=>el.classList.toggle('talk',VC.talk.has(el.dataset.vp)));
+    const b=$('#vcMic');if(b)b.classList.toggle('talk',VC.talk.has(MY_PEER));vcInfo();
+  }
+}
+function vcBadge(p){
+  const pr=p.presence;if(pr.vc!==1)return '';
+  return `<span class="vci ${VC.talk.has(p.peer)?'talk':''}" data-vp="${p.peer}">${pr.mu?'🔇':'🎙️'}</span>`;
+}
+function vcInfo(){
+  const el=$('#vcInfo');if(!el)return;
+  if(!VC.on){el.style.display='none';return}
+  const others=vcPeers();const ok=others.filter(p=>{const c=VC.pcs.get(p.peer);return c&&c.pc.connectionState==='connected'}).length;
+  const talking=others.filter(p=>VC.talk.has(p.peer)).map(p=>p.presence.nm);
+  el.style.display='';
+  el.textContent=talking.length?('🗣️ '+talking.slice(0,2).join(' و ')):others.length?(ok<others.length?`بيوصّل... ${ok}/${others.length}`:`🔊 معاك ${ok}`):'مستني حد يفتح المايك';
+}
+function vcUI(){
+  const bar=$('#vcBar');if(!bar)return;
+  bar.classList.toggle('show',!!R);document.body.classList.toggle('vc',!!R);
+  const b=$('#vcMic'),x=$('#vcOff');
+  b.className=VC.on?(VC.muted?'mu':'on'):'';
+  b.textContent=!VC.on?'🎙️ اتكلم':VC.muted?'🔇 المايك مقفول':'🎙️ المايك شغال';
+  x.style.display=VC.on?'':'none';
+  vcInfo();
+}
+addEventListener('pagehide',()=>{if(VC.on)vcLeave()});
 
 function track(name,title){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:name,title:title||name,event:true})}catch(e){}}
 /* ================== المؤثرات: أصوات وكونفيتي ================== */
@@ -869,14 +1002,14 @@ async function enter(code,host){
   if(host){hostSince=Date.now();H={ph:'lobby',game:'quiz',spyCat:'place',spyMin:3,cats:Object.keys(CATS),n:15,sc:{}};
     await R.presence({nm:myName.trim(),h:1,hs:hostSince,st:pub()});}
   else await R.presence({nm:myName.trim()});
-  R.onPeers(()=>onUpdate());
+  R.onPeers(()=>{onUpdate();vcSync()});R.onSignal(vcSignal);vcUI();
   clearInterval(tick);tick=setInterval(onTick,250);
   S.scr='lobby';onUpdate();
 }
 function copyInvite(){const t=location.origin+location.pathname+'#r-'+S.code;try{navigator.clipboard.writeText(t).then(()=>{S.err='';floatPts('اتنسخ ✅')})}catch(e){}}
 function createRoom(){if(!needName())return;track('room-create','عمل أوضة');let c='';for(let i=0;i<4;i++)c+=CODE_CH[Math.floor(Math.random()*CODE_CH.length)];enter(c,true)}
 function joinRoom(c){if(!needName())return;c=(c||'').trim().toLowerCase();if(!/^[a-z0-9]{4}$/.test(c)){S.err='الكود 4 حروف';render();return}enter(c,false)}
-async function leaveRoom(){try{history.replaceState(null,'',location.pathname)}catch(e){}clearInterval(tick);clearTimeout(revealTimer);try{await R?.leave()}catch(e){}R=null;isHost=false;H=null;go('home')}
+async function leaveRoom(){vcLeave();try{history.replaceState(null,'',location.pathname)}catch(e){}clearInterval(tick);clearTimeout(revealTimer);try{await R?.leave()}catch(e){}R=null;isHost=false;H=null;go('home');vcUI()}
 
 const peers=()=>R?R.peers().filter(p=>p.kind==='viewer'&&p.presence&&p.presence.nm):[];
 function hostPeer(){return peers().filter(p=>p.presence.h===1).sort((a,b)=>(a.presence.hs||0)-(b.presence.hs||0))[0]}
@@ -947,7 +1080,7 @@ function answer(i){
 }
 function lobby(){
   const ps=peers();const h=hostPeer();
-  const list=ps.map(p=>`<li><span>${esc(p.presence.nm)}${p.presence.h===1?'<span class="tag">المضيف</span>':''}${p.sameTab?'<span class="tag me">إنت</span>':''}</span></li>`).join('');
+  const list=ps.map(p=>`<li><span>${esc(p.presence.nm)}${p.presence.h===1?'<span class="tag">المضيف</span>':''}${p.sameTab?'<span class="tag me">إنت</span>':''}</span>${vcBadge(p)}</li>`).join('');
   return `<button class="back" onclick="leaveRoom()">→ اخرج</button>
   <div class="card" style="text-align:center"><div class="note">كود الأوضة</div><div class="code">${esc(S.code)}</div>
   <a class="btn wa" style="text-decoration:none" onclick="track('invite-whatsapp','دعوة واتساب')" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا على لمّتنا 🎉\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
@@ -955,7 +1088,7 @@ function lobby(){
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
   ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div></div></div>
     ${H.game==='spy'?`<div class="card"><h2>فئة الجاسوس</h2><div class="pills">${Object.entries(SPY).map(([k,c])=>`<div class="pill ${H.spyCat===k?'on':''}" onclick="H.spyCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
-    <h2 style="margin-top:16px">وقت النقاش (دقايق)</h2>${nPicker(H.spyMin,'setSpyMin',[2,3,5])}<p class="note">محتاجين 3 لعيبة على الأقل، واتكلموا في الفويس أو جروب واتساب 🗣️</p>
+    <h2 style="margin-top:16px">وقت النقاش (دقايق)</h2>${nPicker(H.spyMin,'setSpyMin',[2,3,5])}<p class="note">محتاجين 3 لعيبة على الأقل، واتكلموا مع بعض من زرار المايك 🎙️ تحت</p>
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="spyHostStart()">يلا الجاسوس 🕵️</button></div>`
     :`<div class="card"><h2>اختار الفئات</h2>${catPicker(H.cats,'toggleCat')}<h2 style="margin-top:16px">عدد الأسئلة</h2>${nPicker(H.n,'setN',[10,20,30,0])}
     <p class="note">كل رابع سؤال 🔥 دبل${H.n?' والسؤال الأخير 🎰 ×3':''}</p>
