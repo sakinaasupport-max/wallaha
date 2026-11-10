@@ -942,7 +942,7 @@ function gwReveal(){
   const ps=peers();const wins=ps.filter(p=>{const g=p.presence.gw;return g&&g.r===r&&g.d==='win'}).sort((a,b)=>(a.presence.gw.ms||0)-(b.presence.gw.ms||0));
   ps.forEach(p=>{const row=H.sc[p.peer]||(H.sc[p.peer]=[p.presence.nm,0,0]);row[0]=String(p.presence.nm).slice(0,16);
     const g=p.presence.gw;let gain=0;
-    if(g&&g.r===r&&g.d==='win'){gain=100+(Math.max(0,+g.h||0))*20;if(wins[0]&&wins[0].peer===p.peer)gain+=50}
+    if(wins[0]&&wins[0].peer===p.peer)gain=100+(Math.max(0,+g.h||0))*20;
     row[1]+=gain;row[2]=gain});
   H.gw={...H.gw,first:wins[0]?String(wins[0].presence.nm).slice(0,16):''};
   H.ph='gx';pushState();onUpdate();clearTimeout(revealTimer);revealTimer=setTimeout(gwNext,7000);
@@ -967,15 +967,18 @@ function ogw(){
     return `<li><span>${esc(p.presence.nm)}</span><span>${ok&&x.d==='win'?'✅ حلّها':ok&&x.d==='lose'?'💔':'❤️'.repeat(ok?Math.max(0,x.h):6)}</span></li>`}).join('');
   let foot;
   if(rv){const me=Object.entries(s.sc||{}).find(([pid])=>pid===myPeer());
-    foot=`<p class="msg" style="color:${OG.done==='win'?'var(--g)':'var(--r)'}">${OG.done==='win'?'برافو! حلّيتها 🎉':'المرة الجاية 💪'}${me&&me[1][2]?' +'+me[1][2]:''}</p>
-    ${g.first?`<p class="note">أول واحد حلّها: <b style="color:var(--y)">${esc(g.first)}</b> 🏁</p>`:''}
+    const iWon=me&&me[1][2]>0;
+    if(OG.fx!==g.r){OG.fx=g.r;if(!OG.done)OG.done='lose';if(!iWon)setTimeout(()=>fxResult(false),100)}
+    foot=`<div class="card" style="text-align:center"><div class="big-emoji">${g.first?'🏆':'⏰'}</div>
+    <h2 style="font-size:26px">${g.first?(iWon?'إنت كسبت الجولة! 🎉':`<span style="color:var(--y)">${esc(g.first)}</span> كسب الجولة!`):'محدش لحق يحلّها'}</h2>
+    <p class="msg">الكلمة كانت: <b style="color:var(--y)">${esc(OG.ans)}</b></p>${iWon?`<p class="msg" style="color:var(--g)">+${me[1][2]}</p>`:''}</div>
     <div class="card"><h2>النقط</h2>${scoreList(s.sc,true)}</div>
     ${isHost?`<div class="row"><button class="btn" onclick="gwNext()">${g.i+1<g.n?'اللي بعده ←':'النتيجة 🏆'}</button><button class="btn ghost" onclick="hostEnd()">إنهاء</button></div>`:''}`}
-  else if(OG.done)foot=`<p class="msg" style="color:${OG.done==='win'?'var(--g)':'var(--r)'}">${OG.done==='win'?'حلّيتها! 🎉 مستنيين الباقي…':'خلصت القلوب 💔 مستنيين الباقي…'}</p>`;
+  else if(OG.done)foot=`<p class="msg" style="color:${OG.done==='win'?'var(--g)':'var(--r)'}">${OG.done==='win'?'حلّيتها! 🎉 مستنيين الباقي…':'خلصت القلوب 💔 مستني الباقي يحاولوا…'}</p>`;
   else foot=`<div class="gkb">${kb}</div><button class="btn ghost" onclick="ogHint()" ${OG.hearts<=1?'disabled':''}>💡 اكشف حرف (بقلب)</button>`;
   return `<div class="top"><span>جولة ${g.i+1}/${g.n}</span><span>${rv?'':`⏱ <b id="gwt">${Math.ceil(Math.max(0,OG.end-Date.now())/1000)}</b>`}</span><span style="width:42px"></span></div>
   <div class="card" style="text-align:center"><span class="qcat">${esc(g.hint)}</span><div style="margin-top:8px">${'❤️'.repeat(Math.max(0,OG.hearts))}${'🖤'.repeat(6-Math.max(0,OG.hearts))}</div><div class="gboard">${board}</div></div>
-  ${foot}${prog?`<div class="card"><h2>الباقيين</h2><ul class="players">${prog}</ul></div>`:''}`;
+  ${foot}${prog&&!rv?`<div class="card"><h2>الباقيين</h2><ul class="players">${prog}</ul></div>`:''}`;
 }
 
 /* ================== سناك 🐍 ================== */
@@ -1099,8 +1102,9 @@ function onTick(){
     if(el>=DUR*1000||(ps.length&&ans.length>=ps.length))reveal();
   }
   if(isHost&&H&&H.ph==='gw'){
-    const ps=peers();const fin=ps.filter(p=>{const g=p.presence.gw;return g&&g.r===H.gw.r&&g.d});
-    if(Date.now()-H.gwStart>=H.gw.dur*1000||(ps.length&&fin.length>=ps.length))gwReveal();
+    const ps=peers();const mine=ps.filter(p=>{const g=p.presence.gw;return g&&g.r===H.gw.r});
+    const won=mine.some(p=>p.presence.gw.d==='win');const fin=mine.filter(p=>p.presence.gw.d);
+    if(won||Date.now()-H.gwStart>=H.gw.dur*1000||(ps.length&&fin.length>=ps.length))gwReveal();
   }
   {const t=$('#gwt');if(t&&OG.end){const left=Math.max(0,OG.end-Date.now());t.textContent=Math.ceil(left/1000);if(!OG.done&&left<=5000)tickSound(left);if(!OG.done&&left<=0){OG.done='lose';gwPub();render()}}}
   const bar=$('#tbar');if(bar){const s=st();if(s&&s.ph==='q'){const left=Math.max(0,DUR*1000-(Date.now()-localStart));if(!myAns)tickSound(left);bar.style.width=(left/(DUR*10))+'%';const t=$('#tsec');if(t)t.textContent=Math.ceil(left/1000)}}
@@ -1153,7 +1157,7 @@ function lobby(){
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
   ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div><div class="game g3" style="${H.game==='guess'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='guess';pushState();render()"><span class="ge">🔤</span><b>خمّن الكلمة</b></div></div></div>
     ${H.game==='guess'?`<div class="card"><h2>الفئة</h2><div class="pills">${Object.entries(GCATS).map(([k,c])=>`<div class="pill ${H.gCat===k?'on':''}" onclick="H.gCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
-    <h2 style="margin-top:16px">عدد الجولات</h2>${nPicker(H.gn,'setGn',[3,5,10])}<p class="note">نفس الكلمة بتظهر للكل، وكل واحد بيخمّن على موبايله. اللي يحلّها الأول بقلوب أكتر ياخد نقط أكتر 🏁 (من 2 لاعب)</p>
+    <h2 style="margin-top:16px">عدد الجولات</h2>${nPicker(H.gn,'setGn',[3,5,10])}<p class="note">نفس الكلمة بتظهر للكل، وكل واحد بيخمّن على موبايله. أول واحد يحلّها يكسب الجولة على طول 🏁 (من 2 لاعب)</p>
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="gwHostStart()">يلا نخمّن 🔤</button></div>`
     :H.game==='spy'?`<div class="card"><h2>فئة الجاسوس</h2><div class="pills">${Object.entries(SPY).map(([k,c])=>`<div class="pill ${H.spyCat===k?'on':''}" onclick="H.spyCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
     <h2 style="margin-top:16px">وقت النقاش (دقايق)</h2>${nPicker(H.spyMin,'setSpyMin',[2,3,5])}<p class="note">من 2 لحد 20 لاعب، واتكلموا مع بعض من زرار المايك 🎙️ تحت</p>
