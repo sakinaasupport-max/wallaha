@@ -133,7 +133,11 @@ body.vc #app{padding-bottom:96px}
 .game:active{transform:translateY(4px);box-shadow:0 3px 0 #0003}
 .game .ge{font-size:46px;display:block;animation:wobble 3s ease-in-out infinite}
 .game b{font-size:18px;display:block}.game small{font-size:12px;opacity:.85;font-weight:700}
-.game.g1{background:linear-gradient(140deg,#F97316,#EC4899)}.game.g2{background:linear-gradient(140deg,#7C2D92,#A855F7)}.game.g3{background:linear-gradient(140deg,#EC4899,#BE185D)}.game.g4{background:linear-gradient(140deg,#FBBF24,#F97316)}
+.game.g1{background:linear-gradient(140deg,#F97316,#EC4899)}.game.g2{background:linear-gradient(140deg,#7C2D92,#A855F7)}.game.g3{background:linear-gradient(140deg,#EC4899,#BE185D)}.pic{position:relative;height:230px;border-radius:22px;overflow:hidden;box-shadow:inset 0 0 0 3px #fff3}
+.pic .pbg{position:absolute;inset:auto 0 -10px 0;text-align:center;font-size:150px;opacity:.55;line-height:1}
+.pic .pwho{position:absolute;right:18%;bottom:26px;font-size:92px;line-height:1;filter:drop-shadow(0 6px 8px #0006)}
+.pic .pwhat{position:absolute;left:12%;top:24px;font-size:54px;line-height:1;filter:drop-shadow(0 4px 6px #0006);letter-spacing:-6px}
+.game.g4{background:linear-gradient(140deg,#FBBF24,#F97316)}
 .game .new{position:absolute;top:8px;left:8px;background:#fff;color:#f72585;font-size:11px;font-weight:900;border-radius:99px;padding:1px 8px}
 .hero-mini{font-size:64px;text-align:center;animation:bounceIn .8s cubic-bezier(.2,1.8,.4,1) both}
 .flipcard{text-align:center;padding:40px 16px!important;cursor:pointer;border:3px dashed var(--y)!important}
@@ -722,8 +726,8 @@ let roomNS=null, roomReady=false;
 roomNS=createRoomService();roomReady=true;
 
 function render(){
-  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,ogw,lsetup,lturn,lq,lend,spys,spyp,spyd,spyv,spyx,ospy,gh,gp,snk}[S.scr];
-  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:S.scr==='spyp'?LS.idx+''+LS.show:S.scr==='ospy'?(st()||{}).ph:S.scr==='ogw'?((st()||{}).gw||{}).r+(st()||{}).ph:S.scr==='gp'?GW.ans:'');
+  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,ogw,otr,trs,trp,tre,lsetup,lturn,lq,lend,spys,spyp,spyd,spyv,spyx,ospy,gh,gp,snk}[S.scr];
+  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:S.scr==='spyp'?LS.idx+''+LS.show:S.scr==='ospy'?(st()||{}).ph:S.scr==='ogw'?((st()||{}).gw||{}).r+(st()||{}).ph:S.scr==='otr'?((st()||{}).tr||{}).r+(st()||{}).ph:S.scr==='trp'&&TL?TL.turn+''+TL.show+TL.res:S.scr==='gp'?GW.ans:'');
   const app=$('#app');app.classList.toggle('enter',key!==lastScreenKey);
   if(key!==lastScreenKey){app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter')}
   lastScreenKey=key;
@@ -981,6 +985,107 @@ function ogw(){
   ${foot}${prog&&!rv?`<div class="card"><h2>الباقيين</h2><ul class="players">${prog}</ul></div>`:''}`;
 }
 
+
+/* ================== صدّقني 🤥 (صورة وتوصفها… صح ولا كدب؟) ================== */
+const PIC={
+  who:[['🐱','قطة'],['🐶','كلب'],['🐵','قرد'],['🦁','أسد'],['🐸','ضفدع'],['🐘','فيل'],['🐧','بطريق'],['🦒','زرافة'],['🐔','فرخة'],['🐢','سلحفاة'],['👵','تيتة'],['👮','عسكري'],['🧑‍🍳','شيف'],['🤖','روبوت'],['👻','عفريت'],['🧛','مصاص دماء'],['👶','بيبي'],['🐫','جمل'],['🦆','بطة'],['🐟','سمكة']],
+  what:[['🍕','بيتزا'],['⚽','كورة'],['🎸','جيتار'],['📱','موبايل'],['🚲','عجلة'],['🎈','بلونة'],['☂️','شمسية'],['📚','كتب'],['🍉','بطيخة'],['🍦','آيس كريم'],['🥁','طبلة'],['🎂','تورتة'],['🕶️','نضارة شمس'],['🧹','مقشة'],['🪁','طيارة ورق'],['🍔','برجر'],['🎮','دراع بلايستيشن'],['🌹','وردة'],['🫖','براد شاي'],['🧆','طعمية']],
+  where:[['🏖️','على البحر','#38bdf8'],['🏜️','في الصحرا','#f59e0b'],['🏙️','في المدينة','#64748b'],['🌋','جنب بركان','#ef4444'],['🏰','في قصر','#a78bfa'],['🌲','في الغابة','#22c55e'],['🚀','في الفضاء','#1e1b4b'],['❄️','في التلج','#bae6fd'],['🕌','جنب جامع','#14b8a6'],['🏫','في المدرسة','#fb923c'],['🎡','في الملاهي','#ec4899'],['🚌','في الأتوبيس','#eab308']]
+};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function picNew(){const w=pick(PIC.where);return {w:pick(PIC.who),t:pick(PIC.what),p:w,n:1+Math.floor(Math.random()*3)}}
+function picHTML(x,small){
+  return `<div class="pic" style="background:radial-gradient(circle at 50% 35%,#ffffff55,transparent 60%),${x.p[2]}${small?';height:150px':''}">
+    <span class="pbg">${x.p[0]}</span><span class="pwho">${x.w[0]}</span><span class="pwhat">${x.t[0].repeat(x.n)}</span></div>`;
+}
+const picText=x=>`${x.w[1]} + ${x.n>1?x.n+' ':''}${x.t[1]} • ${x.p[1]}`;
+const TRUTH_TIP=['قول الحقيقة بالظبط ✅','اكدب! غيّر حاجة واحدة على الأقل 🤥'];
+
+/* ---- موبايل واحد ---- */
+let TL=null;
+function truthSetup(){if(!TL)TL={players:[myName.trim()||'لاعب 1','لاعب 2','لاعب 3'],rounds:1};go('trs')}
+function trs(){
+  return `<button class="back" onclick="go('home')">→ رجوع</button><div class="hero-mini">🤥</div><h2 style="text-align:center">صدّقني!</h2>
+  <p class="note">كل دور واحد بيشوف صورة لوحده، والموبايل بيقوله يا «قول الحقيقة» يا «اكدب».<br>يوصفها للباقيين، وهما يقرروا: صدّقناك ولا كداب؟ 😏</p>
+  <div class="card teams"><h2>اللعيبة (${TL.players.length})</h2>${TL.players.map((t,i)=>`<input value="${esc(t)}" maxlength="14" oninput="TL.players[${i}]=this.value">`).join('')}
+  <div class="row">${TL.players.length<20?`<button class="btn ghost" onclick="TL.players.push('لاعب '+(TL.players.length+1));render()">+ لاعب</button>`:''}${TL.players.length>2?`<button class="btn ghost" onclick="TL.players.pop();render()">− لاعب</button>`:''}</div></div>
+  <div class="card"><h2>كام لفّة؟</h2>${nPicker(TL.rounds,'trSetR',[1,2,3])}<p class="note">في كل لفّة كل لاعب بيوصف مرة</p>
+  <button class="btn g" onclick="trLocalStart()">يلا نبدأ 🤥</button></div>`;
+}
+function trSetR(n){TL.rounds=n;render()}
+function trLocalStart(){track('play-truth-local','صدقني موبايل واحد');TL.players=TL.players.map((p,i)=>p.trim()||'لاعب '+(i+1));TL.sc=TL.players.map(()=>0);TL.turn=0;trLocalTurn()}
+function trLocalTurn(){TL.pic=picNew();TL.truth=Math.random()<.5;TL.show=false;TL.res=null;go('trp')}
+function trp(){
+  const n=TL.players.length,who=TL.players[TL.turn%n];
+  const top=`<div class="top"><span>دور ${TL.turn+1}/${n*TL.rounds}</span><button class="back" onclick="go('trs')">إنهاء</button></div>`;
+  if(TL.res){const ok=TL.res==='believe'?TL.truth:!TL.truth;
+    return top+`<div class="card" style="text-align:center">${picHTML(TL.pic)}<p class="note">الصورة الحقيقية: ${picText(TL.pic)}</p>
+    <h2 style="font-size:26px">${TL.truth?'كان بيقول الحقيقة ✅':'كان بيكدب 🤥'}</h2><p class="msg" style="color:${ok?'var(--g)':'var(--r)'}">${ok?'الشلة كسبت +100 🎉':esc(who)+' ضحك عليكم! +100 😈'}</p></div>
+    <div class="card"><h2>النقط</h2><ul class="players">${TL.players.map((p,i)=>[p,TL.sc[i]]).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`<li><span>${esc(p)}</span><span class="pts">${v}</span></li>`).join('')}</ul></div>
+    <button class="btn g" onclick="trLocalNext()">${TL.turn+1<n*TL.rounds?'الدور اللي بعده ←':'النتيجة 🏆'}</button>`}
+  if(!TL.show)return top+`<div class="card flipcard" onclick="TL.show=true;snd('joker');render()"><div class="big-emoji">🤫</div><h2 style="font-size:28px;text-align:center">ادّي الموبايل لـ<br><span style="color:var(--y)">${esc(who)}</span></h2><p class="note">ومحدش يبص غيره! دوس علشان تشوف الصورة 👆</p></div>`;
+  if(TL.show===true)return top+`<div class="card" style="text-align:center">${picHTML(TL.pic)}
+    <div class="banner" style="margin-top:12px">${TRUTH_TIP[TL.truth?0:1]}</div><p class="note">احفظ الصورة كويس 👀</p>
+    <button class="btn" onclick="TL.show='hid';render()">خبّيها ووصفها للشلة 🗣️</button></div>`;
+  return top+`<div class="card" style="text-align:center"><div class="big-emoji">🗣️</div><h2>${esc(who)} بيوصف الصورة…</h2><p class="note">اسألوه أسئلة، وبعدين قرروا مع بعض</p>
+    <div class="row"><button class="btn g" onclick="trLocalVote('believe')">صدّقناك ✅</button><button class="btn" style="background:var(--r)" onclick="trLocalVote('liar')">كداب 🤥</button></div></div>`;
+}
+function trLocalVote(v){const n=TL.players.length,w=TL.turn%n;TL.res=v;const ok=v==='believe'?TL.truth:!TL.truth;
+  if(ok){TL.sc.forEach((_,i)=>{if(i!==w)TL.sc[i]+=100});fxResult(true)}else{TL.sc[w]+=100;fxResult(false)}render()}
+function trLocalNext(){TL.turn++;if(TL.turn>=TL.players.length*TL.rounds){go('tre');winFx()}else trLocalTurn()}
+function tre(){const rows=TL.players.map((p,i)=>[p,TL.sc[i]]).sort((a,b)=>b[1]-a[1]);
+  return `<div class="big-emoji">🏆</div><h1 style="font-size:30px">${esc(rows[0][0])} كسب!</h1><div class="card"><ul class="players board">${rows.map(([p,v],i)=>`<li><span>${['🥇','🥈','🥉'][i]||'•'} ${esc(p)}</span><span class="pts">${v}</span></li>`).join('')}</ul></div>
+  <button class="btn g" onclick="trLocalStart()">العبوا تاني 🔁</button><button class="btn ghost" onclick="go('home')">الرئيسية</button>`}
+
+/* ---- أونلاين ---- */
+let OT={};
+function trHostStart(){
+  const ps=peers();if(ps.length<2){S.err='استنى لحد ما صاحبك يدخل الأوضة 👥';render();return}
+  track('play-truth-online','صدقني أونلاين');S.err='';H.sc={};ps.forEach(p=>H.sc[p.peer]=[p.presence.nm,0,0]);
+  H.trOrder=shuffle(ps.map(p=>p.peer));H.trNames=Object.fromEntries(ps.map(p=>[p.peer,String(p.presence.nm).slice(0,16)]));H.ti=0;trRound();
+}
+function trRound(){
+  const n=H.trOrder.length;const who=H.trOrder[H.ti%n];
+  H.tr={r:Math.random().toString(36).slice(2,7),who,nm:H.trNames[who]||'؟',x:enc(JSON.stringify({pic:picNew(),truth:Math.random()<.5})),i:H.ti,n:n*H.tRounds};
+  H.ph='tr';pushState();onUpdate();
+}
+function trReveal(){
+  const t=H.tr;const d=JSON.parse(dec(t.x));Object.values(H.sc).forEach(x=>x[2]=0);let fooled=0;const votes={b:0,l:0};
+  peers().forEach(p=>{if(p.peer===t.who)return;const v=p.presence.tv;if(!v||v.r!==t.r)return;
+    const row=H.sc[p.peer]||(H.sc[p.peer]=[p.presence.nm,0,0]);const ok=(v.v===1)===d.truth;v.v===1?votes.b++:votes.l++;
+    if(ok){row[1]+=100;row[2]=100}else fooled++});
+  const wr=H.sc[t.who]||(H.sc[t.who]=[t.nm,0,0]);wr[1]+=fooled*100;wr[2]=fooled*100;
+  H.tr={...t,votes};H.ph='tx';pushState();onUpdate();
+}
+function trNext(){if(!H||H.ph!=='tx')return;H.ti++;if(H.ti>=H.tr.n){H.ph='end';pushState();onUpdate()}else trRound()}
+function trVote(v){const s=st();if(!s||s.ph!=='tr')return;snd('tap');OT.voted=s.tr.r;R.presence({tv:{r:s.tr.r,v}});render()}
+function otr(){
+  const s=st();if(!s||!s.tr)return lobby();const t=s.tr;const d=JSON.parse(dec(t.x)||'{}');const me=myPeer();const mine=t.who===me;
+  if(OT.r!==t.r)OT={r:t.r,show:true};
+  const others=peers().filter(p=>p.peer!==t.who);const nv=others.filter(p=>p.presence.tv&&p.presence.tv.r===t.r).length;
+  const top=`<div class="top"><span>دور ${t.i+1}/${t.n}</span><span>🗣️ ${esc(t.nm)}</span><span style="width:42px"></span></div>`;
+  if(s.ph==='tr'){
+    if(mine)return top+`<div class="card" style="text-align:center">${OT.show?picHTML(d.pic):`<div class="pic" style="background:#0004;display:grid;place-items:center;font-size:60px">🙈</div>`}
+      <div class="banner" style="margin-top:12px">${TRUTH_TIP[d.truth?0:1]}</div>
+      <button class="btn ghost" onclick="OT.show=!OT.show;render()">${OT.show?'خبّي الصورة 🙈':'وريني الصورة تاني 👀'}</button>
+      <p class="note">وصفها لصحابك في المايك 🎙️ — صوّتوا ${nv}/${others.length}</p></div>
+      ${isHost?`<button class="btn" onclick="trReveal()">اكشف 🎭</button>`:''}`;
+    const voted=OT.voted===t.r;
+    return top+`<div class="card" style="text-align:center"><div class="big-emoji">🗣️</div><h2><span style="color:var(--y)">${esc(t.nm)}</span> بيوصف صورة…</h2><p class="note">اسمعه كويس واسأله، صادق ولا بيكدب؟</p>
+      ${voted?`<p class="msg">تمام! مستنيين الباقي 👀 (${nv}/${others.length})</p>`:`<div class="row"><button class="btn g" onclick="trVote(1)">صدّقتك ✅</button><button class="btn" style="background:var(--r)" onclick="trVote(0)">كداب 🤥</button></div>`}</div>
+      ${isHost?`<button class="btn ghost" onclick="trReveal()">اكشف دلوقتي 🎭</button>`:''}`;
+  }
+  const v=(st().tr.votes)||{b:0,l:0};const myV=peers().find(p=>p.sameTab);const mv=myV&&myV.presence.tv&&myV.presence.tv.r===t.r?myV.presence.tv.v:null;
+  const ok=mine?null:mv===null?null:((mv===1)===d.truth);
+  if(OT.fx!==t.r){OT.fx=t.r;setTimeout(()=>{if(ok===true||(mine&&(d.truth?v.l:v.b)>0))fxResult(true);else if(ok===false)fxResult(false)},100)}
+  return top+`<div class="card" style="text-align:center">${picHTML(d.pic)}<p class="note">الصورة: ${picText(d.pic)}</p>
+    <h2 style="font-size:26px">${esc(t.nm)} ${d.truth?'كان صادق ✅':'كان بيكدب 🤥'}</h2>
+    <p class="msg">${mine?'':ok===true?'<span style="color:var(--g)">عرفته! +100 🎉</span>':ok===false?'<span style="color:var(--r)">ضحك عليك 😈</span>':'ماصوّتّش ⏰'}</p>
+    <p class="note">صدّقوه: ${v.b} • قالوا كداب: ${v.l}</p></div>
+    <div class="card"><h2>النقط</h2>${scoreList(s.sc,true)}</div>
+    ${isHost?`<div class="row"><button class="btn g" onclick="trNext()">${t.i+1<t.n?'الدور اللي بعده ←':'النتيجة 🏆'}</button><button class="btn ghost" onclick="hostEnd()">إنهاء</button></div>`:''}`;
+}
+
 /* ================== سناك 🐍 ================== */
 let SN=null;
 function snakeStart(){go('snk');setTimeout(snInit,30)}
@@ -1029,7 +1134,7 @@ function home(){
   return `<h1>لمّتنا <span>🎉</span></h1><p class="sub">ألعاب وتحديات الشلة • العب أونلاين أو على موبايل واحد</p>
   ${S.invite?`<div class="banner">صاحبك مستنيك في أوضة <b style="direction:ltr;display:inline-block">${esc(S.invite)}</b> 🎉<br><span style="font-size:14px">اكتب اسمك ودوس «ادخل الأوضة»</span></div>`:''}
   <div class="card"><h2>اسمك إيه؟</h2><input id="nameInp" maxlength="16" placeholder="اكتب اسمك" value="${esc(myName)}"></div>
-  <div class="card"><h2>🌐 العب أونلاين مع صحابك</h2><p class="note">أوضة بكود: تحدي الأسئلة 🧠 أو الجاسوس 🕵️</p>
+  <div class="card"><h2>🌐 العب أونلاين مع صحابك</h2><p class="note">أوضة بكود: الأسئلة 🧠 • الجاسوس 🕵️ • خمّن الكلمة 🔤 • صدّقني 🤥</p>
     ${online?(S.invite?`<button class="btn g" onclick="joinRoom(S.invite)">ادخل الأوضة 🚀</button>`:'')+`<div class="row"><button class="btn" onclick="createRoom()">اعمل أوضة</button><button class="btn b" onclick="go('join')">ادخل بكود</button></div>`
     :`<p class="note">محتاج نت علشان تلعب أونلاين 📶</p>`}
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}
@@ -1039,6 +1144,7 @@ function home(){
     <div class="game g1" onclick="startLocalSetup()"><span class="ge">🧠</span><b>تحدي الأسئلة</b><small>جوكرات وكازينو وسرقة</small></div>
     <div class="game g2" onclick="spySetup()"><span class="new">جديد</span><span class="ge">🕵️</span><b>الجاسوس</b><small>أشك فيك! مين برا السالفة؟</small></div>
     <div class="game g3" onclick="guessHome()"><span class="new">جديد</span><span class="ge">🔤</span><b>خمّن الكلمة</b><small>لوحدك أو مع صحابك أونلاين</small></div>
+    <div class="game g1" onclick="truthSetup()"><span class="new">جديد</span><span class="ge">🤥</span><b>صدّقني</b><small>صورة وتوصفها… صح ولا كدب؟</small></div>
     <div class="game g4" onclick="snakeStart()"><span class="new">جديد</span><span class="ge">🐍</span><b>سناك</b><small>اكسر الرقم القياسي</small></div>
   </div>
   ${aiBox()}
@@ -1059,7 +1165,7 @@ function joinScr(){
 async function enter(code,host){
   S.err='';$('#app').insertAdjacentHTML('beforeend','<p class="msg">بيوصّل... ⏳</p>');try{R=await roomNS.join(code)}catch(e){S.err='النت ضعيف أو السيرفر مش راد، جرب تاني';render();return}
   S.code=code;isHost=host;if(!host)track('room-join','دخل أوضة');try{history.replaceState(null,'','#r-'+code)}catch(e){}
-  if(host){hostSince=Date.now();H={ph:'lobby',game:'quiz',spyCat:'place',spyMin:3,gCat:'mathal',gn:5,cats:Object.keys(CATS),n:15,sc:{}};
+  if(host){hostSince=Date.now();H={ph:'lobby',game:'quiz',spyCat:'place',spyMin:3,gCat:'mathal',gn:5,tRounds:1,cats:Object.keys(CATS),n:15,sc:{}};
     await R.presence({nm:myName.trim(),h:1,hs:hostSince,st:pub()});}
   else await R.presence({nm:myName.trim()});
   R.onPeers(()=>{onUpdate();vcSync()});R.onSignal(vcSignal);vcUI();
@@ -1079,6 +1185,7 @@ function pub(){
   const o={ph:H.ph,game:H.game,spyCat:H.spyCat,spyMin:H.spyMin,cats:H.cats,n:H.n,sc:H.sc};
   if(['sr','sv','sx'].includes(H.ph))o.sp=H.sp;
   if(['gw','gx'].includes(H.ph))o.gw=H.gw;
+  if(['tr','tx'].includes(H.ph))o.tr=H.tr;
   if(H.ph==='q'||H.ph==='rv'){const q=H.q;Object.assign(o,{g:H.g,qi:H.qi,k:q.k,p:q.p,o:q.o,ai:q.ai,m:multOf(H.qi,H.n)});if(H.ph==='rv')o.c=q.c}
   return o;
 }
@@ -1090,6 +1197,7 @@ function onUpdate(){
     const fk=key+s.ph;if(s.ph==='rv'&&fk!==lastFx){lastFx=fk;const ok=myAns&&myAns.qi===s.qi&&myAns.i===s.c;fxResult(!!ok);const me=Object.entries(s.sc||{}).find(([pid])=>R.peers().find(p=>p.peer===pid&&p.sameTab));if(ok&&me&&me[1][2])floatPts('+'+me[1][2])}}
   else if(s&&['sr','sv','sx'].includes(s.ph))S.scr='ospy';
   else if(s&&['gw','gx'].includes(s.ph))S.scr='ogw';
+  else if(s&&['tr','tx'].includes(s.ph))S.scr='otr';
   else if(s&&s.ph==='end'){if(S.scr!=='oend')setTimeout(winFx,200);S.scr='oend'}
   else S.scr='lobby';
   render();
@@ -1101,6 +1209,7 @@ function onTick(){
     const ans=ps.filter(p=>{const a=p.presence.a;return a&&a.g===H.g&&a.qi===H.qi});
     if(el>=DUR*1000||(ps.length&&ans.length>=ps.length))reveal();
   }
+  if(isHost&&H&&H.ph==='tr'){const o=peers().filter(p=>p.peer!==H.tr.who);if(o.length&&o.every(p=>p.presence.tv&&p.presence.tv.r===H.tr.r))trReveal()}
   if(isHost&&H&&H.ph==='gw'){
     const ps=peers();const mine=ps.filter(p=>{const g=p.presence.gw;return g&&g.r===H.gw.r});
     const won=mine.some(p=>p.presence.gw.d==='win');const fin=mine.filter(p=>p.presence.gw.d);
@@ -1141,6 +1250,7 @@ function toggleCat(k){H.cats=toggleIn(H.cats,k);pushState();render()}
 function setN(n){H.n=n;pushState();render()}
 function setSpyMin(n){H.spyMin=n;pushState();render()}
 function setGn(n){H.gn=n;pushState();render()}
+function setTr(n){H.tRounds=n;pushState();render()}
 function answer(i){
   const s=st();if(!s||s.ph!=='q'||myAns)return;snd('tap');
   myAns={g:s.g,qi:s.qi,i};
@@ -1155,8 +1265,11 @@ function lobby(){
   <a class="btn wa" style="text-decoration:none" onclick="track('invite-whatsapp','دعوة واتساب')" href="https://wa.me/?text=${encodeURIComponent('تعالى العب معايا على لمّتنا 🎉\nادخل من هنا: '+location.origin+location.pathname+'#r-'+S.code+'\nكود الأوضة: '+S.code)}" target="_blank">ابعت الدعوة على واتساب 💬</a>
   <button class="btn ghost" onclick="copyInvite()">انسخ اللينك 📋</button></div>
   <div class="card"><h2>اللي في الأوضة (${ps.length})</h2><ul class="players">${list||'<li>بيحمّل...</li>'}</ul></div>
-  ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div><div class="game g3" style="${H.game==='guess'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='guess';pushState();render()"><span class="ge">🔤</span><b>خمّن الكلمة</b></div></div></div>
-    ${H.game==='guess'?`<div class="card"><h2>الفئة</h2><div class="pills">${Object.entries(GCATS).map(([k,c])=>`<div class="pill ${H.gCat===k?'on':''}" onclick="H.gCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
+  ${isHost?`<div class="card"><h2>هنلعب إيه؟</h2><div class="games" style="margin:0"><div class="game g1" style="${H.game==='quiz'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='quiz';pushState();render()"><span class="ge">🧠</span><b>تحدي الأسئلة</b></div><div class="game g2" style="${H.game==='spy'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='spy';pushState();render()"><span class="ge">🕵️</span><b>الجاسوس</b></div><div class="game g3" style="${H.game==='guess'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='guess';pushState();render()"><span class="ge">🔤</span><b>خمّن الكلمة</b></div><div class="game g4" style="${H.game==='truth'?'outline:4px solid #fff':'opacity:.6'}" onclick="H.game='truth';pushState();render()"><span class="ge">🤥</span><b>صدّقني</b></div></div></div>
+    ${H.game==='truth'?`<div class="card"><h2>صدّقني 🤥</h2><p class="note">كل دور لاعب بيشوف صورة لوحده ويوصفها في المايك 🎙️ — اللعبة بتقوله يا يقول الحقيقة يا يكدب، والباقيين يصوّتوا: صدّقتك ولا كداب؟</p>
+    <h2 style="margin-top:12px">كام لفّة؟</h2>${nPicker(H.tRounds,'setTr',[1,2,3])}<p class="note">في كل لفّة كل لاعب بيوصف مرة • من 2 لحد 20 لاعب</p>
+    ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="trHostStart()">يلا نبدأ 🤥</button></div>`
+    :H.game==='guess'?`<div class="card"><h2>الفئة</h2><div class="pills">${Object.entries(GCATS).map(([k,c])=>`<div class="pill ${H.gCat===k?'on':''}" onclick="H.gCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
     <h2 style="margin-top:16px">عدد الجولات</h2>${nPicker(H.gn,'setGn',[3,5,10])}<p class="note">نفس الكلمة بتظهر للكل، وكل واحد بيخمّن على موبايله. أول واحد يحلّها يكسب الجولة على طول 🏁 (من 2 لاعب)</p>
     ${S.err?`<p class="msg" style="color:var(--r)">${esc(S.err)}</p>`:''}<button class="btn g" onclick="gwHostStart()">يلا نخمّن 🔤</button></div>`
     :H.game==='spy'?`<div class="card"><h2>فئة الجاسوس</h2><div class="pills">${Object.entries(SPY).map(([k,c])=>`<div class="pill ${H.spyCat===k?'on':''}" onclick="H.spyCat='${k}';pushState();render()">${c.e} ${c.t}</div>`).join('')}</div>
