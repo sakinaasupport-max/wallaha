@@ -1397,7 +1397,7 @@ function lend(){
 (function(){const m=location.hash.match(/^#r-([a-z0-9]{4})$/);if(m){S.prefill=m[1];S.invite=m[1]}})();
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-let instEv=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;if(S.scr==='home')render()});
+var instEv=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;if(S.scr==='home')render()});
 addEventListener('appinstalled',()=>{instEv=null;track('app-installed','نزّل التطبيق');if(S.scr==='home')render()});
 async function installApp(){if(!instEv)return;instEv.prompt();try{await instEv.userChoice}catch(e){}instEv=null;render()}
 </script>
