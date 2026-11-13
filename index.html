@@ -172,6 +172,46 @@ body.vc #app{padding-bottom:96px}
 #splash .skip{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff9;font-size:14px;font-weight:700}
 .credit{text-align:center;color:#ffffffcc;font-size:14px;line-height:1.8;margin:26px 0 6px;padding:16px;border-top:1px solid var(--line)}
 .credit b{color:var(--y)}.cr-logo{font-weight:900;font-size:20px;color:#fff}.cr-small{font-size:12px;opacity:.75}
+/* ألعاب القعدة */
+.game.g5{background:linear-gradient(140deg,#06B6D4,#3B82F6)}.game.g6{background:linear-gradient(140deg,#10B981,#0891B2)}.game.g7{background:linear-gradient(140deg,#EF4444,#F97316)}
+.games .game.wide{grid-column:1/-1}
+.pgcard{text-align:center;padding:24px 14px!important;background:linear-gradient(160deg,#ffffff2e,#ffffff10)!important;border:2px solid #ffffff44!important}
+.pgcard.pgin{animation:pop .35s cubic-bezier(.2,1.6,.4,1) both}
+.pgword{font:900 38px/1.35 Cairo,sans-serif;margin:14px 0 6px;text-shadow:0 3px 0 #0004;word-break:break-word}
+.pgword.sm{font-size:28px}
+.pgq{font:900 24px/1.6 Cairo,sans-serif;margin:10px 0}
+.or{text-align:center;font:900 18px Cairo,sans-serif;color:var(--y);margin:2px 0}
+.taboo{display:grid;gap:6px;margin-top:12px}.taboo small{color:var(--mut);font-weight:800;font-size:14px}
+.taboo span{background:#ff5d7326;border:1px solid #ff5d7366;border-radius:12px;padding:7px;font-weight:800;font-size:17px}
+.pgsec{font:900 30px Cairo,sans-serif;color:var(--y);text-align:center;margin:-8px 0 6px}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.vbtn{border:2px solid var(--line);background:#0003;color:#fff;border-radius:16px;padding:15px 6px;font:800 17px Cairo,sans-serif;cursor:pointer;box-shadow:0 4px 0 #0003;transition:transform .08s}
+.vbtn:active{transform:translateY(3px)}
+.opt.opA,.wyrr.opA{background:#e63946}.opt.opB,.wyrr.opB{background:#1d4ed8}
+.wyrr{border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 0 #0003}
+.wyrr b{display:block;font-size:18px}.wyrr .pc{display:block;font:900 40px Cairo,sans-serif;color:var(--y);text-shadow:0 3px 0 #0004}.wyrr small{display:block;font-weight:700;opacity:.9}
+.vbar{display:flex;align-items:center;gap:8px;margin:9px 0;font-weight:800}
+.vbar .bn{width:104px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbar .bt{flex:1;height:24px;background:#0003;border-radius:99px;overflow:hidden}
+.vbar .bt i{display:block;height:100%;min-width:4px;background:linear-gradient(90deg,var(--y),var(--o));border-radius:99px;animation:grow .9s cubic-bezier(.2,1,.3,1) both}
+.vbar .bc{width:26px;text-align:center;color:var(--y);font-size:18px}
+@keyframes grow{from{width:0}}
+.bomb{font-size:120px;text-align:center;line-height:1.15;filter:drop-shadow(0 10px 20px #0006);user-select:none}
+.bomb.beat{animation:beat .16s ease}
+@keyframes beat{50%{transform:scale(1.14) rotate(-7deg)}}
+.boom{font:900 58px Cairo,sans-serif;text-align:center;color:var(--y);margin:20px 0 4px;animation:bounceIn .6s cubic-bezier(.2,1.8,.4,1) both;text-shadow:0 5px 0 #0005,0 0 40px #ff5d73}
+.pgletter{font:900 96px/1.1 Cairo,sans-serif;color:var(--y);text-align:center;text-shadow:0 6px 0 #0004,0 0 40px #ffd23f88;margin:4px 0}
+.pgletter.spin{animation:wobble .3s infinite}
+#bmBtn.pgin{animation:pop .3s cubic-bezier(.2,1.6,.4,1)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.chips span{background:#0003;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-weight:800;font-size:14px}
+.srow{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#0002;border-radius:14px;margin:7px 0;font-weight:800}
+.srow .sn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow .sp{color:var(--y);min-width:36px;text-align:center;font-size:20px}
+.srow button{border:0;border-radius:10px;padding:9px 10px;font:800 15px Cairo,sans-serif;cursor:pointer;background:#ffffff26;color:#fff}
+.srow button.p10{background:var(--g);color:#063}.srow button.p5{background:var(--y);color:#2b0f4c}
+.pgtop{padding-left:54px;min-height:42px}
+.order{margin:0;padding-inline-start:26px;font-weight:800;font-size:19px;line-height:2}
 </style>
 </head>
 <body>
@@ -726,8 +766,8 @@ let roomNS=null, roomReady=false;
 roomNS=createRoomService();roomReady=true;
 
 function render(){
-  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,ogw,otr,trs,trp,tre,lsetup,lturn,lq,lend,spys,spyp,spyd,spyv,spyx,ospy,gh,gp,snk}[S.scr];
-  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:S.scr==='spyp'?LS.idx+''+LS.show:S.scr==='ospy'?(st()||{}).ph:S.scr==='ogw'?((st()||{}).gw||{}).r+(st()||{}).ph:S.scr==='otr'?((st()||{}).tr||{}).r+(st()||{}).ph:S.scr==='trp'&&TL?TL.turn+''+TL.show+TL.res:S.scr==='gp'?GW.ans:'');
+  const f={home,join:joinScr,lobby,oq:onlineQ,oend:onlineEnd,ogw,otr,trs,trp,tre,lsetup,lturn,lq,lend,spys,spyp,spyd,spyv,spyx,ospy,gh,gp,snk,pgs,pgp}[S.scr];
+  const key=S.scr+'|'+(S.scr==='oq'?lastKey:(S.scr==='lq'||S.scr==='lturn')&&L?L.turn:S.scr==='spyp'?LS.idx+''+LS.show:S.scr==='ospy'?(st()||{}).ph:S.scr==='ogw'?((st()||{}).gw||{}).r+(st()||{}).ph:S.scr==='otr'?((st()||{}).tr||{}).r+(st()||{}).ph:S.scr==='trp'&&TL?TL.turn+''+TL.show+TL.res:S.scr==='gp'?GW.ans:'')+(S.scr.startsWith('pg')&&PG?'#'+PG.k:'');
   const app=$('#app');app.classList.toggle('enter',key!==lastScreenKey);
   if(key!==lastScreenKey){app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter')}
   lastScreenKey=key;
@@ -1128,6 +1168,260 @@ function snDraw(){
       [[1],[-1]].forEach(([k])=>{ctx.beginPath();ctx.arc(cx+ex*k,cy+ey*k,cell*.09,0,7);ctx.fill()})}});
 }
 
+/* ================== ألعاب القعدة (٧ ألعاب على موبايل واحد) ================== */
+const PGD={
+  char:{
+    film:{t:'أفلام',e:'🎬',w:['الناظر','اللمبي','عسل إسود','الفيل الأزرق','صعيدي في الجامعة الأمريكية','الإرهاب والكباب','الكيف','ولاد رزق','الجزيرة','إكس لارج','بوحة','الممر','حرب كرموز','الحرب العالمية التالتة','تيتو','مافيا','همام في أمستردام','عبود على الحدود','مرجان أحمد مرجان','تايتانيك','الأسد الملك','هاري بوتر','سبايدر مان','علاء الدين','الكنز','كيرة والجن','الفيل الأزرق ٢','زكي شان','ظرف طارق','الباشا تلميذ']},
+    series:{t:'مسلسلات وكرتون',e:'📺',w:['الكبير أوي','رأفت الهجان','ليالي الحلمية','يوميات ونيس','الاختيار','جعفر العمدة','لن أعيش في جلباب أبي','عائلة الحاج متولي','باب الحارة','طاش ما طاش','سبونج بوب','توم وجيري','بكار','الهيبة','بوجي وطمطم','المغامرون الخمسة','كابتن ماجد','بينك بانثر','ميكي ماوس','عالم سمسم','فريندز','الضاحك الباكي','الكابتن تسوباسا','ميرو وبيرو']},
+    prov:{t:'أمثال',e:'📜',w:['اللي اختشوا ماتوا','القرد في عين أمه غزال','ابن الوز عوام','على قد لحافك مد رجليك','الصبر مفتاح الفرج','طباخ السم بيدوقه','اللي بيته من إزاز مايحدفش الناس بالطوب','الباب اللي يجيلك منه الريح سده واستريح','اللي فات مات','إن كان حبيبك عسل ماتلحسوش كله','جت الحزينة تفرح مالقتلهاش مطرح','اللي مايعرفش يقول عدس','يا بخت من بات مغلوب ولا بات غالب','الوقت من دهب','اطبخي يا جارية كلّف يا سيدي','العين ماتعلاش على الحاجب','اللي يحب ربنا يرفع إيده','ياما جاب الغراب لأمه','الحركة بركة','امشي عدل يحتار عدوك فيك']},
+    act:{t:'مواقف',e:'🤸',w:['بيغسل المواعين','بيسوق ميكروباص','نايم في المحاضرة','بيصطاد سمك','بيتصوّر سيلفي','بيرقص في فرح','بيلعب بلايستيشن','بيعمل كشري','بيحلق دقنه','بيصلّح حنفية','بيفاصل مع بياع','تايه في المول','بيجري ورا الأتوبيس','موبايله فاصل ومش لاقي شاحن','عريس في الكوشة','بيدوّر على الواي فاي','بيكوي قميص','بيعدّي الشارع في زحمة','بيذاكر ليلة الامتحان','بيعمل تمارين في الجيم','بيدوّر على الريموت','بيعمل عجين','بيستنى الأكل الدليفري','بيتمشى على البحر']},
+    ani:{t:'مهن وحيوانات',e:'🦒',w:['سباك','حلاق','طيار','جرّاح','مذيع نشرة','حكم كورة','ساحر','مصوّر','جزار','رائد فضاء','بطريق','كنغر','زرافة','قرد','ديناصور','تمساح','أخطبوط','ديك الصبح','فيل','جمل','أرنب','ثعبان','دولفين','بومة']}
+  },
+  taboo:[
+    ['كشري',['عدس','مكرونة','رز','صلصة']],['الأهرامات',['الجيزة','فراعنة','أبو الهول','مقبرة']],['موبايل',['تليفون','شاحن','اتصال','شاشة']],
+    ['كورة',['ماتش','جون','لاعب','ملعب']],['فرح',['عروسة','عريس','قاعة','زفة']],['رمضان',['صيام','فطار','سحور','فانوس']],
+    ['مدرسة',['مدرس','فصل','طالب','امتحان']],['بحر',['مية','شاطئ','موج','سمك']],['قهوة',['بن','فنجان','كافيين','تركي']],
+    ['مطار',['طيارة','سفر','تذكرة','جواز سفر']],['دكتور',['عيادة','مريض','كشف','دوا']],['كنافة',['حلويات','قشطة','رمضان','شربات']],
+    ['صيف',['حر','شمس','إجازة','مصيف']],['مترو',['محطة','قطر','تذكرة','زحمة']],['كحك',['العيد','سكر','عجين','بسكويت']],
+    ['سينما',['فيلم','تذكرة','فشار','شاشة']],['واي فاي',['نت','راوتر','باسورد','شبكة']],['عيد ميلاد',['تورتة','شمع','هدية','سنة']],
+    ['امتحان',['مذاكرة','درجات','ورقة','نجاح']],['تلاجة',['برد','أكل','ساقعة','فريزر']],['ميكروباص',['سواق','أجرة','موقف','ركاب']],
+    ['ساعة',['وقت','عقارب','دقيقة','إيد']],['نظارة',['عين','نظر','شمس','عدسة']],['شاورما',['فراخ','لحمة','عيش','سوري']],
+    ['فيسبوك',['بوست','لايك','صفحة','سوشيال']],['كرسي',['قعدة','خشب','ترابيزة','رجول']],['مطر',['شتا','سحاب','مية','شمسية']],
+    ['قطة',['حيوان','مياو','فار','أليف']],['أسد',['غابة','ملك','زئير','حيوان']],['حلاق',['شعر','دقن','مقص','محل']],
+    ['بيتزا',['إيطاليا','جبنة','فرن','دليفري']],['شاي',['سكر','كوباية','نعناع','براد']],['عربية',['سواق','عجل','بنزين','طريق']],
+    ['جيم',['حديد','تمرين','عضلات','كابتن']],['نوم',['سرير','مخدة','تعبان','حلم']],['فانوس',['رمضان','شمعة','نور','أطفال']],
+    ['بطيخ',['أحمر','صيف','بذر','فاكهة']],['طيارة',['سما','مطار','جناح','سفر']],['صيدلية',['دوا','روشتة','دكتور','برشام']],
+    ['ملوخية',['أخضر','طشة','شوربة','فراخ']],['بنك',['فلوس','حساب','فيزا','موظف']],['مستشفى',['دكتور','مريض','ممرضة','عملية']],
+    ['بلايستيشن',['ألعاب','دراع','فيفا','سوني']],['توكتوك',['تلات عجلات','سواق','حارة','أجرة']],['سيلفي',['صورة','موبايل','كاميرا','وش']],
+    ['عصير قصب',['عصارة','حلو','كوباية','محل']],['شنطة',['سفر','هدوم','ضهر','مدرسة']],['جزمة',['رجل','شراب','جلد','لبس']],
+    ['مكرونة بشاميل',['فرن','لحمة','صوص','صينية']],['كاميرا',['صورة','تصوير','عدسة','فلاش']],['مكتبة',['كتب','قراية','رفوف','هدوء']],
+    ['حمام سباحة',['مية','عوم','مايوه','نادي']],['عيد الأضحى',['خروف','لحمة','حج','دبح']],['قلم',['كتابة','حبر','ورقة','رصاص']]
+  ],
+  most:['ينام في الفرح','يتأخر على أي ميعاد','يبقى مليونير','يخلّص مرتبه في أول أسبوع','يضحك في موقف مش مناسب','يرد على الرسايل بعد يومين','يتوه في مكان بيروحه كل يوم','ينسى عيد ميلاد صاحبه','يحرق المطبخ وهو بيعمل بيض','يبقى مشهور على السوشيال','يقول «خمس دقايق وأكون عندك» وهو لسه نايم','يعيّط في فيلم كرتون','ياكل أكل غيره من التلاجة','يخسر في لعبة ويزعل','يسهر على الموبايل لحد الفجر','يتجوز الأول في الشلة','يسافر برا ومايرجعش','يطلب نفس الأكلة في كل مطعم','يفتي في أي موضوع','يصوّر الأكل قبل ما ياكله','يكسب أي نقاش','يدوّر على الموبايل وهو في إيده','يقول سر وهو مش قاصد','يصحى بدري من غير منبه','يبدأ دايت ويبوّظه في نفس اليوم','يبقى مدرس صارم','يتخانق مع سواق التاكسي','يغني بصوت عالي في العربية','يشتري حاجة مش محتاجها عشان عليها عرض','يعمل مقلب في الشلة','يتصل بيك عشان حاجة تتقال في رسالة','ياخد ساعة عشان يلبس','يكسب انتخابات رئيس الشلة','يخاف من صرصار','يعرف كل أخبار الناس','يقول «أنا شبعان» وياكل تاني','يتأخر على الطيارة','ينسى هو ركن العربية فين','يعمل جروب واتساب لأي حاجة','يدفع الحساب من غير ما حد يطلب'],
+  wyr:[
+    ['تعيش شهر من غير نت','تعيش سنة من غير شاي وقهوة'],['تسافر للماضي','تسافر للمستقبل'],['تقدر تطير','تبقى مخفي'],['تاكل كشري كل يوم','ماتاكلوش تاني خالص'],
+    ['تبقى مشهور ومعكش فلوس','تبقى غني ومحدش يعرفك'],['تصحى ٥ الفجر كل يوم','تنام ٣ الفجر كل يوم'],['صيف على طول','شتا على طول'],['تعرف كل اللغات','تعزف على كل الآلات'],
+    ['تتكلم مع الحيوانات','تقرا أفكار الناس'],['موبايلك يتسرق','محفظتك تتسرق'],['تعيش في القاهرة','تعيش في الساحل طول السنة'],['تبقى أذكى واحد في القعدة','تبقى أظرف واحد في القعدة'],
+    ['تسيب السوشيال ميديا سنة','تسيب الحلويات سنة'],['تقف في فرح ساعتين','تقعد في زحمة ساعتين'],['تقول كل اللي في دماغك','ماتتكلمش خالص يوم كامل'],['تشتغل من البيت على طول','تشتغل من المكتب على طول'],
+    ['تاكل أكل البيت بس طول عمرك','تاكل أكل مطاعم بس'],['تسافر لوحدك','تسافر مع الشلة كلها'],['تكسب الماتش في آخر دقيقة','تكسب بخمسة نضاف'],['تبقى أطول ١٠ سانتي','تبقى أشطر واحد في الطبخ'],
+    ['تعيش في فيلم كوميدي','تعيش في فيلم أكشن'],['تسمع نفس الأغنية طول اليوم','ماتسمعش مزيكا خالص'],['تروح المريخ','تروح قاع المحيط'],['تعرف رأي الناس فيك','ماتعرفهوش أبدًا'],
+    ['تنسى كل حاجة بسرعة','تفتكر كل حاجة حتى الوحشة'],['نت سريع وموبايل قديم','موبايل جديد ونت بطيء'],['تقابل نفسك وانت عندك ١٠ سنين','تقابل نفسك وانت عندك ٦٠ سنة'],['تشتغل لنفسك وتكسب أقل','تبقى موظف بمرتب كبير'],
+    ['تبطّل الحلو','تبطّل المقليات'],['عربية فخمة وشقة صغيرة','شقة فخمة من غير عربية'],['تتكلم بالأغاني بس','تتكلم بالأمثال بس'],['ريموت يوقّف الوقت','ريموت يرجّع الوقت ١٠ ثواني'],
+    ['تكون أول واحد يصحى في الرحلة','تكون آخر واحد ينام'],['تاكل حاجة حراقة جدًا','تاكل حاجة حامضة جدًا'],['فيلم في السينما','ماتش في الاستاد']
+  ],
+  bombCats:['اسم ولد','اسم بنت','حيوان','أكلة','بلد','مدينة','مهنة','حاجة في البيت','حاجة في المطبخ','لاعب كورة','مطرب أو مطربة','ممثل أو ممثلة','فاكهة أو خضار','فيلم أو مسلسل','حاجة في الشارع','حاجة بنلبسها','ماركة مشهورة','حاجة في المدرسة','حاجة في البحر','حاجة بتتاكل في الفطار'],
+  bombL:'أبتجحخدرسشصطعفقكلمنهي'.split(''),
+  atobL:'أبتجحخدرزسشصطعفقكلمنهوي'.split(''),
+  atobCats:['اسم ولد','اسم بنت','حيوان','نبات','جماد','بلد','أكلة','مهنة'],
+  odd:[
+    ['كام ساعة بتنام في اليوم؟','كام ساعة بتقعد على الموبايل في اليوم؟'],['كام كوباية شاي أو قهوة بتشرب في اليوم؟','كام مرة بتفتح التلاجة في اليوم؟'],
+    ['عندك كام صاحب مقرّب؟','عندك كام جزمة؟'],['كام دولة نفسك تزورها؟','كام لغة نفسك تتعلمها؟'],['كام مرة بتاكل برا في الشهر؟','كام مرة بتكلم أهلك في الأسبوع؟'],
+    ['قيّم صوتك في الغنا من ١٠','قيّم نفسك في الطبخ من ١٠'],['قيّم حبك للكورة من ١٠','قيّم حبك للنوم من ١٠'],['كام مرة بتعمل سنوز للمنبه؟','كام كوباية مية بتشرب في اليوم؟'],
+    ['كان عندك كام سنة أول ما مسكت موبايل؟','كان عندك كام سنة لما اتعلمت العجلة؟'],['كام فيلم بتشوف في الشهر؟','كام كتاب بتقرا في السنة؟'],
+    ['الساعة كام بتصحى يوم الإجازة؟','الساعة كام بتتغدى؟'],['كام دقيقة بتتأخر عن أي ميعاد؟','كام دقيقة بتاخدها في الدش؟'],
+    ['كام مرة سافرت بالطيارة؟','كام مرة روحت المصيف؟'],['قيّم نفسك في الرسم من ١٠','قيّم نفسك في الرقص من ١٠'],
+    ['كام بيضة ممكن تاكل في قعدة واحدة؟','كام رغيف ممكن تاكل في قعدة واحدة؟'],['كام ساعة تقدر تقعد من غير موبايل؟','كام ساعة تقدر تقعد من غير أكل؟'],
+    ['نفسك تخلّف كام عيل؟','نفسك تزور كام بلد عربي؟'],['كام مرة بتغيّر صورة البروفايل في السنة؟','كام مرة بتقص شعرك في السنة؟'],
+    ['قيّم نفسك في الكورة من ١٠','قيّم نفسك في السواقة من ١٠'],['كام شخص بتكلمه كل يوم؟','كام جروب واتساب بتفتحه كل يوم؟'],
+    ['بتصرف كام في الخروجة الواحدة (بالمية جنيه)؟','بتصرف كام على الهدوم في الشهر (بالمية جنيه)؟'],['كام مرة بتضحك في اليوم؟','كام مرة بتبص في المراية في اليوم؟']
+  ]
+};
+const PGT=['الفريق الأحمر 🔴','الفريق الأزرق 🔵','الفريق الأخضر 🟢','الفريق الأصفر 🟡'];
+let PG=null,pgTimer=null;
+function pgClr(){clearInterval(pgTimer);pgTimer=null}
+function pgHome(){pgClr();go('home')}
+function pgGo(scr){PG.k=(PG.k||0)+1;go(scr)}
+function pgR(){render()}
+function pgs(){return PGG[PG.g].setup()}
+function pgp(){return PGG[PG.g].play()}
+function pgStart(g){track('pg-'+g,PGG[g].name);
+  PG={g,k:1,players:store.get('wl_pg_pl',null)||[myName.trim()||'لاعب 1','لاعب 2','لاعب 3'],teams:store.get('wl_pg_tm',null)||PGT.slice(0,2),...PGG[g].init()};
+  const mn=PGG[g].min||2;while(PG.players.length<mn)PG.players.push('لاعب '+(PG.players.length+1));
+  go('pgs')}
+function pgFixPlayers(){PG.players=PG.players.map((p,i)=>String(p||'').trim()||'لاعب '+(i+1));store.set('wl_pg_pl',PG.players)}
+function pgFixTeams(){PG.teams=PG.teams.map((t,i)=>String(t||'').trim()||PGT[i]);store.set('wl_pg_tm',PG.teams)}
+function pgSet(k,v){PG[k]=v;snd('tap');pgR()}
+function pgPills(k,list,unit){return `<div class="pills">${list.map(v=>`<div class="pill ${PG[k]===v?'on':''}" onclick="pgSet('${k}',${v})">${v}${unit||''}</div>`).join('')}</div>`}
+function pgHead(e,t,d){return `<button class="back" onclick="pgHome()">→ رجوع</button><div class="hero-mini">${e}</div><h2 style="text-align:center">${t}</h2><p class="note">${d}</p>`}
+function pgPlayersCard(min){const P=PG.players;return `<div class="card teams"><h2>اللعيبة (${P.length})</h2>${P.map((t,i)=>`<input value="${esc(t)}" maxlength="14" oninput="PG.players[${i}]=this.value">`).join('')}
+  <div class="row">${P.length<16?`<button class="btn ghost" onclick="PG.players.push('لاعب '+(PG.players.length+1));pgR()">+ لاعب</button>`:''}${P.length>min?`<button class="btn ghost" onclick="PG.players.pop();pgR()">− لاعب</button>`:''}</div></div>`}
+function pgTeamsCard(){const T=PG.teams;return `<div class="card teams"><h2>الفرق (${T.length})</h2>${T.map((t,i)=>`<input value="${esc(t)}" maxlength="18" oninput="PG.teams[${i}]=this.value">`).join('')}
+  <div class="row">${T.length<4?`<button class="btn ghost" onclick="PG.teams.push(PGT[PG.teams.length]);pgR()">+ فريق</button>`:''}${T.length>2?`<button class="btn ghost" onclick="PG.teams.pop();pgR()">− فريق</button>`:''}</div></div>`}
+function pgTop(l,r){return `<div class="top pgtop"><button class="back" onclick="pgHome()">✕ إنهاء</button><span>${l}</span><span style="min-width:46px">${r||''}</span></div>`}
+function pgPass(name,sub,act){return `<div class="card flipcard" onclick="${act}"><div class="big-emoji">🤫</div><h2 style="font-size:28px;text-align:center">ادّي الموبايل لـ<br><span style="color:var(--y)">${esc(name)}</span></h2><p class="note">${sub}<br>دوس هنا لما تكون جاهز 👆</p></div>`}
+function pgBoard(names,sc,low,unit){const o=names.map((n,i)=>({n,s:sc[i]})).sort((a,b)=>low?a.s-b.s:b.s-a.s);const best=o[0].s;
+  return `<ul class="players board">${o.map(x=>`<li><span>${x.s===best?'👑 ':''}${esc(x.n)}</span><span class="pts">${x.s}${unit||''}</span></li>`).join('')}</ul>`}
+function pgEnd(names,sc,low,title,again,unit){const best=low?Math.min(...sc):Math.max(...sc);const w=names.filter((n,i)=>sc[i]===best);
+  return `<div class="big-emoji">🏆</div><h2 style="text-align:center">${w.length>1?'تعادل! '+w.map(esc).join(' و ')+' في المركز الأول':esc(w[0])+' كسب!'}</h2>
+  <div class="card"><h2>${title}</h2>${pgBoard(names,sc,low,unit)}</div>
+  <button class="btn g" onclick="${again}">العبوا تاني 🔁</button><button class="btn ghost" onclick="pgHome()">الرئيسية</button>`}
+function pgVBars(rows,max){return rows.map(r=>`<div class="vbar"><span class="bn">${r.top?'👑 ':''}${esc(r.n)}</span><span class="bt"><i style="width:${max?Math.round(r.c/max*100):0}%"></i></span><span class="bc">${r.c}</span></div>`).join('')}
+
+/* ---------- محرّك الفرق بالكروت: بدون كلام + الكلمة الممنوعة ---------- */
+function tcStart(){pgFixTeams();PG.sc=PG.teams.map(()=>0);PG.r=1;PG.ti=0;PG.deck=[];PG.ph='pass';pgGo('pgp')}
+function tcDraw(){if(!PG.deck.length)PG.deck=shuffle(PG.g==='char'?PG.cats.flatMap(c=>PGD.char[c].w.map(w=>({w,c}))):PGD.taboo.map(([w,f])=>({w,f})));PG.cur=PG.deck.pop()}
+function tcGo(){PG.ph='play';PG.got=[];PG.end=Date.now()+PG.dur*1000;tcDraw();pgGo('pgp');pgClr();lastTick=-1;pgTimer=setInterval(tcTick,200);tcTick()}
+function tcTick(){const b=$('#pgBar'),s=$('#pgSec');if(!b||S.scr!=='pgp'){pgClr();return}const left=PG.end-Date.now();
+  b.style.width=Math.max(0,left/(PG.dur*1000)*100)+'%';s.textContent=Math.max(0,Math.ceil(left/1000));tickSound(left);
+  if(left<=0){pgClr();snd('bad');vib([200,100,200]);PG.ph='sum';pgGo('pgp')}}
+function tcMark(v){if(PG.ph!=='play')return;PG.got.push({w:PG.cur.w,v});PG.sc[PG.ti]+=v;
+  if(v>0){snd('ok');vib(30);floatPts('+1')}else if(v<0){snd('bad');vib([60,40,60]);floatPts('−1')}else snd('tap');
+  tcDraw();pgR();const c=$('#pgCard');if(c){c.classList.add('pgin')}}
+function tcNext(){PG.ti++;if(PG.ti>=PG.teams.length){PG.ti=0;PG.r++}
+  if(PG.r>PG.rounds){PG.ph='end';pgGo('pgp');winFx()}else{PG.ph='pass';pgGo('pgp')}}
+function tcPlay(){const T=PG.teams,ch=PG.g==='char';
+  if(PG.ph==='end')return pgEnd(T,PG.sc,false,'النتيجة النهائية','tcStart()');
+  if(PG.ph==='pass')return `${pgTop('الجولة '+PG.r+'/'+PG.rounds)}
+    <div class="card flipcard" onclick="tcGo()"><div class="big-emoji">${ch?'🎭':'🚫'}</div><h2 style="font-size:28px;text-align:center">الدور على<br><span style="color:var(--y)">${esc(T[PG.ti])}</span></h2>
+    <p class="note">${ch?'واحد منكم يمسك الموبايل ويمثّل من غير ولا كلمة،<br>والباقي يخمّن':'واحد منكم يمسك الموبايل ويوصف الكلمة من غير الكلمات الممنوعة،<br>والباقي يخمّن'}<br>عندكم ${PG.dur} ثانية ⏱️ — دوس هنا وابدأوا 👆</p></div>
+    <div class="card"><h2>النقط</h2>${pgBoard(T,PG.sc)}</div>`;
+  if(PG.ph==='sum'){const pts=PG.got.reduce((a,x)=>a+x.v,0);
+    return `<div class="big-emoji">⏰</div><h2 style="text-align:center">خلص الوقت!</h2><p class="msg">${esc(T[PG.ti])}: <span class="pts">${pts>0?'+':''}${pts}</span></p>
+    <div class="card">${PG.got.length?`<ul class="players">${PG.got.map(x=>`<li><span>${esc(x.w)}</span><span>${x.v>0?'✅':x.v<0?'❌':'⏭️'}</span></li>`).join('')}</ul>`:'<p class="note">ولا كلمة 😅</p>'}</div>
+    <button class="btn g" onclick="tcNext()">${PG.ti+1>=T.length&&PG.r>=PG.rounds?'النتيجة النهائية 🏆':'اللي بعده ←'}</button>`}
+  const c=PG.cur,cat=ch?PGD.char[c.c]:null;
+  return `${pgTop(esc(T[PG.ti]),'<b class="pts">'+PG.sc[PG.ti]+'</b>')}
+  <div class="timer"><i id="pgBar" style="width:100%"></i></div><div class="pgsec" id="pgSec">${PG.dur}</div>
+  <div class="card pgcard" id="pgCard">${ch?`<span class="qcat">${cat.e} ${cat.t}</span><div class="pgword${c.w.length>16?' sm':''}">${esc(c.w)}</div><p class="note">مثّلها من غير ولا كلمة 🤐</p>`
+    :`<div class="pgword">${esc(c.w)}</div><div class="taboo"><small>ممنوع تقول:</small>${c.f.map(x=>`<span>🚫 ${esc(x)}</span>`).join('')}</div>`}</div>
+  ${ch?`<div class="row"><button class="btn ghost" onclick="tcMark(0)">باس ⏭️</button><button class="btn g" onclick="tcMark(1)">صح ✅</button></div>`
+    :`<button class="btn g" onclick="tcMark(1)">صح ✅</button><div class="row"><button class="btn ghost" onclick="tcMark(0)">باس ⏭️</button><button class="btn" style="background:var(--r);color:#fff" onclick="tcMark(-1)">قالها ❌</button></div>`}`}
+
+/* ---------- محرّك التصويت السري: مين فينا + تفضّل إيه ---------- */
+function vtStart(){pgFixPlayers();PG.tally=PG.players.map(()=>0);PG.qs=[];PG.n=0;vtNewQ()}
+function vtNewQ(){if(!PG.qs.length)PG.qs=shuffle(PG.g==='most'?PGD.most:PGD.wyr);PG.q=PG.qs.pop();PG.n++;PG.ph='q';PG.vi=0;PG.votes=[];PG.show=false;pgGo('pgp')}
+function vtBegin(){PG.ph='vote';PG.vi=0;PG.votes=[];PG.show=false;pgGo('pgp')}
+function vtCast(x){if(PG.ph!=='vote'||!PG.show)return;PG.votes[PG.vi]=x;snd('joker');vib(20);PG.vi++;PG.show=false;
+  if(PG.vi>=PG.players.length){PG.ph='res';vtScore();pgGo('pgp');confetti(60)}else pgGo('pgp')}
+function vtScore(){const P=PG.players;
+  if(PG.g==='most'){const c=P.map((_,i)=>PG.votes.filter(v=>v===i).length),m=Math.max(...c);PG.cnt=c;c.forEach((x,i)=>{if(x===m)PG.tally[i]++})}
+  else{const a=PG.votes.filter(v=>v===0).length,b=P.length-a;PG.cnt=[a,b];const maj=a===b?-1:a>b?0:1;PG.votes.forEach((v,i)=>{if(v===maj)PG.tally[i]++})}}
+function vtEnd(){PG.ph='end';pgGo('pgp');winFx()}
+function vtPlay(){const P=PG.players,most=PG.g==='most',q=PG.q;
+  if(PG.ph==='end')return pgEnd(P,PG.tally,false,most?'ألقاب الليلة 👑':'أكتر واحد مع الأغلبية 🤝','vtStart()');
+  const qHtml=most?`<span class="qcat">🤔 مين فينا أكتر واحد…</span><div class="pgq">${esc(q)}؟</div>`
+    :`<span class="qcat">⚖️ تفضّل إيه؟</span><div class="pgq" style="color:#ff8fa0">${esc(q[0])}</div><div class="or">ولا</div><div class="pgq" style="color:#8fc3ff">${esc(q[1])}</div>`;
+  if(PG.ph==='q')return `${pgTop('سؤال '+PG.n)}<div class="card pgcard">${qHtml}</div>
+    <p class="note">${most?'كل واحد هيصوّت سرًّا على الشخص اللي شايفه أكتر واحد':'كل واحد هيختار سرًّا، وبعدها نشوف الشلة اتقسمت إزاي'} 🤫</p>
+    <button class="btn g" onclick="vtBegin()">ابدأوا التصويت السري 🗳️</button><button class="btn ghost" onclick="PG.n--;vtNewQ()">سؤال تاني 🔄</button>`;
+  if(PG.ph==='vote'){if(!PG.show)return `${pgTop('تصويت '+(PG.vi+1)+'/'+P.length)}${pgPass(P[PG.vi],'صوّت ومحدش يبص على اختيارك!','PG.show=true;snd(\'joker\');pgGo(\'pgp\')')}`;
+    return `${pgTop(esc(P[PG.vi]))}<div class="card pgcard">${most?qHtml:`<span class="qcat">⚖️ تفضّل إيه؟</span>`}</div>
+    ${most?`<div class="vgrid">${P.map((n,i)=>`<button class="vbtn" onclick="vtCast(${i})">${esc(n)}</button>`).join('')}</div>`
+      :`<div class="opts"><button class="opt opA" onclick="vtCast(0)">${esc(q[0])}</button><div class="or">ولا</div><button class="opt opB" onclick="vtCast(1)">${esc(q[1])}</button></div>`}`}
+  let res;
+  if(most){const m=Math.max(...PG.cnt);const rows=P.map((n,i)=>({n,c:PG.cnt[i],top:PG.cnt[i]===m})).sort((a,b)=>b.c-a.c);const w=rows.filter(r=>r.top).map(r=>esc(r.n));
+    res=`<div class="card pgcard"><span class="qcat">مين فينا أكتر واحد ${esc(q)}؟</span><div class="pgword sm">👑 ${w.join(' و ')}</div></div><div class="card">${pgVBars(rows,m)}</div>`}
+  else{const [a,b]=PG.cnt,tot=a+b,pa=Math.round(a/tot*100),side=k=>P.filter((_,i)=>PG.votes[i]===k).map(esc).join('، ')||'محدش';
+    const minor=a===b?'':a<b?side(0):side(1);
+    res=`<div class="card"><div class="wyrr opA"><b>${esc(q[0])}</b><span class="pc">${pa}%</span><small>${side(0)}</small></div><div class="or">ولا</div><div class="wyrr opB"><b>${esc(q[1])}</b><span class="pc">${100-pa}%</span><small>${side(1)}</small></div></div>
+    <p class="msg">${a===b?'الشلة اتقسمت نصين بالظبط! 😂 اتناقشوا':`🎤 ${minor} — دافعوا عن اختياركم!`}</p>`}
+  return `${pgTop('سؤال '+PG.n)}${res}<button class="btn g" onclick="vtNewQ()">السؤال اللي بعده ←</button><button class="btn ghost" onclick="vtEnd()">النتيجة النهائية 🏆</button>`}
+
+/* ---------- القنبلة ---------- */
+function bmStart(){pgFixPlayers();PG.booms=PG.players.map(()=>0);PG.r=0;bmReady()}
+function bmReady(){PG.ph='ready';PG.r++;pgGo('pgp')}
+function bmPrompt(){PG.cat=pick(PGD.bombCats);PG.letter=pick(PGD.bombL)}
+function bmGo(){bmPrompt();PG.ph='live';PG.fuse=rnd(PG.fmin,PG.fmin+25)*1000;PG.t0=Date.now();PG.lastT=0;pgGo('pgp');pgClr();pgTimer=setInterval(bmTick,40)}
+function bmTick(){const el=$('#bomb');if(!el||S.scr!=='pgp'){pgClr();return}const left=PG.fuse-(Date.now()-PG.t0);
+  const gap=Math.max(120,Math.min(1000,left/10));
+  if(Date.now()-PG.lastT>gap){PG.lastT=Date.now();snd('tick');el.classList.remove('beat');void el.offsetWidth;el.classList.add('beat')}
+  if(left<=0){pgClr();bmBoom()}}
+function bmBoom(){PG.ph='boom';tone(90,0,.7,'sawtooth',.3);tone(55,.05,.9,'square',.25);vib([400,100,400]);const fl=$('#flash');if(fl){fl.className='';void fl.offsetWidth;fl.className='bad'}pgGo('pgp')}
+function bmPass(){snd('tap');vib(15);const b=$('#bmBtn');if(b){b.classList.remove('pgin');void b.offsetWidth;b.classList.add('pgin')}}
+function bmNewQ(){bmPrompt();snd('joker');const c=$('#bmCat'),l=$('#bmL');if(c)c.textContent=PG.cat;if(l)l.textContent=PG.letter}
+function bmLose(i){PG.booms[i]++;snd('bad');bmReady()}
+function bmPlay(){const P=PG.players;
+  if(PG.ph==='end')return pgEnd(P,PG.booms,true,'عدد مرات الانفجار 💥 (الأقل يكسب)','bmStart()',' 💣');
+  if(PG.ph==='ready')return `${pgTop('الجولة '+PG.r)}<div class="bomb">💣</div>
+    <p class="note">القنبلة هتفرقع في وقت عشوائي محدش يعرفه!<br>هيظهر سؤال وحرف: قول إجابة صح بسرعة، ودوس «قلتها» وعدّي الموبايل للي جنبك 👉</p>
+    <button class="btn o" onclick="bmGo()">شغّل القنبلة 🔥</button>
+    ${PG.r>1?`<div class="card"><h2>مرات الانفجار</h2>${pgBoard(P,PG.booms,true,' 💥')}</div><button class="btn ghost" onclick="PG.ph='end';pgGo('pgp');winFx()">إنهاء اللعبة 🏁</button>`:''}`;
+  if(PG.ph==='live')return `${pgTop('الجولة '+PG.r)}<div class="card pgcard"><span class="qcat" id="bmCat">${esc(PG.cat)}</span><div class="note" style="margin-top:8px">بحرف</div><div class="pgletter" id="bmL">${PG.letter}</div></div>
+    <div class="bomb" id="bomb">💣</div><button class="btn g" id="bmBtn" style="font-size:24px;padding:20px" onclick="bmPass()">قلتها! عدّي 👉</button><button class="btn ghost" onclick="bmNewQ()">سؤال تاني 🔄</button>`;
+  return `<div class="boom">💥 بووووم!</div><h2 style="text-align:center">القنبلة فرقعت في إيد مين؟</h2>
+    <div class="vgrid">${P.map((n,i)=>`<button class="vbtn" onclick="bmLose(${i})">${esc(n)}</button>`).join('')}</div>
+    <button class="btn ghost" onclick="bmReady()">محدش (نعيدها) 🔁</button>`}
+
+/* ---------- أتوبيس كومبليت ---------- */
+function abStart(){pgFixPlayers();PG.tot=PG.players.map(()=>0);PG.used=[];PG.r=0;abReady()}
+function abReady(){PG.ph='ready';PG.r++;pgGo('pgp')}
+function abSpin(){let pool=PGD.atobL.filter(l=>!PG.used.includes(l));if(!pool.length){PG.used=[];pool=PGD.atobL}
+  PG.letter=pick(pool);PG.used.push(PG.letter);PG.ph='spin';pgGo('pgp');let k=0;pgClr();
+  pgTimer=setInterval(()=>{const el=$('#abL');if(!el||S.scr!=='pgp'){pgClr();return}if(++k>16){pgClr();snd('joker');abPlay();return}el.textContent=pick(PGD.atobL);snd('tick')},85)}
+function abPlay(){PG.ph='play';PG.end=Date.now()+PG.dur*1000;pgGo('pgp');lastTick=-1;pgTimer=setInterval(()=>{const b=$('#pgBar'),s=$('#pgSec');if(!b||S.scr!=='pgp'){pgClr();return}
+  const left=PG.end-Date.now();b.style.width=Math.max(0,left/(PG.dur*1000)*100)+'%';s.textContent=Math.max(0,Math.ceil(left/1000));tickSound(left);if(left<=0)abStop()},200)}
+function abStop(){pgClr();snd('bad');vib([200,100,200]);PG.ph='score';PG.rp=PG.players.map(()=>0);pgGo('pgp')}
+function abAdd(i,v){PG.rp[i]=v===0?0:Math.min(PG.rp[i]+v,PGD.atobCats.length*10);snd(v?'tap':'bad');pgR()}
+function abSave(){PG.rp.forEach((v,i)=>PG.tot[i]+=v);const m=Math.max(...PG.rp);if(m>0)confetti(50);abReady()}
+function abPlay_(){const P=PG.players,L=PG.letter;
+  if(PG.ph==='end')return pgEnd(P,PG.tot,false,'مجموع النقط','abStart()');
+  if(PG.ph==='ready')return `${pgTop('الجولة '+PG.r)}<div class="hero-mini">🚌</div>
+    <p class="note">جهّزوا ورقة وقلم ✍️ كل واحد يكتب الخانات دي:</p><div class="chips">${PGD.atobCats.map(c=>`<span>${c}</span>`).join('')}</div>
+    <button class="btn" onclick="abSpin()">طلّع الحرف 🎰</button>
+    ${PG.r>1?`<div class="card"><h2>النقط</h2>${pgBoard(P,PG.tot)}</div><button class="btn ghost" onclick="PG.ph='end';pgGo('pgp');winFx()">إنهاء اللعبة 🏁</button>`:''}`;
+  if(PG.ph==='spin')return `${pgTop('الجولة '+PG.r)}<div class="card pgcard"><div class="note">الحرف هو…</div><div class="pgletter spin" id="abL">${pick(PGD.atobL)}</div></div>`;
+  if(PG.ph==='play')return `${pgTop('الجولة '+PG.r)}<div class="card pgcard"><div class="note">كل الإجابات تبدأ بحرف</div><div class="pgletter">${L}</div><div class="chips">${PGD.atobCats.map(c=>`<span>${c}</span>`).join('')}</div></div>
+    <div class="timer"><i id="pgBar" style="width:100%"></i></div><div class="pgsec" id="pgSec">${PG.dur}</div>
+    <button class="btn" style="background:var(--r);color:#fff;font-size:24px;padding:20px" onclick="abStop()">ستوب! ✋</button><p class="note">أول واحد يخلّص كل الخانات يدوس ستوب</p>`;
+  return `${pgTop('تصحيح حرف «'+L+'»')}<div class="card"><p class="note" style="margin-top:0">لكل خانة: إجابة محدش كتبها غيرك = <b style="color:var(--g)">10</b> • إجابة مكررة = <b style="color:var(--y)">5</b> • غلط أو فاضية = 0</p>
+    ${P.map((n,i)=>`<div class="srow"><span class="sn">${esc(n)}</span><span class="sp">${PG.rp[i]}</span><button class="p10" onclick="abAdd(${i},10)">+10</button><button class="p5" onclick="abAdd(${i},5)">+5</button><button onclick="abAdd(${i},0)">↺</button></div>`).join('')}</div>
+    <button class="btn g" onclick="abSave()">احسب الجولة ✅</button>`}
+
+/* ---------- برّا السالفة بالأرقام ---------- */
+function odStart(){pgFixPlayers();PG.sc=PG.players.map(()=>0);PG.qs=[];PG.r=0;odNew()}
+function odNew(){if(!PG.qs.length)PG.qs=shuffle(PGD.odd);PG.q=PG.qs.pop();PG.odd=rnd(0,PG.players.length-1);PG.first=rnd(0,PG.players.length-1);PG.r++;PG.ph='see';PG.vi=0;PG.show=false;pgGo('pgp')}
+function odNextSee(){PG.show=false;PG.vi++;if(PG.vi>=PG.players.length)PG.ph='say';pgGo('pgp')}
+function odAccuse(i){PG.acc=i;PG.ph='rev';const ok=i===PG.odd;if(ok){PG.players.forEach((_,j)=>{if(j!==PG.odd)PG.sc[j]++});fxResult(true)}else{PG.sc[PG.odd]+=2;snd('bad');vib([80,50,80])}pgGo('pgp')}
+function odPlay(){const P=PG.players,n=P.length;
+  if(PG.ph==='end')return pgEnd(P,PG.sc,false,'النتيجة النهائية','odStart()');
+  if(PG.ph==='see'){if(!PG.show)return `${pgTop((PG.vi+1)+'/'+n,'الجولة '+PG.r)}${pgPass(P[PG.vi],'هيظهرلك سؤال… ماتقولوش لحد!','PG.show=true;snd(\'joker\');pgGo(\'pgp\')')}`;
+    const q=PG.vi===PG.odd?PG.q[1]:PG.q[0];
+    return `${pgTop((PG.vi+1)+'/'+n,esc(P[PG.vi]))}<div class="card role"><div class="big-emoji">🔢</div><div class="note">سؤالك:</div><div class="pgq">${esc(q)}</div><p class="note">جاوب برقم في سرّك وماتقولش السؤال!<br>(ممكن يكون سؤالك مختلف عن الباقيين وانت مش عارف 👀)</p>
+    <button class="btn" onclick="odNextSee()">${PG.vi+1<n?'خلاص، اخفي وعدّي ←':'كله شاف! ←'}</button></div>`}
+  if(PG.ph==='say'){const order=P.map((_,i)=>P[(PG.first+i)%n]);
+    return `${pgTop('الجولة '+PG.r)}<div class="big-emoji">🗣️</div><h2 style="text-align:center">كل واحد يقول رقمه بصوت عالي</h2>
+    <div class="card"><p class="note" style="margin-top:0">بالترتيب ده:</p><ol class="order">${order.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>
+    <button class="btn g" onclick="PG.ph='disc';pgGo('pgp')">اكشف السؤال الأصلي 👀</button>`}
+  if(PG.ph==='disc')return `${pgTop('الجولة '+PG.r)}<div class="card pgcard"><span class="qcat">السؤال الأصلي</span><div class="pgq">${esc(PG.q[0])}</div></div>
+    <p class="note">واحد فيكم كان سؤاله مختلف! 🕵️ اتناقشوا: مين رقمه مش راكب على السؤال؟<br>لما تتفقوا، اختاروه:</p>
+    <div class="vgrid">${P.map((x,i)=>`<button class="vbtn" onclick="odAccuse(${i})">${esc(x)}</button>`).join('')}</div>`;
+  const ok=PG.acc===PG.odd;
+  return `${pgTop('الجولة '+PG.r)}<div class="big-emoji">${ok?'🎯':'😈'}</div><h2 style="text-align:center">${ok?'مسكتوه! كان '+esc(P[PG.odd]):esc(P[PG.odd])+' هرب منكم!'}</h2>
+    <div class="card pgcard"><span class="qcat">سؤال ${esc(P[PG.odd])} كان</span><div class="pgq">${esc(PG.q[1])}</div><p class="note">${ok?'+1 لكل الباقيين ✅':'+2 لـ'+esc(P[PG.odd])+' 😈'}</p></div>
+    <div class="card"><h2>النقط</h2>${pgBoard(P,PG.sc)}</div>
+    <button class="btn g" onclick="odNew()">جولة جديدة 🔁</button><button class="btn ghost" onclick="PG.ph='end';pgGo('pgp');winFx()">إنهاء اللعبة 🏁</button>`}
+
+/* ---------- سجل الألعاب: الإعداد + اللعب ---------- */
+const PGG={
+  char:{name:'بدون كلام',init:()=>({cats:['film','series','prov','act','ani'],dur:60,rounds:3}),play:tcPlay,
+    setup:()=>`${pgHead('🎭','بدون كلام','مثّل الكلمة لفريقك من غير ولا كلمة… ولا صوت! 🤐<br>كل إجابة صح = نقطة • الباس ببلاش')}${pgTeamsCard()}
+    <div class="card"><h2>الفئات</h2><div class="cats">${Object.entries(PGD.char).map(([k,c])=>`<div class="cat ${PG.cats.includes(k)?'on':''}" onclick="pgCat('${k}')"><span class="e">${c.e}</span>${c.t}</div>`).join('')}</div>
+    <h2 style="margin-top:16px">وقت كل دور</h2>${pgPills('dur',[45,60,90],' ث')}<h2 style="margin-top:16px">كام لفّة؟</h2>${pgPills('rounds',[2,3,5])}
+    <button class="btn g" onclick="tcStart()">يلا نبدأ 🎭</button></div>`},
+  taboo:{name:'الكلمة الممنوعة',init:()=>({dur:60,rounds:3}),play:tcPlay,
+    setup:()=>`${pgHead('🚫','الكلمة الممنوعة','وصّف الكلمة لفريقك… بس فيه ٤ كلمات ممنوع تقولها! 😬<br>صح = +1 • قال كلمة ممنوعة = −1 • الباس ببلاش')}${pgTeamsCard()}
+    <div class="card"><h2>وقت كل دور</h2>${pgPills('dur',[45,60,90],' ث')}<h2 style="margin-top:16px">كام لفّة؟</h2>${pgPills('rounds',[2,3,5])}
+    <button class="btn g" onclick="tcStart()">يلا نبدأ 🚫</button></div>`},
+  most:{min:3,name:'مين فينا',init:()=>({}),play:vtPlay,
+    setup:()=>`${pgHead('🤔','مين فينا؟','سؤال زي «مين فينا أكتر واحد بيتأخر؟»<br>كل واحد يصوّت سرًّا… وبعدين الفضيحة على الملأ 😂')}${pgPlayersCard(3)}
+    <button class="btn g" onclick="vtStart()">يلا نبدأ 🤔</button>`},
+  wyr:{min:2,name:'تفضل إيه',init:()=>({}),play:vtPlay,
+    setup:()=>`${pgHead('⚖️','تفضّل إيه؟','اختيارين صعبين… لازم تختار واحد! 😅<br>كل واحد يختار سرًّا، والأقلية تدافع عن نفسها 🎤')}${pgPlayersCard(2)}
+    <button class="btn g" onclick="vtStart()">يلا نبدأ ⚖️</button>`},
+  bomb:{min:2,name:'القنبلة',init:()=>({fmin:15}),play:bmPlay,
+    setup:()=>`${pgHead('💣','القنبلة','قول إجابة وعدّي الموبايل بسرعة… قبل ما تفرقع في إيدك! 💥<br>اللي تفرقع معاه أقل مرات هو الكسبان')}${pgPlayersCard(2)}
+    <div class="card"><h2>سرعة القنبلة</h2><div class="pills">${[[25,'هادية 🐢'],[15,'عادية 🔥'],[8,'مجنونة ⚡']].map(([v,t])=>`<div class="pill ${PG.fmin===v?'on':''}" onclick="pgSet('fmin',${v})">${t}</div>`).join('')}</div>
+    <button class="btn o" onclick="bmStart()">يلا نبدأ 💣</button></div>`},
+  atob:{min:1,name:'أتوبيس كومبليت',init:()=>({dur:90}),play:abPlay_,
+    setup:()=>`${pgHead('🚌','أتوبيس كومبليت','حرف عشوائي، والكل يكتب: اسم ولد، بنت، حيوان، نبات، جماد، بلد، أكلة، مهنة ✍️<br>أسرع واحد يقول «ستوب!» والتصحيح هنا')}${pgPlayersCard(1)}
+    <div class="card"><h2>وقت الجولة</h2>${pgPills('dur',[60,90,120],' ث')}
+    <button class="btn g" onclick="abStart()">يلا نبدأ 🚌</button></div>`},
+  odd:{min:3,name:'برا السالفة بالأرقام',init:()=>({}),play:odPlay,
+    setup:()=>`${pgHead('🔢','برّا السالفة… بالأرقام','الكل بياخد نفس السؤال وإجابته رقم… ماعدا واحد بياخد سؤال تاني شبهه! 🕵️<br>قولوا أرقامكم واكشفوا مين برّا السالفة')}${pgPlayersCard(3)}
+    <button class="btn g" onclick="odStart()">يلا نبدأ 🔢</button>`}
+};
+function pgCat(k){const c=PG.cats;if(c.includes(k)){if(c.length>1)c.splice(c.indexOf(k),1)}else c.push(k);snd('tap');pgR()}
+
 /* ================== الشاشة الرئيسية ================== */
 function home(){
   const online=!!roomNS;
@@ -1147,6 +1441,16 @@ function home(){
     <div class="game g3" onclick="guessHome()"><span class="new">جديد</span><span class="ge">🔤</span><b>خمّن الكلمة</b><small>لوحدك أو مع صحابك أونلاين</small></div>
     <div class="game g1" onclick="truthSetup()"><span class="new">جديد</span><span class="ge">🤥</span><b>صدّقني</b><small>صورة وتوصفها… صح ولا كدب؟</small></div>
     <div class="game g4" onclick="snakeStart()"><span class="new">جديد</span><span class="ge">🐍</span><b>سناك</b><small>اكسر الرقم القياسي</small></div>
+  </div>
+  <h2 style="text-align:center">🎲 ألعاب القعدة</h2>
+  <div class="games">
+    <div class="game g5" onclick="pgStart('char')"><span class="new">جديد</span><span class="ge">🎭</span><b>بدون كلام</b><small>مثّل وفريقك يخمّن</small></div>
+    <div class="game g7" onclick="pgStart('taboo')"><span class="new">جديد</span><span class="ge">🚫</span><b>الكلمة الممنوعة</b><small>وصّف من غير ما تغلط</small></div>
+    <div class="game g2" onclick="pgStart('most')"><span class="new">جديد</span><span class="ge">🤔</span><b>مين فينا؟</b><small>تصويت سري وفضايح</small></div>
+    <div class="game g6" onclick="pgStart('wyr')"><span class="new">جديد</span><span class="ge">⚖️</span><b>تفضّل إيه؟</b><small>اختيارات صعبة جدًا</small></div>
+    <div class="game g4" onclick="pgStart('bomb')"><span class="new">جديد</span><span class="ge">💣</span><b>القنبلة</b><small>عدّي قبل ما تفرقع!</small></div>
+    <div class="game g3" onclick="pgStart('atob')"><span class="new">جديد</span><span class="ge">🚌</span><b>أتوبيس كومبليت</b><small>حرف وورقة وقلم</small></div>
+    <div class="game g1 wide" onclick="pgStart('odd')"><span class="new">جديد</span><span class="ge">🔢</span><b>برّا السالفة… بالأرقام</b><small>سؤال مختلف لواحد بس… اكشفوه</small></div>
   </div>
   ${aiBox()}
   <div class="credit"><div class="cr-logo">لمّتنا</div>تأسيس وتطوير: <b>محمود أحمد الترامسي</b><br><span dir="ltr">Founded by Mahmoud Ahmed Altramsy</span><br><span class="cr-small">© 2026 لمّتنا — جميع الحقوق محفوظة</span></div>`;
